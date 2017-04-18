@@ -1,0 +1,80 @@
+﻿@using Portal.Interfaces;
+@model IEnumerable<ADSync.Data.Models.RemoteSite>
+
+@{
+    ViewBag.Title = "Remote Site Configuration";
+    bool hasRecords = (Model.Count() > 0);
+}
+<div class="panel panel-primary" style="margin-top:20px;">
+    <div class="panel-title panel-heading">
+        @ViewBag.Title
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal">
+            <div class="form-group control">
+                <div class="col-md-12">
+                    <button id="btnNew" type="button" class="btn btn-default control"><span class="glyphicon glyphicon-plus"></span> New...</button>
+                </div>
+            </div>
+            <table class="table">
+                <tr class="head">
+                    <th>
+                        @Html.DisplayNameFor(model => model.SiteDomains)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ApiKey)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SiteType)
+                    </th>
+                </tr>
+                @if (!hasRecords)
+                {
+                    <tr><td colspan="3">No sites configured</td></tr>
+                }
+
+                @foreach (var item in Model)
+                {
+                    var masterClass = (item.SiteType == SiteTypes.MasterHQ) ? "master" : "";
+                    var domCount = item.SiteDomains.Count;
+
+                    var domains = (domCount > 1) ? item.SiteDomains[0] + " (" + (domCount-1).ToString() + " more)" : item.SiteDomains[0];
+                    <tr data-id="@item.Id" title="Click to edit" class="bg-rowEdit @masterClass" style="cursor:pointer">
+                        <td>
+                            @domains
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ApiKey)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SiteType)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        $(function () {
+            $("#btnNew").on("click", function () {
+                location.href = "/RemoteSite/Edit";
+            });
+
+            $("table tr:gt(0)")
+                .on("click", function () {
+                    location.href = "/RemoteSite/Edit/" + $(this).data("id");
+                });
+        });
+    </script>
+}
+@section styles {
+    <style type="text/css">
+        table.table tr.head th {
+            border-top: 0;
+            vertical-align: bottom;
+        }
+    </style>
+}

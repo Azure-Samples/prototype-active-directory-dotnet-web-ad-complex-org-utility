@@ -1,0 +1,21 @@
+﻿@model HandleErrorInfo
+
+@{
+    ViewBag.Title = "Error";
+}
+
+<div class="panel panel-primary" style="margin-top:20px;">
+    <div class="panel-title panel-heading">
+        @ViewBag.Title
+    </div>
+    <div class="panel-body">
+        <h3 class="text-danger">An error occurred while processing your request.</h3>
+
+        @if (ViewBag.Message != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                @ViewBag.Message
+            </div>
+        }
+    </div>
+</div>

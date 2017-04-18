@@ -1,0 +1,1 @@
+Powershell -File "c:\aadlab\sync.ps1"

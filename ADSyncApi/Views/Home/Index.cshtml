@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+}
+<div class="panel panel-primary" style="margin-top:20px;">
+    <div class="panel-title panel-heading">
+        @ViewBag.Title
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="well">
+                    <h4>Sites</h4>
+                    <ul>
+                        <li>3 configured sites</li>
+                        <li>Last site activity 3 minutes ago</li>
+                    </ul>
+
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="well">
+                    <h4>Users</h4>
+                    <ul>
+                        <li>493 replicated users</li>
+                        <li>Last user sync 3 hours ago</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="well">
+                    <h4>Logs</h4>
+                    <ul>
+                        <li>No errors in last 22 days</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section styles {
+    <style type="text/css">
+        div.well {
+            min-height: 250px;
+        }
+    </style>
+}
