@@ -5,6 +5,7 @@ using ADSync.Data.Models;
 using System.Web.Caching;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ADSync.Common.Models;
 
 namespace Infrastructure
 {
@@ -35,7 +36,7 @@ namespace Infrastructure
         }
         private static async Task<IEnumerable<RemoteSite>> refreshCache(Cache cache)
         {
-            var sites = await RemoteSite.GetAllSites();
+            var sites = await RemoteSiteUtil.GetAllSites();
             cache.Add("RemoteSites", sites, null, DateTime.Now.AddMinutes(5), Cache.NoSlidingExpiration, CacheItemPriority.BelowNormal, null);
             return sites;
         }

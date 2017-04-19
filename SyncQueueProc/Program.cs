@@ -20,11 +20,10 @@ namespace SyncQueueProc
             DocDBRepo.Settings.DocDBUri = ConfigurationManager.AppSettings["DocDBUri"];
             DocDBRepo.Settings.DocDBAuthKey = ConfigurationManager.AppSettings["DocDBAuthKey"];
             DocDBRepo.Settings.DocDBName = ConfigurationManager.AppSettings["DocDBName"];
-            DocDBRepo.Settings.DocDBCollection = ConfigurationManager.AppSettings["DocDBCollection"];
 
             var config = new JobHostConfiguration();
             config.StorageConnectionString = ConfigurationManager.AppSettings["StorageConnectionString"];
-            config.DashboardConnectionString = null;
+            config.DashboardConnectionString = ConfigurationManager.AppSettings["StorageConnectionString"];
 
             //TODO: comment out for production
             config.Queues.BatchSize = 1;

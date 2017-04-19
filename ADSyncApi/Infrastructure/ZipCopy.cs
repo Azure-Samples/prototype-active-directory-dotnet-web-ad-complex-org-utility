@@ -42,5 +42,38 @@ namespace ADSyncApi.Infrastructure
                 }
             }
         }
+
+        public static MemoryStream SetupZip(string dirPath, string apiKey, string apiUrl)
+        {
+            var configFile = GetConfig(dirPath, apiKey, apiUrl);
+            using (var zipFile = File.Open(Path.Combine(dirPath, "SyncSiteSetup.zip"), FileMode.Open))
+            {
+                Stream zipCopy = new MemoryStream();
+                zipFile.CopyTo(zipCopy);
+
+                using (var archive = new ZipArchive(zipCopy, ZipArchiveMode.Update, true))
+                {
+                    var item = archive.CreateEntry("api.config", CompressionLevel.Fastest);
+
+                    using (var streamWriter = new StreamWriter(item.Open()))
+                    {
+                        streamWriter.Write(configFile);
+                    }
+                    return (zipCopy as MemoryStream);
+                }
+            }
+        }
+
+        private static string GetConfig(string dirPath, string apiKey, string apiUrl)
+        {
+            var file = new XmlDocument();
+            file.Load(Path.Combine(dirPath, "api.config.txt"));
+
+            var key = file.SelectSingleNode("//add[@key='ApiKey']");
+            key.Attributes["value"].Value = apiKey;
+            key = file.SelectSingleNode("//add[@key='ApiUrl']");
+            key.Attributes["value"].Value = apiUrl;
+            return file.OuterXml;
+        }
     }
 }

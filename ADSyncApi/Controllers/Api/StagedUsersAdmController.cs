@@ -1,4 +1,6 @@
-﻿using ADSync.Data.Models;
+﻿using ADSync.Common.Enums;
+using ADSync.Common.Models;
+using ADSync.Data.Models;
 using Common;
 using Infrastructure;
 using Portal.Data;
@@ -26,20 +28,33 @@ namespace ADSyncApi.Controllers.Api
         [HttpGet]
         public async Task<IEnumerable<RemoteSite>> GetRemoteSiteList()
         {
-            return await RemoteSite.GetRemoteSites();
+            return await RemoteSiteUtil.GetRemoteSites();
         }
-        
+
         /// <summary>
         /// Get the list of users to process
         /// </summary>
         /// <returns></returns>
         public async Task<IEnumerable<StagedUser>> GetAllByStage(string stage)
         {
-            LoadStage loadStage = (LoadStage)Enum.Parse(typeof(LoadStage), stage);
-            var res = await StagedUser.GetAllByStage(loadStage);
+            LoadStageEnum loadStage = (LoadStageEnum)Enum.Parse(typeof(LoadStageEnum), stage);
+            var res = await StagedUserUtil.GetAllByStage(loadStage);
+            return res.ToList();
+        }
+        /// <summary>
+        /// Get the list of users to process
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<StagedUser>> GetAllByStageAndSiteType(string stage, string type)
+        {
+            LoadStageEnum loadStage = (LoadStageEnum)Enum.Parse(typeof(LoadStageEnum), stage);
+            SiteTypes siteType = (SiteTypes)Enum.Parse(typeof(SiteTypes), type);
+
+            var res = await StagedUserUtil.GetAllByStageAndSiteType(loadStage, siteType);
             return res.ToList();
         }
 
+        
         /// <summary>
         /// Called after users have been created locally, setting the HQ MasterGUID and updating the LoadState
         /// </summary>
@@ -59,7 +74,7 @@ namespace ADSyncApi.Controllers.Api
             {
                 try
                 {
-                    StagedUser.AddBulkUsersToQueue(userBatch);
+                    StagedUserUtil.AddBulkUsersToQueue(userBatch);
                 }
                 catch (Exception ex)
                 {

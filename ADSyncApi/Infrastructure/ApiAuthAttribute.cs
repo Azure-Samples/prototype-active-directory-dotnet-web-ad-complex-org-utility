@@ -1,6 +1,7 @@
-﻿using ADSync.Data.Models;
+﻿using ADSync.Common.Enums;
+using ADSync.Common.Models;
+using ADSync.Data.Models;
 using Common;
-using Portal.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens;

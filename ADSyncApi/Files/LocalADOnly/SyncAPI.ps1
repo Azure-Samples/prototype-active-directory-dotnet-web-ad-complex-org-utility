@@ -5,12 +5,14 @@ function Init-SyncAPI
 {
     param(
         [parameter(Position=0, Mandatory=$true)]
-        [string]$ApiKey,
-        [parameter(Position=1, Mandatory=$true)]
-        [string]$APISite
+        [object]$SyncVars
     )
+    $ApiKey = $SyncVars.ApiKey
+    $ApiSite = $SyncVars.ApiSite
     $global:SyncAPI_UriRoot = "$APISite/api"
     $global:SyncAPI_AuthHeader = @{apikey = $ApiKey}
+    $global:SiteConfig = Get-SiteConfig
+    $global:RemoteSiteID = $SiteConfig.id
 }
 
 function Get-SiteConfig
@@ -23,7 +25,7 @@ function Get-SiteConfig
 function Get-AllStaged
 {
     $Endpoint = "$SyncAPI_UriRoot/StagedUsers/GetAllStaged"
-    $api = Invoke-RestMethod -Uri "$ApiUrl/GetAllStaged" -Method Get -Headers $SyncAPI_AuthHeader
+    $api = Invoke-RestMethod -Uri $Endpoint -Method Get -Headers $SyncAPI_AuthHeader
     return $api
 }
 

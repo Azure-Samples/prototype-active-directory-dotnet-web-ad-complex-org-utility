@@ -21,9 +21,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MasterHQ", "MasterHQ", "{83
 		PSScripts\MasterHQ\GraphDeltaToken.json = PSScripts\MasterHQ\GraphDeltaToken.json
 		PSScripts\MasterHQ\GraphLogin.ps1 = PSScripts\MasterHQ\GraphLogin.ps1
 		PSScripts\MasterHQ\Logging.ps1 = PSScripts\MasterHQ\Logging.ps1
+		PSScripts\MasterHQ\RunSync-ADLocal.cmd = PSScripts\MasterHQ\RunSync-ADLocal.cmd
+		PSScripts\MasterHQ\RunSync-B2B.cmd = PSScripts\MasterHQ\RunSync-B2B.cmd
 		PSScripts\MasterHQ\RunSync.cmd = PSScripts\MasterHQ\RunSync.cmd
+		PSScripts\MasterHQ\Send-B2BInviteGraph.ps1 = PSScripts\MasterHQ\Send-B2BInviteGraph.ps1
 		PSScripts\MasterHQ\Sync-AD.ps1 = PSScripts\MasterHQ\Sync-AD.ps1
+		PSScripts\MasterHQ\Sync-B2B.ps1 = PSScripts\MasterHQ\Sync-B2B.ps1
 		PSScripts\MasterHQ\SyncAPI.ps1 = PSScripts\MasterHQ\SyncAPI.ps1
+		PSScripts\MasterHQ\SyncTools.ps1 = PSScripts\MasterHQ\SyncTools.ps1
+		PSScripts\MasterHQ\SyncVars.json = PSScripts\MasterHQ\SyncVars.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LocalADOnly", "LocalADOnly", "{352F2598-7354-45CE-8AFF-91F29064B959}"

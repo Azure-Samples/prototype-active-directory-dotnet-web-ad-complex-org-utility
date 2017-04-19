@@ -1,4 +1,5 @@
-﻿using ADSync.Data.Models;
+﻿using ADSync.Common.Models;
+using ADSync.Data.Models;
 using Common;
 using Infrastructure;
 using System;
@@ -19,7 +20,7 @@ namespace ADSyncApi.Controllers.Api
         {
             var siteId = User.Identity.GetClaim(CustomClaimTypes.SiteId);
             log.RemoteSiteID = siteId;
-            return await SyncLogEntry.AddLog(log);
+            return await SyncLogEntryUtil.AddLog(log);
         }
 
         /// <summary>
@@ -43,7 +44,7 @@ namespace ADSyncApi.Controllers.Api
             {
                 try
                 {
-                    SyncLogEntry.AddBulkLogs(logBatch, siteId);
+                    SyncLogEntryUtil.AddBulkLogs(logBatch, siteId);
                 }
                 catch (Exception ex)
                 {

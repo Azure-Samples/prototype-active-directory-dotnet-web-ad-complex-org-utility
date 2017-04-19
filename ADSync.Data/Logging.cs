@@ -1,4 +1,5 @@
-﻿using ADSync.Data.Models;
+﻿using ADSync.Common.Models;
+using ADSync.Data.Models;
 using Common;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,7 @@ namespace Common
 
             bool res = false;
             var task = Task.Run(async () => {
-                res = await SyncLogEntry.AddLog(log);
+                res = await SyncLogEntryUtil.AddLog(log);
             });
             task.Wait();
         }

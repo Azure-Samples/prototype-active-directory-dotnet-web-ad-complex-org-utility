@@ -10,6 +10,10 @@ namespace ADSyncApi
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js",
+                        "~/scripts/lib/moment.min.js",
+                        "~/scripts/lib/moment-timezone.min.js",
+                        "~/scripts/lib/moment-tzData.js",
+                        "~/scripts/lib/jstz-1.0.4.min.js",
                         "~/Scripts/App/global.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
@@ -23,6 +27,13 @@ namespace ADSyncApi
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/datatables").Include(
+                    "~/scripts/lib/jquery.dataTables.js",
+                    "~/scripts/lib/dataTables.bootstrap.js"));
+
+            bundles.Add(new StyleBundle("~/content/datatablescss").Include(
+                    "~/content/datatables/css/dataTables.bootstrap.css"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

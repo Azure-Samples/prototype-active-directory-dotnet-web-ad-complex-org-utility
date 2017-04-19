@@ -1,0 +1,1 @@
+Powershell -File "c:\aadlab\sync-B2B.ps1"

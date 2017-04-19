@@ -1,0 +1,51 @@
+﻿    <div class="panel-body">
+        <div class="form-horizontal" id="frmSite">
+            <input type="hidden" id="Id" name="Id" />
+            <input type="hidden" id="SiteDomains" name="SiteDomains" />
+            <div class="form-group control">
+                <div class="col-md-12">
+                    <button id="btnSave" type="button" class="btn btn-default control"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+                    <button id="btnDelete" type="button" class="btn btn-default control"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+                    <button id="btnCancel" type="button" class="btn btn-default control"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+                </div>
+            </div>
+
+            <div class="alert alert-danger alert-dismissible hidden" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <span id="spAlert"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="SiteDomainsList" class="control-label col-md-2">Site Domains</label>
+                <div class="col-md-5">
+                    <textarea id="SiteDomainsList" name="SiteDomainsList" rows="3" class="form-control"></textarea>
+                    (Enter one or more domain names/UPN suffixes, each on a separate line)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="ApiKey" class="control-label col-md-2">API Key</label>
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <input type="text" id="ApiKey" name="ApiKey" class="form-control" style="max-width:none;" />
+                        <span title="Click to copy API key to the clipboard" class="glyphicon glyphicon-copy input-group-addon" id="btnCopyApiKey"></span>
+                    </div>
+                    <label for="ResetApiKey">Reset Key on Save</label> <input type="checkbox" id="ResetApiKey" name="ResetApiKey" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="SiteType" class="control-label col-md-2">Site Type</label>
+                <div class="col-md-5">
+                    <select id="SiteType" name="SiteType" class="form-control"></select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="B2BRedirectUrl" class="control-label col-md-2">Site Domains</label>
+                <div class="col-md-5">
+                    <input type="text" id="B2BRedirectUrl" name="B2BRedirectUrl" class="form-control" />
+                </div>
+            </div>
+        </div>
+    </div>

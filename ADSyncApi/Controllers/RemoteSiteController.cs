@@ -1,4 +1,5 @@
-﻿using ADSync.Data.Models;
+﻿using ADSync.Common.Models;
+using ADSync.Data.Models;
 using Common;
 using Infrastructure;
 using System;
@@ -16,7 +17,7 @@ namespace ADSyncApi.Controllers
         // GET: RemoteSite
         public async Task<ActionResult> Index()
         {
-            var res = await RemoteSite.GetAllSites();
+            var res = await RemoteSiteUtil.GetAllSites();
             return View(res);
         }
 
@@ -36,7 +37,7 @@ namespace ADSyncApi.Controllers
                 site = new RemoteSite();
             } else
             {
-                site = await RemoteSite.GetSite(id);
+                site = await RemoteSiteUtil.GetSite(id);
             }
             return View(site);
         }
@@ -51,7 +52,7 @@ namespace ADSyncApi.Controllers
                 if (site.Id == null)
                 {
                     //creating
-                    var res = await RemoteSite.AddSite(site);
+                    var res = await RemoteSiteUtil.AddSite(site);
                 }
                 else
                 {
@@ -60,7 +61,7 @@ namespace ADSyncApi.Controllers
                         site.ApiKey = Utils.GenApiKey();
                     }
                     // TODO: Add update logic here
-                    var res = await RemoteSite.UpdateSite(site);
+                    var res = await RemoteSiteUtil.UpdateSite(site);
                 }
                 return RedirectToAction("Index");
             }
@@ -76,7 +77,7 @@ namespace ADSyncApi.Controllers
             try
             {
                 // TODO: Add delete logic here
-                var res = await RemoteSite.DeleteSite(site.Id);
+                var res = await RemoteSiteUtil.DeleteSite(site.Id);
                 return RedirectToAction("Index");
             }
             catch(Exception ex)

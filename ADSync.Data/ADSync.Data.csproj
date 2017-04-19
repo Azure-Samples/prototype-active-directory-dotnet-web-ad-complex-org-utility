@@ -84,14 +84,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DocDBRepo.cs" />
-    <Compile Include="DocModelBase.cs" />
-    <Compile Include="Enums.cs" />
-    <Compile Include="IDocModelBase.cs" />
     <Compile Include="Logging.cs" />
-    <Compile Include="Models\LoadState.cs" />
-    <Compile Include="Models\RemoteSite.cs" />
-    <Compile Include="Models\StagedUser.cs" />
-    <Compile Include="Models\SyncLogEntry.cs" />
+    <Compile Include="Models\RemoteSiteUtil.cs" />
+    <Compile Include="Models\StagedUserUtil.cs" />
+    <Compile Include="Models\SyncLogEntryUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StorageRepo.cs" />
   </ItemGroup>

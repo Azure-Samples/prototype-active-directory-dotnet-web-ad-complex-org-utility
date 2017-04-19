@@ -25,6 +25,7 @@ textarea {
 .bg-rowEdit {
   color: #4a4a4a;
   background-color: #fff;
+  cursor:pointer;
 }
 .bg-rowEdit:hover,
 .bg-rowEdit:focus {
@@ -33,15 +34,21 @@ textarea {
 
 .bg-rowEdit.master {
   color: #4a4a4a;
-  background-color: #cccbf4;
+  background-color: #cfd3f1;
   font-weight:bold;
 }
 .bg-rowEdit.master:hover,
 .bg-rowEdit.master:focus {
-  background-color: #2a32b2;
+  background-color: #cecccc;
   color:#fff;
 }
 
 label {
     cursor:pointer;
+}
+img.ui-loader {
+    margin-top:26px;
+    display:none;
+    zoom:70%;
+    background-color:#feffb4
 }

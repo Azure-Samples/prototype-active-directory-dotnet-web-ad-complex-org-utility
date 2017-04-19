@@ -14,7 +14,7 @@ namespace ADSyncApi.Controllers
         // GET: Files
         public async Task<ActionResult> Index()
         {
-            var sites = await RemoteSite.GetAllSites();
+            var sites = await RemoteSiteUtil.GetAllSites();
             return View(sites);
         }
     }

@@ -1,0 +1,34 @@
+﻿<link rel="stylesheet" href="~/Content/error.css" />
+<div class="panel-body">
+    <div class="form-horizontal">
+        <div class="col-sm-12">
+            <input class="form-control" type="text" id="LogSearch" />
+            <table id="LogList" class="table table-responsive">
+                <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Site</th>
+                    <th>User</th>
+                    <th>Source</th>
+                    <th>Detail</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="ErrorDialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Error Details</h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+

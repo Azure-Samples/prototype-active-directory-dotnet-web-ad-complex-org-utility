@@ -7,21 +7,21 @@ using Microsoft.Azure.Documents.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Net;
-using Portal.Interfaces;
+using ADSync.Common.Enums;
+using ADSync.Common.Interfaces;
 
 namespace Portal.Data
 {
     public static class DocDBRepo
     {
         private static DocumentClient client;
-        private static Uri baseDocCollectionUri;
+        private static Dictionary<string, Uri> docCollectionUris;
 
         public static class Settings
         {
-            public static string DocDBUri;
-            public static string DocDBAuthKey;
-            public static string DocDBName;
-            public static string DocDBCollection;
+            public static string DocDBUri { get; set; }
+            public static string DocDBAuthKey { get; set; }
+            public static string DocDBName { get; set; }
         }
 
         public static class DB<T> where T : class, IDocModelBase
@@ -30,7 +30,9 @@ namespace Portal.Data
             {
                 item.DocType = (DocTypes)Enum.Parse(typeof(DocTypes), typeof(T).Name);
                 item.Id = Guid.NewGuid().ToString();
-                await client.CreateDocumentAsync(baseDocCollectionUri, item);
+                Uri coll = docCollectionUris[item.DocType.ToString()];
+
+                await client.CreateDocumentAsync(coll, item);
                 return item;
             }
 
@@ -38,14 +40,15 @@ namespace Portal.Data
             {
                 item.DocType = (DocTypes)Enum.Parse(typeof(DocTypes), typeof(T).Name);
                 var id = item.Id;
-                await client.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(Settings.DocDBName, Settings.DocDBCollection, id), item);
+                await client.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(Settings.DocDBName, item.DocType.ToString(), id), item);
                 return item;
             }
 
             public static async Task<dynamic> DeleteItemAsync(T item)
             {
                 var id = item.Id;
-                return await client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(Settings.DocDBName, Settings.DocDBCollection, id));
+                var docType = (DocTypes)Enum.Parse(typeof(DocTypes), typeof(T).Name);
+                return await client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(Settings.DocDBName, docType.ToString(), id));
             }
 
             public static async Task<T> GetItemAsync(string id)
@@ -54,7 +57,7 @@ namespace Portal.Data
                 {
                     var docType = (DocTypes)Enum.Parse(typeof(DocTypes), typeof(T).Name);
 
-                    Document document = await client.ReadDocumentAsync(UriFactory.CreateDocumentUri(Settings.DocDBName, Settings.DocDBCollection, id));
+                    Document document = await client.ReadDocumentAsync(UriFactory.CreateDocumentUri(Settings.DocDBName, docType.ToString(), id));
                     return (T)(dynamic)document;
                 }
                 catch (DocumentClientException e)
@@ -113,8 +116,9 @@ namespace Portal.Data
                 if (predicate == null) return await GetItemsAsync();
 
                 var docType = (DocTypes)Enum.Parse(typeof(DocTypes), typeof(T).Name);
+                Uri coll = docCollectionUris[docType.ToString()];
 
-                var cli = client.CreateDocumentQuery<T>(baseDocCollectionUri);
+                var cli = client.CreateDocumentQuery<T>(coll);
                 var cli2 = cli.Where(predicate);
 
                 Expression<Func<T, bool>> docTypeFilter = (q => q.DocType == docType);
@@ -134,8 +138,9 @@ namespace Portal.Data
             {
                 var docType = (DocTypes)Enum.Parse(typeof(DocTypes), typeof(T).Name);
                 Expression<Func<T, bool>> docTypeFilter = (q => q.DocType == docType);
+                Uri coll = docCollectionUris[docType.ToString()];
 
-                var query = client.CreateDocumentQuery<T>(baseDocCollectionUri)
+                var query = client.CreateDocumentQuery<T>(coll)
                     .Where(docTypeFilter)
                     .AsDocumentQuery();
 
@@ -145,10 +150,16 @@ namespace Portal.Data
 
         public static async Task<DocumentClient> Initialize()
         {
-            baseDocCollectionUri = UriFactory.CreateDocumentCollectionUri(Settings.DocDBName, Settings.DocDBCollection);
             client = new DocumentClient(new Uri(Settings.DocDBUri), Settings.DocDBAuthKey);
             await CreateDatabaseIfNotExistsAsync();
-            await CreateCollectionIfNotExistsAsync();
+
+            docCollectionUris = new Dictionary<string, Uri>();
+            foreach (var type in Enum.GetNames(typeof(DocTypes)))
+            {
+                docCollectionUris.Add(type, UriFactory.CreateDocumentCollectionUri(Settings.DocDBName, type));
+                await CreateCollectionIfNotExistsAsync(type);
+            }
+
             return client;
         }
 
@@ -171,11 +182,12 @@ namespace Portal.Data
             }
         }
 
-        private static async Task CreateCollectionIfNotExistsAsync()
+        private static async Task CreateCollectionIfNotExistsAsync(string collectionName)
         {
             try
             {
-                await client.ReadDocumentCollectionAsync(baseDocCollectionUri);
+                Uri coll = docCollectionUris[collectionName];
+                await client.ReadDocumentCollectionAsync(coll);
             }
             catch (DocumentClientException e)
             {
@@ -183,7 +195,7 @@ namespace Portal.Data
                 {
                     await client.CreateDocumentCollectionAsync(
                         UriFactory.CreateDatabaseUri(Settings.DocDBName),
-                        new DocumentCollection { Id = Settings.DocDBCollection },
+                        new DocumentCollection { Id = collectionName },
                         new RequestOptions { OfferThroughput = 1000 });
                 }
                 else

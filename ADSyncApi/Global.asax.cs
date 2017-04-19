@@ -30,7 +30,6 @@ namespace ADSyncApi
                 DocDBRepo.Settings.DocDBUri = ConfigurationManager.AppSettings["DocDBUri"];
                 DocDBRepo.Settings.DocDBAuthKey = ConfigurationManager.AppSettings["DocDBAuthKey"];
                 DocDBRepo.Settings.DocDBName = ConfigurationManager.AppSettings["DocDBName"];
-                DocDBRepo.Settings.DocDBCollection = ConfigurationManager.AppSettings["DocDBCollection"];
 
                 Settings.StorageConnectionString = ConfigurationManager.AppSettings["StorageConnectionString"];
 

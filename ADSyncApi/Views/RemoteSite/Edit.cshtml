@@ -1,9 +1,11 @@
 ﻿@using Newtonsoft.Json;
+@using ADSync.Common.Models;
 
-@model ADSync.Data.Models.RemoteSite
+@model RemoteSite
 
 @{
     ViewBag.Title = "Remote Site Configuration";
+
     var isEditing = (Model != null && Model.Id != null);
     string Operation = (isEditing) ? "Edit" : "Create";
     string siteDomains = "[]";
@@ -15,7 +17,7 @@
     }
 }
 
-@using (Html.BeginForm("Edit", "RemoteSite", FormMethod.Post, new { @id="EditForm" }))
+@using (Html.BeginForm("Edit", "RemoteSite", FormMethod.Post, new { @id = "EditForm" }))
 {
     @Html.AntiForgeryToken()
 
@@ -45,20 +47,12 @@
                     </div>
                 }
                 <div class="form-group">
-                    @Html.LabelFor(model => model.SiteDomains, htmlAttributes: new { @for="SiteDomainsList", @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.SiteDomains, htmlAttributes: new { @for = "SiteDomainsList", @class = "control-label col-md-2" })
                     <div class="col-md-5">
                         @Html.Hidden("SiteDomains", siteDomains)
                         <textarea name="SiteDomainsList" id="SiteDomainsList" rows="3" class="form-control">@siteDomainList</textarea>
                         (Enter one or more domain names/UPN suffixes, each on a separate line)
                         @Html.ValidationMessageFor(model => model.SiteDomains, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.SiteType, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-5">
-                        @Html.EnumDropDownListFor(model => model.SiteType, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.SiteType, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
@@ -76,6 +70,22 @@
                         </div>
                     </div>
                 }
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SiteType, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-5">
+                        @Html.EnumDropDownListFor(model => model.SiteType, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.SiteType, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.B2BRedirectUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-5">
+                        @Html.EditorFor(model => model.B2BRedirectUrl, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.B2BRedirectUrl, "", new { @class = "text-danger" })
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -95,6 +105,19 @@
         $(function () {
             var isEditing = @isEditing.ToString().ToLower();
 
+            $("#SiteType").on("change", function() {
+                checkSiteType();
+            });
+            function checkSiteType() {
+                var val = $("#SiteType").val();
+                //master for default, b2b for per-site
+                var show = (val == "0" || val == "1") ? "block": "none";
+                var fg = $("#B2BRedirectUrl").closest("div.form-group");
+                var lbl = (val == "0") ? "B2B Default Redirect URL" : "B2B Redirect Url";
+                fg.children("label").html(lbl);
+                fg.css("display", show);
+                $("#B2BRedirectUrl").focus();
+            }
             $("#ApiKey").on("focus", function () {
                 setTimeout(function () {
                     $("#ApiKey").select();
@@ -122,6 +145,8 @@
                 document.forms[1].action = "/RemoteSite/Delete";
                 document.forms[1].submit();
             });
+
+            checkSiteType();
         });
     </script>
 }

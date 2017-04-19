@@ -11,6 +11,7 @@ using ADSync.Data.Models;
 using Newtonsoft.Json;
 using Common;
 using Microsoft.WindowsAzure.Storage.Blob;
+using ADSync.Common.Models;
 
 namespace SyncQueueProc
 {
@@ -39,7 +40,7 @@ namespace SyncQueueProc
 
                 IEnumerable<StagedUser> stagedUsers = JsonConvert.DeserializeObject<IEnumerable<StagedUser>>(data);
 
-                var res = StagedUser.ProcessCollection(stagedUsers);
+                var res = StagedUserUtil.ProcessCollection(stagedUsers);
 
                 if (containerAndBlob.Length > 0)
                 {
@@ -80,7 +81,7 @@ namespace SyncQueueProc
 
                 IEnumerable<SyncLogEntry> logBatch = JsonConvert.DeserializeObject<IEnumerable<SyncLogEntry>>(data);
 
-                var res = SyncLogEntry.ProcessCollection(logBatch);
+                var res = SyncLogEntryUtil.ProcessCollection(logBatch);
 
                 if (containerAndBlob.Length > 0)
                 {

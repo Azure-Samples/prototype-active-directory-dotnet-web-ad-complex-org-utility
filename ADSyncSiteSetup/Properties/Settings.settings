@@ -1,7 +1,12 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ADSyncSiteSetup.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ApiKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">wnawAcsiRkttRbHq0qMbjsByN4NUZPMSF8QZheg72W8=</Value>
+    </Setting>
+    <Setting Name="SiteUrl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://adsyncapi20170413061307.azurewebsites.net</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

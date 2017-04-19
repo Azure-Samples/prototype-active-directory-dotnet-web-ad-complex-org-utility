@@ -1,80 +1,84 @@
-﻿@using Portal.Interfaces;
-@model IEnumerable<ADSync.Data.Models.RemoteSite>
+﻿@using ADSync.Common.Models;
+@using ADSync.Common.Enums;
+@model IEnumerable<RemoteSite>
 
 @{
-    ViewBag.Title = "Remote Site Configuration";
+    ViewBag.Title = "Affiliate Configuration";
     bool hasRecords = (Model.Count() > 0);
 }
 <div class="panel panel-primary" style="margin-top:20px;">
     <div class="panel-title panel-heading">
+        <div class="pull-right">
+            <button id="btnNew" type="button" class="btn btn-sm btn-default control"><span class="glyphicon glyphicon-plus"></span> New...</button>
+        </div>
         @ViewBag.Title
     </div>
-    <div class="panel-body">
-        <div class="form-horizontal">
-            <div class="form-group control">
-                <div class="col-md-12">
-                    <button id="btnNew" type="button" class="btn btn-default control"><span class="glyphicon glyphicon-plus"></span> New...</button>
-                </div>
+    <div class="panel-body" style="min-height:500px;" id="SiteContainer">
+        <div class="col-sm-3">
+            <div class="row sitehead">
+                <div class="col-sm-4" style="padding-left:14px;">Site</div>
+                <div class="col-sm-8" style="text-align:right;"># Domains</div>
             </div>
-            <table class="table">
-                <tr class="head">
-                    <th>
-                        @Html.DisplayNameFor(model => model.SiteDomains)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ApiKey)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.SiteType)
-                    </th>
-                </tr>
+            <ul class="list-group" id="siteList">
                 @if (!hasRecords)
-                {
-                    <tr><td colspan="3">No sites configured</td></tr>
+            {
+                    <li class="list-group-item">No sites configured</li>
                 }
 
                 @foreach (var item in Model)
-                {
-                    var masterClass = (item.SiteType == SiteTypes.MasterHQ) ? "master" : "";
-                    var domCount = item.SiteDomains.Count;
-
-                    var domains = (domCount > 1) ? item.SiteDomains[0] + " (" + (domCount-1).ToString() + " more)" : item.SiteDomains[0];
-                    <tr data-id="@item.Id" title="Click to edit" class="bg-rowEdit @masterClass" style="cursor:pointer">
-                        <td>
-                            @domains
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ApiKey)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.SiteType)
-                        </td>
-                    </tr>
+            {
+                var masterClass = (item.SiteType == SiteTypes.MasterHQ) ? "master" : "";
+                var domCount = item.SiteDomains.Count;
+                    <li class="list-group-item bg-rowEdit @masterClass" data-id="@item.Id" title="Click to edit" style="cursor:pointer">
+                        <span class="badge">@domCount</span>
+                        @item.SiteDomains[0]
+                    </li>
                 }
-            </table>
+            </ul>
+        </div>
+        <div class="col-sm-9">
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#users" aria-controls="users" role="tab" data-toggle="tab">Users</a></li>
+                <li role="presentation"><a href="#logs" aria-controls="logs" role="tab" data-toggle="tab">Logs</a></li>
+                <li role="presentation"><a href="#setup" aria-controls="setup" role="tab" data-toggle="tab">Setup</a></li>
+                <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="users">@Html.Partial("_userDetail")</div>
+                <div role="tabpanel" class="tab-pane" id="logs">@Html.Partial("_logDetail")</div>
+                <div role="tabpanel" class="tab-pane" id="setup">@Html.Partial("_setupDetail")</div>
+                <div role="tabpanel" class="tab-pane" id="settings">@Html.Partial("_siteDetail", Model)</div>
+            </div>
         </div>
     </div>
 </div>
 
 @section scripts {
-    <script type="text/javascript">
-        $(function () {
-            $("#btnNew").on("click", function () {
-                location.href = "/RemoteSite/Edit";
-            });
-
-            $("table tr:gt(0)")
-                .on("click", function () {
-                    location.href = "/RemoteSite/Edit/" + $(this).data("id");
-                });
-        });
-    </script>
+    <script type="text/javascript" src="/scripts/app/site.js"></script>
 }
+
 @section styles {
     <style type="text/css">
         table.table tr.head th {
             border-top: 0;
             vertical-align: bottom;
+        }
+
+        div.sitehead {
+            margin: 0;
+        }
+
+            div.sitehead div {
+                padding: 5px;
+                font-weight: bold;
+                background-color: #efefef;
+            }
+
+        #btnCopyApiKey {
+            cursor: pointer;
+        }
+        #btnNew {
+            margin-top:-3px;
         }
     </style>
 }

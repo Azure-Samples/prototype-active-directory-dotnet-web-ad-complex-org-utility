@@ -1,5 +1,5 @@
-# Azure Active Directory/ASP.Net MVC/GraphAPI B2BPortal
-## Sample/Prototype project enabling self-service B2B capabilities for an Azure AD Tenant
+# Azure Active Directory/ASP.Net MVC Complex Organization Utility
+## Sample/Prototype utility facilitating automated access to a headquarters Azure AD and on-premises resources from affiliated companies
 ## Quick Start
 
 <a href="#"><img src="http://azuredeploy.net/deploybutton.png"/></a> (coming soon)

@@ -1,4 +1,6 @@
-﻿using ADSync.Data.Models;
+﻿using ADSync.Common.Enums;
+using ADSync.Common.Models;
+using ADSync.Data.Models;
 using Common;
 using Infrastructure;
 using Newtonsoft.Json;
@@ -54,7 +56,7 @@ namespace ADSyncApi.Controllers.Api
                 {
                     try
                     {
-                        StagedUser.AddBulkUsersToQueue(userBatch);
+                        StagedUserUtil.AddBulkUsersToQueue(userBatch);
                     }
                     catch (Exception ex)
                     {
@@ -74,21 +76,21 @@ namespace ADSyncApi.Controllers.Api
         {
             var siteDomains = SiteUtils.GetSiteDomainList(User.Identity);
             var siteId = User.Identity.GetClaim(CustomClaimTypes.SiteId);
-            return await StagedUser.GetAllByDomain(siteDomains);
+            return await StagedUserUtil.GetAllByDomain(siteDomains);
         }
 
         public async Task<IEnumerable<StagedUser>> GetAllByStage(string stage)
         {
-            LoadStage loadStage = (LoadStage)Enum.Parse(typeof(LoadStage), stage);
+            LoadStageEnum loadStage = (LoadStageEnum)Enum.Parse(typeof(LoadStageEnum), stage);
 
             var siteDomains = SiteUtils.GetSiteDomainList(User.Identity);
             var siteId = User.Identity.GetClaim(CustomClaimTypes.SiteId);
-            return await StagedUser.GetAllByStageAndDomain(loadStage, siteDomains);
+            return await StagedUserUtil.GetAllByStageAndDomain(loadStage, siteDomains);
         }
         public async Task<RemoteSite> GetSiteConfig()
         {
             var siteId = User.Identity.GetClaim(CustomClaimTypes.SiteId);
-            return await RemoteSite.GetSite(siteId);
+            return await RemoteSiteUtil.GetSite(siteId);
         }
     }
 }
