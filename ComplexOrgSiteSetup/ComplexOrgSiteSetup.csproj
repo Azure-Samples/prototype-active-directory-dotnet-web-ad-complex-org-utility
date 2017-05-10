@@ -122,6 +122,10 @@
       <Project>{bca20cf9-b8e1-4551-8b26-11ad42f63892}</Project>
       <Name>ComplexOrgSiteAgent</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OrgRelay\OrgRelay.csproj">
+      <Project>{1b4b9e0e-ab4b-46fa-a035-d5e912f6a767}</Project>
+      <Name>OrgRelay</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\Settings.settings">

@@ -237,6 +237,10 @@
       <Project>{d50a9792-ac8a-46e0-84ab-540a89161962}</Project>
       <Name>ADSync.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OrgRelay\OrgRelay.csproj">
+      <Project>{1b4b9e0e-ab4b-46fa-a035-d5e912f6a767}</Project>
+      <Name>OrgRelay</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

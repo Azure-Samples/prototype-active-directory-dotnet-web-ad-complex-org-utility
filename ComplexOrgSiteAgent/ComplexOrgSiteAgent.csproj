@@ -89,6 +89,10 @@
       <Project>{4f56f58d-a05c-4a4a-8d5a-fcc3904750f9}</Project>
       <Name>ADSync.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OrgRelay\OrgRelay.csproj">
+      <Project>{1b4b9e0e-ab4b-46fa-a035-d5e912f6a767}</Project>
+      <Name>OrgRelay</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ServiceInstaller.resx">
