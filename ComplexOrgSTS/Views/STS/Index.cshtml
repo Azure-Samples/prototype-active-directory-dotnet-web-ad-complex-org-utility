@@ -1,0 +1,135 @@
+﻿@using ComplexOrgSTS.Infrastructure
+@using ComplexOrgSTS.Models
+
+@model LoginModel
+
+@{
+    ViewBag.Title = "Complex STS Login";
+    var formAction = string.Format("/sts/login{0}", ViewBag.QS);
+    var kmsiDisplay = ViewBag.KmsiDisplay;
+}
+    <div class="fullPage">
+        <div class="pull-left brandingWrapper">
+            <div class="illustrationClass"></div>
+        </div>
+        <div class="pull-right contentWrapper">
+            <div id="content">
+                <div id="header">
+                    @Settings.SiteName
+                </div>
+                <div id="workArea">
+                    <div class="groupMargin" id="authArea">
+                        <form action="@Html.Raw(formAction)" method="post">
+                            <div id="loginArea">
+                                <div class="groupMargin" id="loginMessage">Sign in with your organizational account</div>
+                                @if (ViewBag.Error != null)
+                                {
+                                    <div class="error">@ViewBag.Error</div>
+                                }
+                                <div class="fieldMargin error smallText" id="error" style="display: none;">
+                                    <label id="errorText" for=""></label>
+                                </div>
+                                <div id="formsAuthenticationArea">
+                                    <div id="userNameArea">
+                                        <input name="UserName" tabindex="1" class="form-control" id="userNameInput" spellcheck="false" type="email" placeholder="someone@example.com" value="@ViewBag.UserName" autocomplete="off">
+                                    </div>
+                                    <div id="passwordArea">
+                                        <input name="Password" tabindex="2" class="form-control" id="passwordInput" type="password" placeholder="Password" autocomplete="off">
+                                    </div>
+                                    <div id="kmsiArea" style="display:@kmsiDisplay">
+                                        <input name="Kmsi" tabindex="3" id="kmsiInput" type="checkbox" value="true">
+                                        <label for="kmsiInput">Keep me signed in</label>
+                                    </div>
+                                    <div class="submitMargin" id="submissionArea">
+                                        <button class="btn btn-primary">Sign in</button>
+                                    </div>
+                                </div>
+                                <input id="optionForms" type="hidden" name="AuthMethod" value="FormsAuthentication" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <footer>
+                <p>&copy; @DateTime.Now.Year - @Settings.SiteName</p>
+            </footer>
+        </div>
+    </div>
+
+@section scripts {
+    <script type="text/javascript">
+        $(function () {
+            $("#Password").focus();
+        });
+    </script>    
+}
+
+@section styles {
+    <style type="text/css">
+        * {
+            margin:0;
+        }
+        html, body {
+            width:100%;
+            height:100%;
+            min-width:500px;
+            -ms-overflow-style: -ms-autohiding-scrollbar;
+        }
+        div.container {
+            width:100%!important;
+            height:100%!important;
+        }
+        div.illustrationClass {
+            background-image: url("/Content/images/illustration.png");
+            height: 100%;
+            margin-right: 500px;
+            margin-left: 0;
+            background-color: inherit;
+            background-repeat: no-repeat;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+        }
+        #header {
+            font-size:2em;
+            font-weight:lighter;
+            padding-top:90px;
+            margin-bottom:60px;
+            min-height:100px;
+            overflow:hidden;
+            word-wrap:break-word;
+        }
+        #loginMessage {
+            margin:14px;
+        }
+        #formsAuthenticationArea div {
+            margin:6px;
+        }
+        .fullPage, .brandingWrapper {
+            height:100%;
+            width:100%;
+        }
+        .contentWrapper {
+            width:500px;
+            height:100%;
+            overflow:auto;
+            background-color:#fff;
+            margin-left:-500px;
+            margin-right:0;
+        }
+        #content {
+            margin: 0 auto -55px auto;
+            padding: 0 150px 0 50px;
+            height:auto!important;
+            min-height:100%;
+        }
+        footer {
+            height:40px;
+            padding: 10px 50px 0 50px;
+            font-size:.78em;
+            color:#696969;
+            margin-top:-60px;
+        }
+    </style>
+}
