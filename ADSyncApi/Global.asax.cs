@@ -14,7 +14,7 @@ using System.Web.Routing;
 
 namespace ADSyncApi
 {
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : HttpApplication
     {
         protected void Application_Start()
         {
@@ -32,9 +32,13 @@ namespace ADSyncApi
                 DocDBRepo.Settings.DocDBName = ConfigurationManager.AppSettings["DocDBName"];
 
                 Settings.StorageConnectionString = ConfigurationManager.AppSettings["StorageConnectionString"];
-
+                Settings.STSApiKey = ConfigurationManager.AppSettings["STSApiKey"];
+                Settings.AdminSiteUrl = ConfigurationManager.AppSettings["AdminSiteUrl"];
+                Settings.AdminApiKey = ConfigurationManager.AppSettings["AdminApiKey"];
+                
                 //Zip init
                 ZipCopy.InitZip(Settings.AppRootPath);
+
 
                 var client = DocDBRepo.Initialize().Result;
             }
@@ -43,6 +47,12 @@ namespace ADSyncApi
                 Logging.WriteToAppLog("Error during site initialization", System.Diagnostics.EventLogEntryType.Error, ex);
                 throw;
             }
+        }
+
+        protected void Application_Error(object sender, EventArgs e)
+        {
+            var ex = Server.GetLastError();
+            Utils.AddLogEntry("Global error caught", System.Diagnostics.EventLogEntryType.Error, 0, ex);
         }
     }
 }

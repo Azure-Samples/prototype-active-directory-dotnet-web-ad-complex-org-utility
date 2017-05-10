@@ -22,7 +22,7 @@ window.onerror = function (msg, url, line, col, err) {
     localErr.Message = msg + "\n  URL: " + url + "\n  Line: " + line + "\n  Col: " + col + "\n  Stack:\n  " + (((err) && (err.stack)) ? err.stack : "N/A");
     localErr.thrownError = "Global Catch";
     var txt = "A general web application error occured. Please <a href='javascript:popErrorUpdater();'>help us out</a> by supplying additional information.";
-    SiteUtil.ShowMessage("body", txt.length > 0 ? txt : 'Unexpected error.');
+    SiteUtil.SiteNotice(txt.length > 0 ? txt : 'Unexpected error.');
     // If you return true, then error alerts (like in older versions of Internet Explorer) will be suppressed.
     return true;
 };
@@ -195,16 +195,32 @@ var SiteUtil = function () {
         });
     }
 
+    function showMessage(item, message, delay) {
+        delay = (delay || 3000);
+        var html = '<div class="popover msg" role="tooltip"><div class="popover-content"></div></div>';
 
-    function showMessage(item, message) {
-        var html = '<div class="popover" role="tooltip"><div class="arrow"></div><div class="popover-content"></div></div>';
         $(item)
             .on("shown.bs.popover", function () {
-                window.setTimeout(function () {
-                    $(item).popover('hide');
-                }, 2000);
+                setTimeout(function () {
+                    $("div.popover.msg").fadeOut(600, function () {
+                        $(item).popover("destroy");
+                    });
+                }, delay);
             })
-            .popover({ content: message, template: html }).popover('show');
+            .popover({ content: message, template: html, placement: "left" }).popover('show');
+    }
+
+    function siteNotice(message) {
+        var html = '<div class="popover siteNotice" role="tooltip"><div class="popover-content"></div></div>';
+        $("#liWelcome")
+            .on("shown.bs.popover", function () {
+                setTimeout(function () {
+                    $("div.popover.siteNotice").fadeOut(600, function () {
+                        $("#liWelcome").popover("destroy");
+                    });
+                }, 3000);
+            })
+            .popover({ content: message, template: html, placement: "left" }).popover('show');
     }
 
     function getFormObjects(obj, excludeClasses) {
@@ -253,29 +269,47 @@ var SiteUtil = function () {
         });
         return oOut;
     }
+    var radioButton = {
+        Get: function (radioName) {
+            var $radio = $("input[name = " + radioName + "]");
+            return $radio.filter(":checked").val();
+        },
+        Set: function (radioName, val) {
+            var $radio = $("input[name = " + radioName + "]");
+            if (val == null) val = "";
+            $radio.each(function () {
+                this.checked = (this.value.toString() == val.toString());
+            });
+            return $radio;
+        }
+    };
+
     function getLoadState(state) {
         switch (state) {
-            case 0: return "PendingHQAdd";
-            case 1 : return "PendingRemoteUpdate";
-            case 2 : return "PendingHQUpdate";
-            case 3 : return "NothingPending";
-            case 4 : return "PendingHQDelete";
+            case 0: return "Pending HQ Add";
+            case 1 : return "Pending Remote Update";
+            case 2 : return "Pending HQ Update";
+            case 3 : return "Nothing Pending";
+            case 4 : return "Pending HQ Delete";
             case 5 : return "Deleted";
-            case 6: return "NewNothingPending";
+            case 6: return "New, Nothing Pending";
             default: return "N/A";
         }
     }
     function _deTc(sTitle) {
         var re = /([a-z])([A-Z])/g;
         var res = sTitle.replace(re, "$1 $2");
+        return res;
     }
     return {
         GetLoadState: getLoadState,
         DeTC: _deTc,
         Copy: copyToClipboard,
         ShowMessage: showMessage,
+        SiteNotice: siteNotice,
         ShowModal: _showModal,
         GetModal: _getModal,
+        RadioButton: radioButton,
         AjaxCall: _ajaxCall,
         UtcToLocal: _utcToLocal,
         UtcToServerAndLocal: _utcToServerAndLocal,

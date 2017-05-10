@@ -33,14 +33,23 @@
 
     $msg="Staging new AD user $($user.UserPrincipalName)..."
     Create-LogEntry -ErrorType Info -Detail $msg -Source "Script:Add-NewStagedUser" -RemoteSiteID $RemoteSiteID | Add-LogEntry | Out-Null
+	
+    $loadState = 0
+    $masterGuid = $null
+    $siteType = Get-SiteType -SiteType $SiteConfig.siteType
+    if ($siteType -eq "MasterHQ") { 
+        $masterGuid = $user.ObjectGUID
+        $loadstate = 6
+    }
 
     try {
         $res = @{}
-        $res.loadState=0
+        $res.loadState = $loadState
         $res.localGuid = $user.ObjectGUID
         $res.domainName = $dom
         $res.siteType = $SiteConfig.siteType
-        $res.masterGuid = $null
+        $res.siteId = $SiteConfig.id
+        $res.masterGuid = $masterGuid
         $res.department = $user.Department
         $res.mobile = $user.Mobile
         $res.title = $user.Title

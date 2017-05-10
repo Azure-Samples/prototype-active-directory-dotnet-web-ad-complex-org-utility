@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADSyncApi", "ADSyncApi\ADSyncApi.csproj", "{D0D03B2A-53CA-4564-B0DC-2DF330EC4D23}"
 EndProject
@@ -10,8 +10,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADSync.Data", "ADSync.Data\ADSync.Data.csproj", "{D50A9792-AC8A-46E0-84AB-540A89161962}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADSync.Common", "ADSync.Common\ADSync.Common.csproj", "{4F56F58D-A05C-4A4A-8D5A-FCC3904750F9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADSyncSiteSetup", "ADSyncSiteSetup\ADSyncSiteSetup.csproj", "{DD6F3F2C-D26F-4CC2-84D6-3CAC52879EE1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PSScripts", "PSScripts", "{403BB528-A379-432B-9A63-10396C4AEC89}"
 EndProject
@@ -28,6 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MasterHQ", "MasterHQ", "{83
 		PSScripts\MasterHQ\Sync-AD.ps1 = PSScripts\MasterHQ\Sync-AD.ps1
 		PSScripts\MasterHQ\Sync-B2B.ps1 = PSScripts\MasterHQ\Sync-B2B.ps1
 		PSScripts\MasterHQ\SyncAPI.ps1 = PSScripts\MasterHQ\SyncAPI.ps1
+		SyncTools-HQ.ps1 = SyncTools-HQ.ps1
 		PSScripts\MasterHQ\SyncTools.ps1 = PSScripts\MasterHQ\SyncTools.ps1
 		PSScripts\MasterHQ\SyncVars.json = PSScripts\MasterHQ\SyncVars.json
 	EndProjectSection
@@ -44,12 +43,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LocalADOnly", "LocalADOnly"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AADB2B", "AADB2B", "{13C1FC44-D031-4C9C-A13F-054465BF554F}"
 	ProjectSection(SolutionItems) = preProject
-		PSScripts\AADB2B\AADSyncLogin.ps1 = PSScripts\AADB2B\AADSyncLogin.ps1
-		PSScripts\AADB2B\GraphLogin.ps1 = PSScripts\AADB2B\GraphLogin.ps1
 		PSScripts\AADB2B\Logging.ps1 = PSScripts\AADB2B\Logging.ps1
 		PSScripts\AADB2B\RunSync.cmd = PSScripts\AADB2B\RunSync.cmd
-		PSScripts\AADB2B\Send-B2BInviteGraph.ps1 = PSScripts\AADB2B\Send-B2BInviteGraph.ps1
 		PSScripts\AADB2B\Sync.ps1 = PSScripts\AADB2B\Sync.ps1
+		PSScripts\AADB2B\SyncApi.ps1 = PSScripts\AADB2B\SyncApi.ps1
+		PSScripts\AADB2B\SyncTools.ps1 = PSScripts\AADB2B\SyncTools.ps1
+		PSScripts\AADB2B\SyncVars.json = PSScripts\AADB2B\SyncVars.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logs", "Logs", "{87017258-A35E-4902-B39F-E95EA1D80578}"
@@ -65,6 +64,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{B7D40B83-3
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DocImages", "DocImages", "{8F22BC43-FF2D-47BA-B5EC-D1FBA57EC58C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrgRelay", "..\ComplexOrgSiteSetup\OrgRelay\OrgRelay.csproj", "{1B4B9E0E-AB4B-46FA-A035-D5E912F6A767}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,12 +98,12 @@ Global
 		{4F56F58D-A05C-4A4A-8D5A-FCC3904750F9}.LocalDebug|Any CPU.Build.0 = LocalDebug|Any CPU
 		{4F56F58D-A05C-4A4A-8D5A-FCC3904750F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F56F58D-A05C-4A4A-8D5A-FCC3904750F9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DD6F3F2C-D26F-4CC2-84D6-3CAC52879EE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DD6F3F2C-D26F-4CC2-84D6-3CAC52879EE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DD6F3F2C-D26F-4CC2-84D6-3CAC52879EE1}.LocalDebug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DD6F3F2C-D26F-4CC2-84D6-3CAC52879EE1}.LocalDebug|Any CPU.Build.0 = Debug|Any CPU
-		{DD6F3F2C-D26F-4CC2-84D6-3CAC52879EE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DD6F3F2C-D26F-4CC2-84D6-3CAC52879EE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B4B9E0E-AB4B-46FA-A035-D5E912F6A767}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B4B9E0E-AB4B-46FA-A035-D5E912F6A767}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B4B9E0E-AB4B-46FA-A035-D5E912F6A767}.LocalDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B4B9E0E-AB4B-46FA-A035-D5E912F6A767}.LocalDebug|Any CPU.Build.0 = Debug|Any CPU
+		{1B4B9E0E-AB4B-46FA-A035-D5E912F6A767}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B4B9E0E-AB4B-46FA-A035-D5E912F6A767}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

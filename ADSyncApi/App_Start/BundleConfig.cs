@@ -9,31 +9,31 @@ namespace ADSyncApi
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js",
+                        "~/scripts/jquery-{version}.js",
                         "~/scripts/lib/moment.min.js",
                         "~/scripts/lib/moment-timezone.min.js",
                         "~/scripts/lib/moment-tzData.js",
                         "~/scripts/lib/jstz-1.0.4.min.js",
-                        "~/Scripts/App/global.js"));
+                        "~/scripts/App/global.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.validate*"));
+                        "~/scripts/jquery.validate*"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                        "~/Scripts/modernizr-*"));
+                        "~/scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js",
-                      "~/Scripts/respond.js"));
+                      "~/scripts/bootstrap.js",
+                      "~/scripts/respond.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/datatables").Include(
                     "~/scripts/lib/jquery.dataTables.js",
                     "~/scripts/lib/dataTables.bootstrap.js"));
 
             bundles.Add(new StyleBundle("~/content/datatablescss").Include(
-                    "~/content/datatables/css/dataTables.bootstrap.css"));
+                    "~/Content/datatables/css/dataTables.bootstrap.css"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

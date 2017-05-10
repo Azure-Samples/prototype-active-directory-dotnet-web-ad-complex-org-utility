@@ -1,132 +1,351 @@
-﻿<div class="panel-body">
+﻿<div class="panel-body" style="padding:5px 0;">
     <div class="form-horizontal">
-        <div class="col-sm-3">
+        <div class="col-sm-3" style="margin:0;padding:0;">
             <input placeholder="Filter Users..." class="form-control" type="text" id="UserSearch" />
-            <ul class="list-group" id="UserList"></ul>
+            <div class="pre-scrollable">
+                <ul class="list-group" id="UserList"></ul>
+            </div>
         </div>
         <div class="col-sm-9">
-            <div class="form-group control">
-                <div class="col-md-12">
-                    <button id="btnUserSave" type="button" class="btn btn-default control"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
-                    <button id="btnUserDelete" type="button" class="btn btn-default control"><span class="glyphicon glyphicon-trash"></span> Delete</button>
-                    <button id="btnUserCancel" type="button" class="btn btn-default control"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+            <div class="form-group control" style="margin-right:15px;">
+                <div class="col-md-12" style="background-color:#efefef;padding:6px;margin-left:15px;">
+                    <button id="btnUserSave" type="button" class="btn btn-sm btn-default control"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+                    <button id="btnUserDelete" type="button" class="btn btn-sm btn-default control"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+                    <button id="btnUserCancel" type="button" class="btn btn-sm btn-default control"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
                 </div>
             </div>
 
-            <div class="well">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label>IDBank Identifier</label>
-                        <input type="text" class="form-control" id="Id" readonly />
-                    </div>
-                    <div class="col-sm-6">
-                        <label>UPN</label>
-                        <input type="text" class="form-control" id="Upn" placeholder="Upn" readonly />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label>MasterGuid</label>
-                        <input type="text" class="form-control" id="MasterGuid" readonly placeholder="" />
-                    </div>
-                    <div class="col-sm-6">
-                        <label>CreateDate</label>
-                        <input type="text" class="form-control" id="CreateDate" readonly placeholder="" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label>LocalGuid</label>
-                        <input type="text" class="form-control" id="LocalGuid" readonly placeholder="" />
-                    </div>
-                    <div class="col-sm-6">
-                        <label>Email</label>
-                        <input type="text" class="form-control" id="Mail" placeholder="" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label>LoadState</label>
-                        <input type="text" class="form-control" id="LoadState" placeholder="" />
-                    </div>
-                    <div class="col-sm-6">
-                        <label>Mobile</label>
-                        <input type="text" class="form-control" id="Mobile" placeholder="" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label>GivenName</label>
-                        <input type="text" class="form-control" id="GivenName" placeholder="" />
-                    </div>
-                    <div class="col-sm-6">
-                        <label>Surname</label>
-                        <input type="text" class="form-control" id="Surname" placeholder="" />
+            <ul class="nav nav-tabs" role="tablist" id="userTabs">
+                <li role="presentation" class="active"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">General</a></li>
+                <li role="presentation"><a href="#contact" aria-controls="contact" role="tab" data-toggle="tab">Contact</a></li>
+                <li role="presentation"><a href="#advanced" aria-controls="advanced" role="tab" data-toggle="tab">Advanced</a></li>
+                <li role="presentation"><a href="#manage" aria-controls="manage" role="tab" data-toggle="tab">Manage</a></li>
+            </ul>
+            <div class="tab-content" id="frmUser">
+                <div role="tabpanel" class="tab-pane active" id="general">
+                    <div class="well">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label>Given Name</label>
+                                <input type="text" class="form-control" id="GivenName" name="GivenName" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label>Surname</label>
+                                <input type="text" class="form-control" id="Surname" name="Surname" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label>Display Name</label>
+                                <input type="text" class="form-control" id="DisplayName" name="DisplayName" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label>Name</label>
+                                <input type="text" class="form-control" id="Name" name="Name" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label>Title</label>
+                                <input type="text" class="form-control" id="Title" name="Title" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label>Department</label>
+                                <input type="text" class="form-control" id="Department" name="Department" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label>Email</label>
+                                <input type="text" class="form-control" id="Mail" name="Mail" style="max-width:none;"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label>TelephoneNumber</label>
-                        <input type="text" class="form-control" id="TelephoneNumber" placeholder="" />
-                    </div>
-                    <div class="col-sm-6">
-                        <label>HomePhone</label>
-                        <input type="text" class="form-control" id="HomePhone" placeholder="" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label>StreetAddress</label>
-                        <input type="text" class="form-control" id="StreetAddress" placeholder="" />
-                    </div>
-                    <div class="col-sm-6">
-                        <label>City</label>
-                        <input type="text" class="form-control" id="City" placeholder="" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label>State</label>
-                        <input type="text" class="form-control" id="State" placeholder="" />
-                    </div>
-                    <div class="col-sm-6">
-                        <label>Country</label>
-                        <input type="text" class="form-control" id="Country" placeholder="" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label>PostalCode</label>
-                        <input type="text" class="form-control" id="PostalCode" placeholder="" />
-                    </div>
-                    <div class="col-sm-6">
-                        <label>Department</label>
-                        <input type="text" class="form-control" id="Department" placeholder="" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label>DisplayName</label>
-                        <input type="text" class="form-control" id="DisplayName" placeholder="" />
-                    </div>
-                    <div class="col-sm-6">
-                        <label>Name</label>
-                        <input type="text" class="form-control" id="Name" placeholder="" />
+                <div role="tabpanel" class="tab-pane" id="contact">
+                    <div class="well">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label>Office Phone</label>
+                                <input type="text" class="form-control" id="TelephoneNumber" name="TelephoneNumber" />
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Home Phone</label>
+                                <input type="text" class="form-control" id="HomePhone" name="HomePhone" />
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Mobile Phone</label>
+                                <input type="text" class="form-control" id="Mobile" name="Mobile" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <label>Street Address</label>
+                                <input type="text" class="form-control" id="StreetAddress" name="StreetAddress" style="max-width:none" />
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Country</label>
+                                <input type="text" class="form-control" id="Country" name="Country" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label>City</label>
+                                <input type="text" class="form-control" id="City" name="City" />
+                            </div>
+                            <div class="col-sm-4">
+                                <label>State</label>
+                                <input type="text" class="form-control" id="State" name="State" />
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Postal Code</label>
+                                <input type="text" class="form-control" id="PostalCode" name="PostalCode" />
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label>Title</label>
-                        <input type="text" class="form-control" id="Title" placeholder="" />
+
+                <div role="tabpanel" class="tab-pane" id="advanced">
+                    <div class="well">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label>IDBank Identifier</label>
+                                <input type="text" class="form-control" id="Id" name="Id" readonly />
+                            </div>
+                            <div class="col-sm-6">
+                                <label>UPN</label>
+                                <input type="text" class="form-control" id="Upn" name="Upn" readonly />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label>Master GUID</label>
+                                <input type="text" class="form-control" id="MasterGuid" name="MasterGuid" readonly />
+                            </div>
+                            <div class="col-sm-6">
+                                <label>Local GUID</label>
+                                <input type="text" class="form-control" id="LocalGuid" name="LocalGuid" readonly />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label>Create Date</label>
+                                <input type="text" class="form-control" id="CreateDate" name="CreateDate" readonly />
+                            </div>
+                            <div class="col-sm-6">
+                                <label>Load State</label>
+                                <input type="text" class="form-control" id="LoadState" name="LoadState" readonly />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="manage">
+                    <div class="well" id="userManage">
+                        <fieldset>
+                            <legend class="caption">Current On-Premises Account Status</legend>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>SAM Account Name</label>
+                                    <input class="form-control" type="text" id="SamAccountName" name="SamAccountName" />
+                                    <input type="hidden" id="OrgSamAccountName" name="OrgSamAccountName" />
+                                </div>
+                                <div class="col-sm-8 acctexpblock">
+                                    <label>Account Expires</label>
+                                    <label class="form-inline" for="AcctExpSelNever" style="margin-right:6px;">
+                                        <input type="radio" name="AcctExpSel" id="AcctExpSelNever" value="no" /> Never
+                                    </label>
+                                    <label class="form-inline" for="AcctExpSelDate">
+                                        <input type="radio" name="AcctExpSel" id="AcctExpSelDate" value="yes" /> End of
+                                        <input type="text" id="AccountExpirationDate" name="AccountExpirationDate" />
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label>Bad Logons</label>
+                                    <input class="form-control center" type="number" id="BadLogonCount" name="BadLogonCount" readonly />
+                                </div>
+                                <div class="col-sm-5">
+                                    <label>Last Logon</label>
+                                    <input class="form-control" type="text" id="LastLogon" name="LastLogon" readonly />
+                                </div>
+                                <div class="col-sm-5">
+                                    <label>Account Lockout Time</label>
+                                    <input class="form-control" type="text" id="AccountLockoutTime" name="AccountLockoutTime" readonly />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Last Bad Password Attempt</label>
+                                    <input class="form-control" type="text" id="LastBadPasswordAttempt" name="LastBadPasswordAttempt" readonly />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Last Password Set</label>
+                                    <input class="form-control" type="text" id="LastPasswordSet" name="LastPasswordSet" readonly />
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:8px;">
+                                <div class="col-sm-6">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <input type="checkbox" id="Disabled" name="Disabled" />
+                                        </span>
+                                        <span class="form-control">
+                                            <label class="control-label addHelp" for="Disabled">Account is disabled</label>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <input type="checkbox" id="SmartcardLogonRequired" name="SmartcardLogonRequired" />
+                                        </span>
+                                        <span class="form-control">
+                                            <label class="control-label addHelp" for="SmartcardLogonRequired">Smartcard Logon Required</label>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:4px;">
+                                <div class="col-sm-6">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <input type="checkbox" id="UserCannotChangePassword" name="UserCannotChangePassword" />
+                                        </span>
+                                        <span class="form-control">
+                                            <label class="control-label addHelp" for="UserCannotChangePassword">User Cannot Change Password</label>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <input type="checkbox" id="PasswordNeverExpires" name="PasswordNeverExpires" />
+                                        </span>
+                                        <span class="form-control">
+                                            <label class="control-label addHelp" for="PasswordNeverExpires">Password Never Expires</label>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 detailButtons">
+                                    <input type="button" class="btn btn-sm btn-warning pull-right" id="btnPWResetDialog" value="Reset Password..." />
+                                    <input type="button" class="btn btn-sm btn-default pull-right" id="btnUserApplyCancel" value="Cancel" />
+                                    <input type="button" class="btn btn-sm btn-primary pull-right" id="btnUserApply" value="Apply" />
+                                </div>
+                            </div>
+                        </fieldset>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="PWResetDialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="pwResetTitleLabel">Reset Password</h4>
+            </div>
+            <div id="PWResetBody" class="modal-body">
+                <div>
+                    <label>New password
+                        <input type="password" class="form-control" id="NewPassword1" name="NewPassword1" />
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        Confirm password
+                        <input type="password" class="form-control" id="NewPassword2" name="NewPassword2" />
+                    </label>
+                </div>
+                <div>
+                    <label id="lblSetPwChangeOnLogon">
+                        <input type="checkbox" id="SetChangePasswordAtNextLogon" name="SetChangePasswordAtNextLogon" />
+                        User must change password at next logon
+                    </label>
+                    <div style="margin-left:18px;font-size:.9em;margin-top:3px;">
+                        The user must logoff and then logon again for the change to take effect.
+                    </div>
+                </div>
+                <div>
+                    Account Lockout Status: <span id="spLockoutStatus"></span>
+                </div>
+                <div>
+                    <label id="lblUnlockUser" class="disabled">
+                        <input type="checkbox" disabled id="SetUnlockUserAccount" name="SetUnlockUserAccount" />
+                        Unlock the user's account
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnResetPassword">OK</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <style type="text/css">
+    .detailButtons input {
+        width: 140px;
+    }
+    div.modal-footer button {
+        width: 100px;
+    }
     div.well label {
-        font-size:.8em;
+        font-size:.70em;
         display:block;
+        margin-bottom:0;
+    }
+    div.well div.row {
+        margin-bottom:12px;
+    }
+    label.disabled {
+        color:#9a9a9a;
+    }
+    #UserList {
+        min-height:300px;
+    }
+    div.pre-scrollable {
+        max-height:470px;
+    }
+    #UserList li.list-group-item {
+        padding: 5px 10px;
+    }
+    label.form-inline {
+        display:inline-block!important;
+        font-weight:normal;
+    }
+    #AccountExpirationDate {
+        width: 80px;
+        padding: 0;
+        text-align: center;
+    }
+    form-group.control {
+        margin-right:0;
+    }
+    #userTabs li a {
+        padding: 4px 10px !important;
+        background-color: #f9f9f9;
+    }
+    li.active {
+        cursor:pointer;
+    }
+    #userTabs li.active a {
+        background-color: #efefef;
+    }
+    .modal-sm {
+        width:400px;
+    }
+    #PWResetBody div {
+        margin-bottom:8px;
+    }
+    #PWResetBody div label {
+        margin-bottom:0;
     }
 </style>

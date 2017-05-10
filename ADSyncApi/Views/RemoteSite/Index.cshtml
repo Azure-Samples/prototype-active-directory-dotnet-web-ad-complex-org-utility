@@ -21,23 +21,23 @@
             </div>
             <ul class="list-group" id="siteList">
                 @if (!hasRecords)
-            {
+                {
                     <li class="list-group-item">No sites configured</li>
                 }
 
                 @foreach (var item in Model)
-            {
+                {
                 var masterClass = (item.SiteType == SiteTypes.MasterHQ) ? "master" : "";
                 var domCount = item.SiteDomains.Count;
                     <li class="list-group-item bg-rowEdit @masterClass" data-id="@item.Id" title="Click to edit" style="cursor:pointer">
                         <span class="badge">@domCount</span>
-                        @item.SiteDomains[0]
+                        <span class="siteitem">@item.SiteDomains[0]</span>
                     </li>
                 }
             </ul>
         </div>
         <div class="col-sm-9">
-            <ul class="nav nav-tabs" role="tablist">
+            <ul class="nav nav-tabs" role="tablist" id="pageTabs">
                 <li role="presentation" class="active"><a href="#users" aria-controls="users" role="tab" data-toggle="tab">Users</a></li>
                 <li role="presentation"><a href="#logs" aria-controls="logs" role="tab" data-toggle="tab">Logs</a></li>
                 <li role="presentation"><a href="#setup" aria-controls="setup" role="tab" data-toggle="tab">Setup</a></li>
@@ -79,6 +79,10 @@
         }
         #btnNew {
             margin-top:-3px;
+        }
+        label.control-label {
+            text-align:left!important;
+            padding-top:0!important;
         }
     </style>
 }

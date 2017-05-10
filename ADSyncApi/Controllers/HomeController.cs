@@ -66,5 +66,10 @@ namespace ADSyncApi.Controllers
             ViewBag.Message = Request.QueryString["message"];
             return View();
         }
+        [AllowAnonymous]
+        public ActionResult Chat()
+        {
+            return View();
+        }
     }
 }

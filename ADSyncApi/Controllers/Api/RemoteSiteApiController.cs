@@ -2,6 +2,7 @@
 using ADSync.Common.Models;
 using ADSync.Data.Models;
 using Common;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,17 +24,24 @@ namespace ADSyncApi.Controllers.Api
             return res;
         }
 
+        [HttpGet]
+        public async Task<IEnumerable<RemoteSite>> GetAllSites()
+        {
+            var res = await RemoteSiteUtil.GetAllSites();
+            return res;
+        }
+
         [HttpPost]
         public async Task<RemoteSite> UpdateSite(RemoteSiteModel site)
         {
-            site.SiteDomains = site.SiteDomainsList.Split(new string[] { "\r\n" }, StringSplitOptions.None).ToList();
+            site.SiteDomains = site.SiteDomainsList.Split(new string[] { "\n" }, StringSplitOptions.None).ToList();
 
             if (site.ResetApiKey)
             {
                 site.ApiKey = Utils.GenApiKey();
             }
-
-            var res = await RemoteSiteUtil.UpdateSite(site);
+            var site2 = JsonConvert.DeserializeObject<RemoteSite>(JsonConvert.SerializeObject(site));
+            var res = await RemoteSiteUtil.UpdateSite(site2);
             return res.Single(s => s.Id == site.Id);
         }
     }

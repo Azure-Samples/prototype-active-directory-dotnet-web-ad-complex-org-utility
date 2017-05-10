@@ -31,6 +31,11 @@ namespace ADSync.Data.Models
             
             return res;
         }
+        public static async Task<StagedUser> GetUser(string userId)
+        {
+            var res = await DocDBRepo.DB<StagedUser>.GetItemAsync(userId);
+            return res;
+        }
 
         public static async Task<IEnumerable<StagedUser>> GetAllByStage(LoadStageEnum state)
         {
@@ -73,6 +78,18 @@ namespace ADSync.Data.Models
         public static async Task<IEnumerable<StagedUser>> GetAllBySiteId(string siteId)
         {
             var res = await DocDBRepo.DB<StagedUser>.GetItemsAsync(u => u.SiteId == siteId);
+            return res.ToList();
+        }
+
+        public static async Task<IEnumerable<StagedUser>> GetFilteredBySiteId(string siteId, string filter)
+        {
+            var res = await DocDBRepo.DB<StagedUser>.GetItemsAsync(
+                u => (u.SiteId == siteId) && 
+                ( u.Surname.ToLower().StartsWith(filter) 
+                || u.GivenName.ToLower().StartsWith(filter) 
+                || u.Mail.ToLower().StartsWith(filter) )
+            );
+
             return res.ToList();
         }
 

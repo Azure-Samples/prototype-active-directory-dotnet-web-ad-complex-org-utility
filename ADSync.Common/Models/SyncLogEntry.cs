@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Common;
 using ADSync.Common.Interfaces;
+using System.Diagnostics;
 
 namespace ADSync.Common.Models
 {
@@ -31,6 +32,14 @@ namespace ADSync.Common.Models
 
         public SyncLogEntry()
         {
+            LogDate = DateTime.UtcNow;
+        }
+        public SyncLogEntry(EventLogEntryType errorType, string detail, string source, string stagedUserId)
+        {
+            ErrorType = errorType.ToString();
+            Detail = detail;
+            StagedUserId = stagedUserId;
+            Source = source;
             LogDate = DateTime.UtcNow;
         }
 

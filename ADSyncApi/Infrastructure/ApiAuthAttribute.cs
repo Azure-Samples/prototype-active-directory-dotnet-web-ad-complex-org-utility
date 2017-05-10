@@ -1,23 +1,19 @@
 ﻿using ADSync.Common.Enums;
 using ADSync.Common.Models;
-using ADSync.Data.Models;
 using Common;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
 using System.Web.Http.Controllers;
-using System.Web.Http.Filters;
-using System.Web.Mvc;
+using System.Web.Http;
+using System.Security.Principal;
 
 namespace Infrastructure
 {
-    public class ApiAuth: System.Web.Http.AuthorizeAttribute
+    public class ApiAuth: AuthorizeAttribute
     {
         private bool _isAdmin;
         public ApiAuth(string isAdmin="")
@@ -34,36 +30,32 @@ namespace Infrastructure
             try
             {
                 var key = actionContext.Request.Headers.SingleOrDefault(h => h.Key=="apikey").Value.FirstOrDefault();
-                
-                if (key == null)
-                {
-                    Unauthorized(actionContext);
-                    return;
-                }
 
                 RemoteSite site = null;
                 var task = Task.Run(async () => {
-                    site = await SiteCache.GetSiteByApiKey(HttpRuntime.Cache, key.ToString());
+                    site = await SiteUtils.AuthorizeApiAsync(key);
                 });
                 task.Wait();
 
                 if (site == null)
                 {
-                    Unauthorized(actionContext);
+                    Unauthorized(actionContext.Response, actionContext.Request);
                     return;
                 }
                 if (_isAdmin && site.SiteType != SiteTypes.MasterHQ)
                 {
-                    Unauthorized(actionContext);
+                    Unauthorized(actionContext.Response, actionContext.Request);
                     return;
                 }
 
                 //we're authenticated
-                if (!AuthAndAddClaims(site, actionContext))
+                var p = actionContext.RequestContext.Principal;
+                if (!AuthAndAddClaims(site, ref p))
                 {
-                    Unauthorized(actionContext);
+                    Unauthorized(actionContext.Response, actionContext.Request);
                     return;
                 }
+                actionContext.RequestContext.Principal = p;
             }
             catch (Exception ex)
             {
@@ -71,27 +63,29 @@ namespace Infrastructure
             }
         }
 
-        private static void Unauthorized(HttpActionContext actionContext)
+        public static void Unauthorized(HttpResponseMessage response, HttpRequestMessage request)
         {
-            actionContext.Response = actionContext.Request.CreateResponse(System.Net.HttpStatusCode.Forbidden);
-            actionContext.Response.Headers.Add("AuthenticationStatus", "NotAuthorized");
-            actionContext.Response.ReasonPhrase = "ApiKey is invalid.";
+            response = request.CreateResponse(System.Net.HttpStatusCode.Forbidden);
+            response.Headers.Add("AuthenticationStatus", "NotAuthorized");
+            response.ReasonPhrase = "ApiKey is invalid.";
         }
 
-        private static bool AuthAndAddClaims(RemoteSite site, HttpActionContext context)
+        public static bool AuthAndAddClaims(RemoteSite site, ref IPrincipal principal)
         {
             try
             {
                 string domainList = string.Join(",", site.SiteDomains.ToArray());
-                List<Claim> claims = new List<Claim>();
-                claims.Add(new Claim(CustomClaimTypes.SiteId, site.Id));
-                claims.Add(new Claim(CustomClaimTypes.SiteDomain, domainList));
+                List<Claim> claims = new List<Claim>
+                {
+                    new Claim(CustomClaimTypes.SiteId, site.Id),
+                    new Claim(CustomClaimTypes.SiteDomain, domainList)
+                };
 
                 // create an identity with the valid claims.
                 ClaimsIdentity identity = new ClaimsIdentity(claims, CustomAuthTypes.Api);
 
                 // set the context principal.
-                context.RequestContext.Principal = new ClaimsPrincipal(new[] { identity });
+                principal = new ClaimsPrincipal(new[] { identity });
                 return true;
 
             }

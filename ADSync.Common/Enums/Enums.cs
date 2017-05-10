@@ -38,6 +38,20 @@ namespace ADSync.Common.Enums
     {
         MasterHQ,
         AADB2B,
-        LocalADOnly
+        LocalADOnly,
+        AADB2BCloudOnly
+    }
+    public enum SiteOperation
+    {
+        ValidateUser,
+        ResetPW,
+        TriggerPoll,
+        Ping,
+        GetUserStatus,
+        SetUserStatus,
+        DisableUser,
+        EnableUser,
+        Unauthorized,
+        UpdateUser
     }
 }

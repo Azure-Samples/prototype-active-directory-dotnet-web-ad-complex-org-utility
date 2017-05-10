@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -151,14 +154,95 @@ namespace Common
             res.AppendLine("</div></body></html>");
             return res.ToString();
         }
+
         public static string GenApiKey()
         {
-            var bytes = new byte[32];
-            var rand = RandomNumberGenerator.Create();
-            rand.GetBytes(bytes);
-            rand.Dispose();
-            var randPassword = Convert.ToBase64String(bytes);
-            return randPassword;
+            using (RandomNumberGenerator rng = new RNGCryptoServiceProvider())
+            {
+                byte[] tokenData = new byte[32];
+                rng.GetBytes(tokenData);
+                return Convert.ToBase64String(tokenData);
+            }
+        }
+
+        public static T ConvertDynamic<T>(dynamic data)
+        {
+            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(data));
+        }
+
+        public static T ConvertDynamic<T>(string data)
+        {
+            return JsonConvert.DeserializeObject<T>(data);
+        }
+
+        public static string GetFormattedException(Exception ex)
+        {
+            var message = " (original error: " + ex.Source + "/" + ex.Message + "\r\nStack Trace: " +
+                ex.StackTrace + ")";
+            if (ex.InnerException != null)
+            {
+                message += "\r\nInner Exception: " + ex.GetBaseException();
+            }
+            return message;
+        }
+
+        public static void AddLogEntry(string message)
+        {
+            AddLogEntry("Application", EventLogEntryType.Information, 0, null);
+        }
+
+        public static void AddLogEntry(string message, EventLogEntryType entryType)
+        {
+            AddLogEntry("Application", entryType, 0, null);
+        }
+
+        public static void AddLogEntry(string message, EventLogEntryType entryType, int eventId = 0, Exception ex = null)
+        {
+            AddLogEntry("Application", message, entryType, eventId, ex);
+        }
+        public static void AddLogEntry(string source, string message, EventLogEntryType entryType)
+        {
+            AddLogEntry(source, message, entryType, 0, null);
+        }
+
+        public static void AddLogEntry(string source, string message)
+        {
+            AddLogEntry(source, message, EventLogEntryType.Information, 0, null);
+        }
+
+        public static void AddLogEntry(string source, string message, EventLogEntryType entryType, int eventId, Exception ex)
+        {
+            if (ex != null)
+            {
+                message += GetFormattedException(ex);
+            }
+
+            EventLog.WriteEntry(source, message, entryType, eventId);
+        }
+        public static string SetupLog(string logSource)
+        {
+            if (!EventLog.Exists(logSource))
+            {
+                try
+                {
+                    var isAdmin = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+                    if (isAdmin)
+                    {
+                        EventLog.CreateEventSource(logSource, logSource);
+                        AddLogEntry("Created event log " + logSource, EventLogEntryType.Information);
+                    }
+                    else
+                    {
+                        logSource = "Application";
+                    }
+                }
+                catch (Exception)
+                {
+                    logSource = "Application";
+                }
+            }
+
+            return logSource;
         }
     }
 }

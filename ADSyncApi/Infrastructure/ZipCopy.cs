@@ -46,7 +46,7 @@ namespace ADSyncApi.Infrastructure
         public static MemoryStream SetupZip(string dirPath, string apiKey, string apiUrl)
         {
             var configFile = GetConfig(dirPath, apiKey, apiUrl);
-            using (var zipFile = File.Open(Path.Combine(dirPath, "SyncSiteSetup.zip"), FileMode.Open))
+            using (var zipFile = File.Open(Path.Combine(dirPath, "ComplexOrgSiteSetup.zip"), FileMode.Open))
             {
                 Stream zipCopy = new MemoryStream();
                 zipFile.CopyTo(zipCopy);

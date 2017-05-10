@@ -10,6 +10,7 @@ using System.Web.Http;
 
 namespace ADSyncApi.Controllers.Api
 {
+    [Authorize]
     public class LogApiController : ApiController
     {
         public async Task<IEnumerable<SyncLogEntry>> GetLogsBySite(string siteId, int? days = null)

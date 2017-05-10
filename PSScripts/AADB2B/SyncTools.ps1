@@ -40,6 +40,7 @@
         $res.localGuid = $user.ObjectGUID
         $res.domainName = $dom
         $res.siteType = $SiteConfig.siteType
+        $res.siteId = $SiteConfig.id
         $res.masterGuid = $null
         $res.department = $user.Department
         $res.mobile = $user.Mobile

@@ -9,7 +9,7 @@ Function _addLogEntry {
     )
 
     _writeHost $SyncLogItem
-    Add-Content $logFile -Value $SyncLogItem.Detail
+    Add-Content $logFile -Value $SyncLogItem.Detail | Out-Null
 
     Add-SyncLog -LogItem $SyncLogItem -OutVariable $null
     return $null
@@ -43,6 +43,38 @@ Function Add-LogEntry {
     return $null
 }
 
+Function Add-BatchLogEntries {
+    param(
+        [parameter(Position=0, Mandatory=$true)]
+        [System.Collections.ArrayList]$SyncLogBatch
+    )
+
+    Add-SyncLogBatch -SyncLogBatch $SyncLogBatch | Out-Null
+
+    $count = $SyncLogBatch.Count
+    $errors = $SyncLogBatch | where { $_.ErrorType -eq "Error" }
+    $errCount = $errors.Count
+    $warnCount = ($SyncLogBatch | where { $_.ErrorType -eq "Warning" }).Count
+    $msg = "$count log entry(s) transmitted, including $errCount error(s) and $warnCount warning(s)."
+
+    if ($errCount -gt 0) {
+        Write-Error $msg
+    }
+    elseif ($warnCount -gt 0) {
+        Write-Warning $msg
+    }
+    else {
+        Write-Host $msg
+    }
+
+    Add-Content $logFile -Value $msg
+    for($x=0; $x -lt $errors.Count; $x++) {
+        Add-Content $logFile -Value "    $($errors[$x].Detail)" | Out-Null
+    }
+
+    return $null
+}
+
 Function Create-LogEntry {
     param(
         [parameter(Position=0, Mandatory=$true)]
@@ -62,12 +94,13 @@ Function Create-LogEntry {
         [string]$StagedUserID
     )
 
-    $newLog=@{}
-    $newLog.ErrorType = $ErrorType
-    $newLog.Detail = $Detail
-    $newLog.RemoteSiteID = $RemoteSiteID
-    $newLog.Source = $Source
-    $newLog.StagedUserID = $StagedUserID
+    $newLog=@{
+        "ErrorType" = $ErrorType;
+        "Detail" = $Detail;
+        "RemoteSiteID" = $RemoteSiteID;
+        "Source" = $Source;
+        "StagedUserID" = $StagedUserID;
+    }
 
     return $newLog
 }
