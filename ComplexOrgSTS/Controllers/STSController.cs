@@ -109,8 +109,8 @@ namespace WSFederationSecurityTokenService
             );
 
             //todo: 
-            //var immutableId = user.UserProperties.MasterGuid;
-            var immutableId = user.UserProperties.LocalGuid;
+            var immutableId = user.UserProperties.MasterGuid;
+            //var immutableId = user.UserProperties.LocalGuid;
 
             SignInRequestMessage requestMessage = (SignInRequestMessage)WSFederationMessage.CreateFromUri(new Uri(fullRequest));
 

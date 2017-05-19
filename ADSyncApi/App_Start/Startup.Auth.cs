@@ -42,6 +42,10 @@ namespace ADSyncApi
             {
                 Authority = string.Format(aadInstance, tenant),
                 ClientId = clientId,
+                //ProtocolValidator = new OpenIdConnectProtocolValidator
+                //{
+                //    RequireNonce = false
+                //},
                 Notifications = new OpenIdConnectAuthenticationNotifications
                 {
                     AuthenticationFailed = AuthenticationFailed,

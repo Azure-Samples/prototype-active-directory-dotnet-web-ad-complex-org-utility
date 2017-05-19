@@ -39,7 +39,6 @@ namespace ADSyncApi
                 //Zip init
                 ZipCopy.InitZip(Settings.AppRootPath);
 
-
                 var client = DocDBRepo.Initialize().Result;
             }
             catch (Exception ex)

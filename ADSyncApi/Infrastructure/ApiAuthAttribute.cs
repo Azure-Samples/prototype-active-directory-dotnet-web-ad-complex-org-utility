@@ -39,12 +39,14 @@ namespace Infrastructure
 
                 if (site == null)
                 {
-                    Unauthorized(actionContext.Response, actionContext.Request);
+                    Unauthorized(ref actionContext);
+                    base.OnAuthorization(actionContext);
                     return;
                 }
                 if (_isAdmin && site.SiteType != SiteTypes.MasterHQ)
                 {
-                    Unauthorized(actionContext.Response, actionContext.Request);
+                    Unauthorized(ref actionContext);
+                    base.OnAuthorization(actionContext);
                     return;
                 }
 
@@ -52,10 +54,13 @@ namespace Infrastructure
                 var p = actionContext.RequestContext.Principal;
                 if (!AuthAndAddClaims(site, ref p))
                 {
-                    Unauthorized(actionContext.Response, actionContext.Request);
+                    Unauthorized(ref actionContext);
+                    base.OnAuthorization(actionContext);
                     return;
                 }
                 actionContext.RequestContext.Principal = p;
+                base.OnAuthorization(actionContext);
+                return;
             }
             catch (Exception ex)
             {
@@ -63,11 +68,12 @@ namespace Infrastructure
             }
         }
 
-        public static void Unauthorized(HttpResponseMessage response, HttpRequestMessage request)
+        protected void Unauthorized(ref HttpActionContext actionContext)
         {
-            response = request.CreateResponse(System.Net.HttpStatusCode.Forbidden);
+            var response = actionContext.Request.CreateResponse(System.Net.HttpStatusCode.Forbidden);
             response.Headers.Add("AuthenticationStatus", "NotAuthorized");
             response.ReasonPhrase = "ApiKey is invalid.";
+            actionContext.Response = response;
         }
 
         public static bool AuthAndAddClaims(RemoteSite site, ref IPrincipal principal)
@@ -80,7 +86,7 @@ namespace Infrastructure
                     new Claim(CustomClaimTypes.SiteId, site.Id),
                     new Claim(CustomClaimTypes.SiteDomain, domainList)
                 };
-
+                
                 // create an identity with the valid claims.
                 ClaimsIdentity identity = new ClaimsIdentity(claims, CustomAuthTypes.Api);
 

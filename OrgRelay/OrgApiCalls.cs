@@ -18,14 +18,22 @@ namespace OrgRelay
         public static RemoteSite GetSiteConfig()
         {
             Uri uri = new Uri(string.Format("{0}api/StagedUsers/GetSiteConfig", SiteUrl));
-            WebClient web;
-            using (web = new WebClient())
+            WebClient2 web;
+            try
             {
-                ConfigWeb(ref web);
-                var data = web.DownloadString(uri);
-                var res = JsonConvert.DeserializeObject<RemoteSite>(data);
-                RemoteSiteId = res.Id;
-                return res;
+                using (web = new WebClient2())
+                {
+                    ConfigWeb(ref web);
+                    var data = web.DownloadString(uri);
+                    var res = JsonConvert.DeserializeObject<RemoteSite>(data);
+                    RemoteSiteId = res.Id;
+                    return res;
+                }
+            }
+            catch (WebException ex)
+            {
+
+                throw;
             }
         }
 
@@ -35,14 +43,14 @@ namespace OrgRelay
 
             Uri uri = new Uri(string.Format("{0}/api/SyncLogUpdate/AddLogEntry", SiteUrl));
             var data = JsonConvert.SerializeObject(log);
-            WebClient web;
-            using (web = new WebClient())
+            WebClient2 web;
+            using (web = new WebClient2())
             {
                 ConfigWeb(ref web);
                 web.UploadString(uri, data);
             }
         }
-        public static void ConfigWeb(ref WebClient web)
+        public static void ConfigWeb(ref WebClient2 web)
         {
             web.Headers.Add("apikey", ApiKey);
             web.Headers.Add("Content-Type", "application/json");

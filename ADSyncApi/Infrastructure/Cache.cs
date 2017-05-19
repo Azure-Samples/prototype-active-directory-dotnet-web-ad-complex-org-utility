@@ -3,14 +3,19 @@ using System.Linq;
 using System.Web;
 using ADSync.Data.Models;
 using System.Web.Caching;
+//using StackExchange.Redis;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ADSync.Common.Models;
+using StackExchange.Redis;
 
 namespace Infrastructure
 {
     public static class SiteCache
     {
+        private ConnectionMultiplexer conn;
+        private bool isRedisConnected;
+
         public static async Task<RemoteSite> GetSiteByApiKey(Cache cache, string apiKey)
         {
             var sites = (IEnumerable<RemoteSite>)cache["RemoteSites"];

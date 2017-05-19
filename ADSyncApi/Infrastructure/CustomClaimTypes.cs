@@ -12,6 +12,8 @@ namespace Common
         public const string IdentityProvider = "http://schemas.microsoft.com/identity/claims/identityprovider";
         public const string ExtClaims = "ExtClaims";
         public const string AuthType = "AuthType";
+        public const string IsHQ = "IsHQ";
+        public const string IsSTS = "IsSTS";
         public const string FullName = "FullName";
         public const string ObjectIdentifier = "http://schemas.microsoft.com/identity/claims/objectidentifier";
     }

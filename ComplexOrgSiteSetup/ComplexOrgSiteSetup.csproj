@@ -154,7 +154,6 @@
 
 copy $(TargetDir)ADSync.Common.dll $(SolutionDir)..\active-directory-dotnet-web-ad-complex-org-utility\ADSyncApi\Files\SyncSiteSetup\
 copy $(TargetDir)$(TargetFileName).config $(SolutionDir)..\active-directory-dotnet-web-ad-complex-org-utility\ADSyncApi\Files\SyncSiteSetup\
-copy $(TargetDir)Microsoft.Azure.Relay.dll $(SolutionDir)..\active-directory-dotnet-web-ad-complex-org-utility\ADSyncApi\Files\SyncSiteSetup\
 copy $(TargetDir)Newtonsoft.Json.dll $(SolutionDir)..\active-directory-dotnet-web-ad-complex-org-utility\ADSyncApi\Files\SyncSiteSetup\
 copy $(TargetDir)OrgRelay.dll $(SolutionDir)..\active-directory-dotnet-web-ad-complex-org-utility\ADSyncApi\Files\SyncSiteSetup\
 
@@ -162,8 +161,6 @@ md $(SolutionDir)..\active-directory-dotnet-web-ad-complex-org-utility\ADSyncApi
 copy $(SolutionDir)ComplexOrgSiteAgent\$(OutDir)ADSync.Common.dll $(SolutionDir)..\active-directory-dotnet-web-ad-complex-org-utility\ADSyncApi\Files\SyncSiteSetup\AgentServiceFiles
 copy $(SolutionDir)ComplexOrgSiteAgent\$(OutDir)ComplexOrgSiteAgent.exe $(SolutionDir)..\active-directory-dotnet-web-ad-complex-org-utility\ADSyncApi\Files\SyncSiteSetup\AgentServiceFiles
 copy $(SolutionDir)ComplexOrgSiteAgent\$(OutDir)ComplexOrgSiteAgent.exe.config $(SolutionDir)..\active-directory-dotnet-web-ad-complex-org-utility\ADSyncApi\Files\SyncSiteSetup\AgentServiceFiles
-copy $(SolutionDir)ComplexOrgSiteAgent\$(OutDir)Microsoft.Azure.Relay.dll $(SolutionDir)..\active-directory-dotnet-web-ad-complex-org-utility\ADSyncApi\Files\SyncSiteSetup\AgentServiceFiles
-copy $(SolutionDir)ComplexOrgSiteAgent\$(OutDir)Microsoft.Azure.Relay.xml $(SolutionDir)..\active-directory-dotnet-web-ad-complex-org-utility\ADSyncApi\Files\SyncSiteSetup\AgentServiceFiles
 copy $(SolutionDir)ComplexOrgSiteAgent\$(OutDir)Microsoft.AspNet.SignalR.Client.dll $(SolutionDir)..\active-directory-dotnet-web-ad-complex-org-utility\ADSyncApi\Files\SyncSiteSetup\AgentServiceFiles
 copy $(SolutionDir)ComplexOrgSiteAgent\$(OutDir)Microsoft.AspNet.SignalR.Client.xml $(SolutionDir)..\active-directory-dotnet-web-ad-complex-org-utility\ADSyncApi\Files\SyncSiteSetup\AgentServiceFiles
 copy $(SolutionDir)ComplexOrgSiteAgent\$(OutDir)Newtonsoft.Json.dll $(SolutionDir)..\active-directory-dotnet-web-ad-complex-org-utility\ADSyncApi\Files\SyncSiteSetup\AgentServiceFiles
@@ -178,8 +175,6 @@ copy $(SolutionDir)ComplexOrgSiteAgent\$(OutDir)OrgRelay.dll $(SolutionDir)..\ac
 copy $(SolutionDir)ComplexOrgSiteAgent\$(OutDir)ADSync.Common.dll $(TargetDir)AgentServiceFiles
 copy $(SolutionDir)ComplexOrgSiteAgent\$(OutDir)ComplexOrgSiteAgent.exe $(TargetDir)AgentServiceFiles
 copy $(SolutionDir)ComplexOrgSiteAgent\$(OutDir)ComplexOrgSiteAgent.exe.config $(TargetDir)AgentServiceFiles
-copy $(SolutionDir)ComplexOrgSiteAgent\$(OutDir)Microsoft.Azure.Relay.dll $(TargetDir)AgentServiceFiles
-copy $(SolutionDir)ComplexOrgSiteAgent\$(OutDir)Microsoft.Azure.Relay.xml $(TargetDir)AgentServiceFiles
 copy $(SolutionDir)ComplexOrgSiteAgent\$(OutDir)Microsoft.AspNet.SignalR.Client.dll $(TargetDir)AgentServiceFiles
 copy $(SolutionDir)ComplexOrgSiteAgent\$(OutDir)Microsoft.AspNet.SignalR.Client.xml $(TargetDir)AgentServiceFiles
 copy $(SolutionDir)ComplexOrgSiteAgent\$(OutDir)Newtonsoft.Json.dll $(TargetDir)AgentServiceFiles
