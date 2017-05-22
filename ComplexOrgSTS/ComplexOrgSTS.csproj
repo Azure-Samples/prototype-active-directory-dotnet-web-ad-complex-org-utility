@@ -26,7 +26,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
-    <ApplicationInsightsResourceId>/subscriptions/3d624276-5097-46c8-9983-370b3a34ac82/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/ComplexOrgSTS</ApplicationInsightsResourceId>
+    <ApplicationInsightsResourceId>/subscriptions/aed7eb10-0c55-4e2f-9789-56a40fe42f16/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/ComplexOrgSTS</ApplicationInsightsResourceId>
     <ApplicationInsightsAnnotationResourceId>/subscriptions/aed7eb10-0c55-4e2f-9789-56a40fe42f16/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/ComplexOrgSTS</ApplicationInsightsAnnotationResourceId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

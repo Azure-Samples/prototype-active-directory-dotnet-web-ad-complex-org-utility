@@ -24,12 +24,12 @@ namespace WSFederationSecurityTokenService
         CustomSTSConfig stsConfiguration;
         SecurityTokenService securityTokenService;
 
-        public STSController()
+        private void InitSTS(string domain)
         {
-            stsConfiguration = new CustomSTSConfig();
+            stsConfiguration = new CustomSTSConfig(domain);
             securityTokenService = new CustomSTS(stsConfiguration);
         }
-        
+
         public ActionResult Index(string username, string wa, string wtrealm, string realm, string wctx, string wct, string wreply)
         {
             ViewBag.UserName = username;
@@ -44,6 +44,8 @@ namespace WSFederationSecurityTokenService
         [Route("~/sts/trust")]
         public async Task<ActionResult> Trust(LoginModel login)
         {
+            string domain = login.UserName.Split('@')[1];
+            InitSTS(domain);
             //validate identity
             var user = await LoginValidate.ValidateAsync(login, HttpRuntime.Cache);
 
@@ -75,6 +77,8 @@ namespace WSFederationSecurityTokenService
         [HttpPost]
         public async Task<ActionResult> Login(LoginModel login)
         {
+            string domain = login.UserName.Split('@')[1];
+            InitSTS(domain);
             ValidationResponse user;
             try
             {
@@ -145,46 +149,13 @@ namespace WSFederationSecurityTokenService
             return res;
         }
 
-        //[HttpGet]
-        //public ActionResult Issue(string realm, string wctx, string wct, string wreply)
-        //{
-        //    MemoryStream stream = new MemoryStream();
-        //    StreamWriter writer = new StreamWriter(stream, Encoding.UTF8);
-
-        //    string fullRequest = Constants.HttpLocalhost +
-        //        Constants.Port +
-        //        Constants.WSFedStsIssue +
-        //        string.Format("?wa=wsignin1.0&wtrealm={0}&wctx={1}&wct={2}&wreply={3}", realm, HttpUtility.UrlEncode(wctx), wct, wreply);
-
-        //    SignInRequestMessage requestMessage = (SignInRequestMessage)WSFederationMessage.CreateFromUri(new Uri(fullRequest));
-
-
-        //    ClaimsIdentity identity = new ClaimsIdentity(AuthenticationTypes.Federation);
-        //    identity.AddClaim(new Claim(ClaimTypes.Name, "foo"));
-        //    ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-
-        //    SignInResponseMessage responseMessage = FederatedPassiveSecurityTokenServiceOperations.ProcessSignInRequest(requestMessage, principal, this.securityTokenService);
-        //    responseMessage.Write(writer);
-
-        //    writer.Flush();
-        //    stream.Position = 0;
-
-        //    var res = new ContentResult()
-        //    {
-        //        ContentType = "text/html",
-        //        ContentEncoding = Encoding.UTF8,
-        //        Content = Encoding.UTF8.GetString(stream.ToArray())
-        //    };
-
-        //    return res;
-        //}
-
         [HttpGet]
-        [Route("~/sts/FederationMetadata/2007-06/FederationMetadata.xml")]
-        public XElement FederationMetadata()
+        [Route("~/sts/{domain}/FederationMetadata/2007-06/FederationMetadata.xml")]
+        public XElement FederationMetadata(string domain)
         {
+            InitSTS(domain);
             Response.ContentType = "application/xml";
-            return this.stsConfiguration.GetFederationMetadata();
+            return this.stsConfiguration.GetFederationMetadata(domain);
         }
     }
 }

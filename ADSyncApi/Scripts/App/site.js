@@ -3,9 +3,10 @@
     $("#siteList li").on("click", function () {
         SetSiteClick(this);
     });
-
+    var searchTimer = 0;
     $("#UserSearch").on("change keyup", function () {
-        setTimeout(function () {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(function () {
             var currSiteId = $("#SiteContainer").data("siteId");
             var filter = $("#UserSearch").val();
             if (filter.length == 0) {
@@ -13,7 +14,7 @@
             } else {
                 LoadFilteredUsers(currSiteId, filter);
             }
-        }, 400);
+        }, 300);
     });
 
     function SetSiteClick(li) {

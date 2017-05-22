@@ -29,11 +29,11 @@ namespace WSFederationSecurityTokenService
 {
     internal class CustomSTSConfig : SecurityTokenServiceConfiguration
     {
-        public CustomSTSConfig()
+        public CustomSTSConfig(string domain)
         {
             try
             {
-                this.TokenIssuerName = Settings.IssuerUri;
+                this.TokenIssuerName = string.Format(Settings.IssuerUri, domain);
                 string signingCertificatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Settings.SigningCertificate);
                 X509Certificate2 signingCert = new X509Certificate2(
                         signingCertificatePath,
@@ -54,14 +54,15 @@ namespace WSFederationSecurityTokenService
             }
         }
 
-        public XElement GetFederationMetadata()
+        public XElement GetFederationMetadata(string domain)
         {
             // hostname
             EndpointReference passiveEndpoint = new EndpointReference(Settings.HttpLocalhost + Settings.Port + Settings.WSFedStsIssue);
             EndpointReference activeEndpoint = new EndpointReference(Settings.HttpLocalhost + Settings.Port + Settings.WSTrustSTS);
 
             // metadata document 
-            EntityDescriptor entity = new EntityDescriptor(new EntityId(Settings.IssuerUri));
+            var uri = string.Format(Settings.IssuerUri, domain);
+            EntityDescriptor entity = new EntityDescriptor(new EntityId(uri));
             SecurityTokenServiceDescriptor sts = new SecurityTokenServiceDescriptor();
             entity.RoleDescriptors.Add(sts);
 

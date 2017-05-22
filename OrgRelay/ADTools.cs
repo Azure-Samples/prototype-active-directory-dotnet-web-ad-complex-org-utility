@@ -46,6 +46,8 @@ namespace OrgRelay
 
         private static SearchResult GetUser(string user)
         {
+            SearchResult res = null;
+
             using (var entry = new DirectoryEntry("LDAP://" + ADDomainName))
             {
                 using (var search = new DirectorySearcher(entry))
@@ -53,9 +55,11 @@ namespace OrgRelay
                     search.Filter = string.Format(sFilterTemplate, user);
                     search.SearchScope = SearchScope.Subtree;
                     search.PropertiesToLoad.AddRange(SProps);
-                    return search.FindOne();
+                    res = search.FindOne();
                 }
             }
+
+            return res;
         }
 
         public static RelayResponse ResetPassword(RelayMessage message)
