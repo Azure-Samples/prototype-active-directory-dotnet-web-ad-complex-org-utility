@@ -14,7 +14,8 @@ __Details__
   * "Master" accounts are created and then synchronized to Azure Active Directory via the Azure Active Directory Connect
   * The "immutable id" that is synchronized with Azure AD is then updated back in the staging database
   * The originating AD picks this record up and records the immutable id in it's local AD, using the "mS-DS-ConsistencyGuid"
-  * This remote AD then sets up ADFS federation to the master Azure AD tenant, federating with associated domain previously established by HQ. Azure Active Directory Connect is NOT configured at these remote sites
+  * Federation is then manually configured (via PowerShell) for this remote AD to the master Azure AD tenant, federating with associated domain previously established by HQ. Azure Active Directory Connect is NOT configured at these remote sites.
+  * This federation is enabled on behalf of all remote sites via a central custom STS. This STS communicates with each remote site via a SignalR backplane running on the administrative portal. This real-time socket connection facilitates pass-through authentication directly from the STS to the appropriate on-prem AD.
   * The result of this scheduled orchestration is a central location to manage and authorize user identities across a distributed network of affiliated companies. Users credentials are managed in their local Active Directory, but they maintain cloud access for SaaS applications via the headquarters Azure AD
   * Additionally, the accounts created in the on-premises headquarters AD enable affiliate users to access on-premises applications hosted locally at HQ, and authorized against the HQ AD, by leveraging Azure Application Proxy
 * Leverages Azure Cosmos DB. For development, a downloadable emulator is available: https://aka.ms/documentdb-emulator
