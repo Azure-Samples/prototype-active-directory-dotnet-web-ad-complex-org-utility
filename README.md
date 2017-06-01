@@ -28,6 +28,10 @@ __Details__
 
 
 
+# As-Is Code
+
+This code is made available as a sample to demonstrate a potential strategy for managing and integrating multiple disconnected directories with Azure Active Directory. It should be customized by your dev team or a partner, and should be reviewed before being deployed in a production scenario.
+
 # Contributing
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
