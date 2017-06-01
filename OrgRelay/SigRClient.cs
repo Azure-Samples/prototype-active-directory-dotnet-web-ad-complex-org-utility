@@ -8,6 +8,7 @@ using System.Threading;
 using System.Diagnostics;
 using Common;
 using ADSync.Common.Enums;
+using Newtonsoft.Json;
 
 namespace OrgRelay
 {
@@ -96,6 +97,11 @@ namespace OrgRelay
                         OnPingEvent(new PingEvent(msg.Data, DateTime.Now));
                         break;
 
+                    case SiteOperation.AddLogEntry:
+                        var data = JsonConvert.DeserializeObject<ErrorEvent>(msg.Data);
+                        OnErrorEvent(data);
+                        break;
+
                     case SiteOperation.GetUserStatus:
                     case SiteOperation.DisableUser:
                     case SiteOperation.EnableUser:
@@ -105,6 +111,7 @@ namespace OrgRelay
                     case SiteOperation.UpdateUser:
                         ForwardRelayResponse(response);
                         break;
+
                     default:
                         ForwardRelayResponse(response);
                         break;

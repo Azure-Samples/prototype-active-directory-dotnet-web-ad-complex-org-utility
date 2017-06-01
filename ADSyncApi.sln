@@ -61,9 +61,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{B7D40B83-3
 	ProjectSection(SolutionItems) = preProject
 		Help.md = Help.md
 		README.md = README.md
+		Setup.md = Setup.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DocImages", "DocImages", "{8F22BC43-FF2D-47BA-B5EC-D1FBA57EC58C}"
+	ProjectSection(SolutionItems) = preProject
+		DocImages\Diagram.png = DocImages\Diagram.png
+		DocImages\SiteDashboard.png = DocImages\SiteDashboard.png
+		DocImages\SiteLogs.png = DocImages\SiteLogs.png
+		DocImages\SiteSettings.png = DocImages\SiteSettings.png
+		DocImages\SiteSetupDownload.png = DocImages\SiteSetupDownload.png
+		DocImages\UserAdminPWReset.png = DocImages\UserAdminPWReset.png
+		DocImages\UserAdvanced.png = DocImages\UserAdvanced.png
+		DocImages\UserContact.png = DocImages\UserContact.png
+		DocImages\UserGeneral.png = DocImages\UserGeneral.png
+		DocImages\UserOnPremManage.png = DocImages\UserOnPremManage.png
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComplexOrgSiteAgent", "ComplexOrgSiteAgent\ComplexOrgSiteAgent.csproj", "{BCA20CF9-B8E1-4551-8B26-11AD42F63892}"
 EndProject

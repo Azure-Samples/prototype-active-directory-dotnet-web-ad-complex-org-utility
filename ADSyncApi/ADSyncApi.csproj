@@ -233,6 +233,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LogsController.cs" />
     <Compile Include="Controllers\RemoteSiteController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -408,6 +409,7 @@
     <Content Include="Scripts\lib\moment-tzData.min.js.map" />
     <Content Include="Views\RemoteSite\_setupDetail.cshtml" />
     <Content Include="Views\Home\Chat.cshtml" />
+    <Content Include="Views\Search\Index.cshtml" />
     <None Include="Web.LocalDebug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

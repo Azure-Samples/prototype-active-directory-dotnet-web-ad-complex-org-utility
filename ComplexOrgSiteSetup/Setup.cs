@@ -119,7 +119,7 @@ namespace ComplexOrgSiteSetup
             }
             catch(DirectoryServicesCOMException ex)
             {
-                var msg = string.Format("The server was uanble to complete the login.\n\nDetail: {0}", ex.ExtendedErrorMessage);
+                var msg = string.Format("The server was unable to complete the login.\n\nDetail: {0}", ex.Message);
                 MessageBox.Show(msg, "Active Directory Access Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
             catch (Exception ex)

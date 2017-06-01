@@ -8,6 +8,7 @@ using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
 using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace OrgRelay
 {
@@ -23,18 +24,42 @@ namespace OrgRelay
 
         public static object[] GetADDomainList(string userName, string password)
         {
+            var res = new List<string>
+            {
+                ADDomainName
+            };
+
             var path = "DC=" + string.Join(",DC=", ADDomainName.Split('.'));
-            DirectoryEntry oPartition = new DirectoryEntry(@"LDAP://CN=Partitions,CN=Configuration," + path);
+            DirectoryEntry oPartition = new DirectoryEntry(string.Format("LDAP://{0}/CN=Partitions,CN=Configuration,{1}", ADDomainName, path), userName, password);
+            DirectorySearcher mySearcher = new DirectorySearcher(oPartition);
+            mySearcher.PropertiesToLoad.Add("uPNSuffixes");
+            foreach (SearchResult searchResults in mySearcher.FindAll())
+            {
+                foreach (string propertyName in searchResults.Properties.PropertyNames)
+                {
+                    if (propertyName == "upnsuffixes")
+                    {
+                        foreach (Object retEntry in searchResults.Properties[propertyName])
+                        {
+                            res.Add(retEntry.ToString());
+                        }
+                    }
+                }
+            }
+
+            /*
             oPartition.Invoke("GetEx", new object[] { "uPNSuffixes" });
 
-            var context = new DirectoryContext(DirectoryContextType.Domain, ADDomainName, userName, password);
-            var domain = Domain.GetDomain(context);
-
-            var res = new List<string>();
-            res.Add(domain.Name);
-            var upns = (object[])oPartition.InvokeGet("uPNSuffixes");
-
-            res.AddRange(upns.Select(u => (string)u));
+            var upns = oPartition.InvokeGet("uPNSuffixes");
+            if (upns.GetType().Name == "Object[]")
+            {
+                res.AddRange((upns as object[]).Select(u => (string)u));
+            }
+            else
+            {
+                res.Add(upns.ToString());
+            }
+            */
 
             return res.ToArray<object>();
         }

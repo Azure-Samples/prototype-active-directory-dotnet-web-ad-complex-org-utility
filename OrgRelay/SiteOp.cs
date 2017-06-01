@@ -37,7 +37,9 @@ namespace OrgRelay
                         return res;
 
                     case SiteOperation.TriggerPoll:
-                        ActivatePoll(message.DestSiteId);
+                        r = ActivatePoll(message.DestSiteId);
+                        res.Success = r.Success;
+                        res.ErrorMessage = r.ErrorMessage;
                         res.Operation = SiteOperation.TriggerPoll;
                         return res;
 
@@ -75,6 +77,13 @@ namespace OrgRelay
                         res.ErrorMessage = r.ErrorMessage;
                         return res;
 
+                    case SiteOperation.AddLogEntry:
+
+                        return res;
+
+                    case SiteOperation.FireScript:
+
+                        return res;
                 }
                 return null;
 
@@ -150,11 +159,12 @@ namespace OrgRelay
         /// <summary>
         /// Master site will fire the PS call to check the queue
         /// </summary>
-        public static void ActivatePoll(string targetSiteId)
+        public static RelayResponse ActivatePoll(string targetSiteId)
         {
             throw new NotImplementedException();
         }
     }
+
     public class RelayResponseInternal: RelayResponse
     {
         public Exception Exception { get; set; }

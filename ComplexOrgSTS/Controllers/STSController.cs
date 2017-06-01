@@ -77,19 +77,21 @@ namespace WSFederationSecurityTokenService
         [HttpPost]
         public async Task<ActionResult> Login(LoginModel login)
         {
+            if (login.UserName.IndexOf('@') < 0)
+            {
+                //incorrect format
+                Session["Error"] = @"Enter your user ID in the format ""domain\user"" or ""user @domain"". ";
+                return RedirectToAction("Index", new { Request.Url.Query });
+            }
+
             string domain = login.UserName.Split('@')[1];
             InitSTS(domain);
             ValidationResponse user;
+
             try
             {
                 //validate identity
                 user = await LoginValidate.ValidateAsync(login, HttpRuntime.Cache);
-                if (login.UserName.IndexOf('@') < 0)
-                {
-                    //incorrect format
-                    Session["Error"] = @"Enter your user ID in the format ""domain\user"" or ""user @domain"". ";
-                    return RedirectToAction("Index", new { Request.Url.Query });
-                }
 
                 if (!user.IsValid)
                 {

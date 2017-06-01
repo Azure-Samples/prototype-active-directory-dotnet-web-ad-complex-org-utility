@@ -52,6 +52,8 @@ namespace ADSync.Common.Enums
         DisableUser,
         EnableUser,
         Unauthorized,
-        UpdateUser
+        UpdateUser,
+        AddLogEntry,
+        FireScript
     }
 }

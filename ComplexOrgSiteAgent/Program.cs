@@ -52,21 +52,21 @@ namespace ComplexOrgSiteAgent
             {
                 RemoteSite siteConfig = null;
 
-                while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape))
-                {
+                //while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape))
+                //{
                     try
                     {
                         siteConfig = OrgApiCalls.GetSiteConfig();
-                        break;
+                        //break;
                     }
                     catch (Exception)
                     {
-                        var delay = new Random().Next(2000, 4000);
-                        WriteConsoleStatus("Failed retrieving site status, retrying in {0} seconds...", (delay / 1000).ToString("0.00"));
-                        Console.WriteLine("Press ESC to cancel");
-                        Thread.Sleep(delay);
+                        //var delay = new Random().Next(2000, 4000);
+                        WriteConsoleStatus("Failed retrieving site status");
+                        //Console.WriteLine("Press ESC to cancel");
+                        //Thread.Sleep(delay);
                     }
-                }
+                //}
 
                 if (siteConfig == null)
                 {
@@ -148,6 +148,7 @@ namespace ComplexOrgSiteAgent
         private static void Relay_ErrorEvent(object sender, ErrorEvent e)
         {
             Utils.AddLogEntry(ConsoleLogSource, e.Message, e.LogEntryType, e.EventId, e.Exception);
+            Console.WriteLine("{0}: {1}", e.LogEntryType.ToString(),  e.Message);
         }
 
         private static void Relay_StatusUpdate(object sender, StatusEvent e)
@@ -175,7 +176,7 @@ namespace ComplexOrgSiteAgent
 
         static bool ParseCommandLine(string[] args)
         {
-            if (args.Length < 0)
+            if (args.Length == 0)
             {
                 PrintInstructions();
                 return false;

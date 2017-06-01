@@ -6,6 +6,8 @@ using ADSync.Common.Models;
 using ADSync.Common.Enums;
 using System.Diagnostics;
 using System.Security.Claims;
+using OrgRelay;
+using Newtonsoft.Json;
 
 namespace Infrastructure
 {
@@ -50,6 +52,24 @@ namespace Infrastructure
             Clients.Group(message.DestSiteId).Send(message);
         }
 
+        public void WriteClientEventLog(ErrorEvent evt, string siteId=null)
+        {
+            var msg = new RelayMessage
+            {
+                Data = JsonConvert.SerializeObject(evt),
+                Operation = SiteOperation.AddLogEntry
+            };
+
+            if (siteId == null)
+            {
+                Clients.Client(Context.ConnectionId).Send(msg);
+            }
+            else
+            {
+                Clients.Group(siteId).Send(msg);
+            }
+        }
+
         /// <summary>
         /// When a validation response is returned from a site, this method forwards the response back to the STS (which is also a relay client)
         /// </summary>
@@ -79,24 +99,38 @@ namespace Infrastructure
             if (identity != null)
             {
                 var claim = identity.FindFirst("siteId");
+
                 if (claim != null)
                 {
                     Groups.Add(Context.ConnectionId, claim.Value);
+                    var msg = string.Format("Connection {0} connected, site {1}", Context.ConnectionId, claim.Value);
+                    Debug.WriteLine(msg, "SignalR");
+                    WriteClientEventLog(new ErrorEvent
+                    {
+                        LogEntryType = EventLogEntryType.Information,
+                        Message = msg
+                    });
                 }
             }
-
-            Debug.WriteLine("Client {0} connected", new { Context.ConnectionId });
             return base.OnConnected();
         }
+        
         public override Task OnReconnected()
         {
-            Debug.WriteLine("Client {0} RECONNECTED", Context.ConnectionId);
+            var msg = string.Format("Client {0} RECONNECTED", Context.ConnectionId);
+            Debug.WriteLine(msg, "SignalR");
 
+            WriteClientEventLog(new ErrorEvent
+            {
+                LogEntryType = EventLogEntryType.Information,
+                Message = msg
+            });
             return base.OnReconnected();
         }
+
         public override Task OnDisconnected(bool stopCalled)
         {
-            Debug.WriteLine("Client {0} DISconnected", Context.ConnectionId);
+            Debug.WriteLine("Client {0} DISconnected", "SignalR", Context.ConnectionId);
             
             return base.OnDisconnected(stopCalled);
         }

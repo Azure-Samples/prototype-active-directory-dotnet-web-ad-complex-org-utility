@@ -4,6 +4,10 @@
 
 <a href="#"><img src="http://azuredeploy.net/deploybutton.png"/></a> (coming soon)
 
+[Documentation](./Help.md)
+
+[Detailed step-by-step deployment instructions](./Setup.md)
+
 __Details__
 * Creates a cloud-based management portal and database for staging of user accounts from one or more on-premises Active Directory forests, for creation in a master AD
   * The Azure AD administrator establishes a verified domain name in the master Azure AD, one for each remote site's UPN suffixes
@@ -13,10 +17,10 @@ __Details__
   * This remote AD then sets up ADFS federation to the master Azure AD tenant, federating with associated domain previously established by HQ. Azure Active Directory Connect is NOT configured at these remote sites
   * The result of this scheduled orchestration is a central location to manage and authorize user identities across a distributed network of affiliated companies. Users credentials are managed in their local Active Directory, but they maintain cloud access for SaaS applications via the headquarters Azure AD
   * Additionally, the accounts created in the on-premises headquarters AD enable affiliate users to access on-premises applications hosted locally at HQ, and authorized against the HQ AD, by leveraging Azure Application Proxy
-* Leverages Azure DocumentDB. For development, a downloadable emulator is available: https://aka.ms/documentdb-emulator
+* Leverages Azure Cosmos DB. For development, a downloadable emulator is available: https://aka.ms/documentdb-emulator
 * ARM template deploys the following:
   * Azure Web App
-  * Azure DocumentDB
+  * Azure Cosmos DB
 * Requires the following (see step-by-step deployment instructions above for details):
   1. Azure AD application with the following:
      * Sign-in permissions
