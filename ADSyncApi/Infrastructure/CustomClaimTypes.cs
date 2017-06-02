@@ -8,6 +8,7 @@ namespace Common
     public static class CustomClaimTypes
     {
         public const string SiteId = "SiteId";
+        public const string OnPremDomainName = "OnPremDomainName";
         public const string SiteDomain = "SiteDomain";
         public const string IdentityProvider = "http://schemas.microsoft.com/identity/claims/identityprovider";
         public const string ExtClaims = "ExtClaims";

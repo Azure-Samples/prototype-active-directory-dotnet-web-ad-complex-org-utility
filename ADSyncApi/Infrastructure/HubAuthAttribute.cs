@@ -47,6 +47,7 @@ namespace Infrastructure
                     {
                         ApiKey = key,
                         Id = key,
+                        OnPremDomainName = "CustomSTS",
                         SiteType = SiteTypes.LocalADOnly
                     }, ref p, request))
                     {
@@ -95,6 +96,7 @@ namespace Infrastructure
                 {
                     new Claim(ClaimTypes.Name, site.Id),
                     new Claim(CustomClaimTypes.SiteId, site.Id),
+                    new Claim(CustomClaimTypes.OnPremDomainName, site.OnPremDomainName),
                     new Claim(CustomClaimTypes.SiteDomain, domainList),
                     new Claim(CustomClaimTypes.IsHQ, (site.SiteType == SiteTypes.MasterHQ).ToString()),
                     new Claim(CustomClaimTypes.IsSTS, (site.ApiKey == Settings.STSApiKey).ToString())

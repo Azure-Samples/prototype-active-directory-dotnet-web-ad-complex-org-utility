@@ -10,14 +10,13 @@
     User will then be sync'd to HQ Azure AD
     User will be authenticated via federation to this ADFS
     #>
+    $dom = $user.UserPrincipalName.Split('@')[1]
 
     if ($user.UserPrincipalName.Length -eq 0) { 
         $msg = "User $($user.DistinguishedName) missing UPN: not added."
         Create-LogEntry -ErrorType Error -Detail $msg -Source "Script:Add-NewStagedUser" -RemoteSiteID $RemoteSiteID | Add-LogEntry | Out-Null
         return $null
     }
-
-    $dom = $user.UserPrincipalName.Split('@')[1]
 
     if ($dom.indexof("onmicrosoft.com") -gt -1) {
         $msg = "Not adding {0}, excluding '*.onmicrosoft.com' UPNs" -f $user.UserPrincipalName
@@ -79,8 +78,9 @@
 
 function Get-ADUsersToSync
 {
+    $UpnSuffix = $SiteConfig.siteDomain
     $userProps = @("cn","mail","co","name","company","department","displayName","l","mobile","objectSid","st","streetAddress","telephoneNumber","homePhone","postalCode","title")
-    $userFilter = '-not adminCount -like "*" -and Enabled -eq "True"'
+    $userFilter = '-not adminCount -like "*" -and Enabled -eq "True" -and UserPrincipalName -like "*@' + $UpnSuffix + '"'
     $res = Get-ADUser -Filter $userFilter -Properties $userProps
     return $res
 }
@@ -93,24 +93,8 @@ function Process-UpdatesFromHQ
     foreach($updUser in $usersToUpdate) 
     {
         try {
-            $currUser = Get-ADUser -Identity $updUser.localGuid -Properties @("mS-DS-ConsistencyGuid")
             $consistencyguid = ([System.Guid]"{$($updUser.masterGuid)}").ToByteArray()
-
-            if (!$consistencyguid.Equals($currUser.'mS-DS-ConsistencyGuid')) {
-                if ($currUser.'mS-DS-ConsistencyGuid' -ne $null) {
-                    $orgGuid = [System.Guid]::new($currUser.'ms-ds-consistencyguid').ToString()
-
-                    $errMsg = "User $($currUser.name) has a consistency GUID that is set but doesn't match the one from HQ. It will be cleared and the new one set."
-                    $errMsg += "Original GUID: $orgGuid New GUID: $updUser.masterGuid"
-                    $batchError += Create-LogEntry -ErrorType Warning -Detail $errMsg -Source "Sync.Main.HQUpdate" -RemoteSiteID $RemoteSiteID
-
-                    #clearing existing GUID
-                    Set-ADUser -Identity $updUser.localGuid -Replace @{ "mS-DS-ConsistencyGuid" = $consistencyguid } -ErrorAction Stop | Out-Null
-                } else {
-                    Set-ADUser -Identity $updUser.localGuid -Add @{ "mS-DS-ConsistencyGuid" = $consistencyguid } -ErrorAction Stop | Out-Null
-                }
-            }
-
+            Set-ADUser -Identity $updUser.localGuid -Add @{ "mS-DS-ConsistencyGuid" = $consistencyguid } -ErrorAction Stop
             $updUser.loadState=3
             $doUpd = $true
         } 

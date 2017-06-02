@@ -43,6 +43,8 @@
             this.lblLocalDomainList = new System.Windows.Forms.Label();
             this.lstLocalDomainList = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.txtSiteID = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txtSiteType = new System.Windows.Forms.TextBox();
             this.txtDomainName = new System.Windows.Forms.TextBox();
@@ -88,6 +90,7 @@
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.Padding = new System.Drawing.Point(8, 8);
             this.tabControl2.SelectedIndex = 0;
+            this.tabControl2.ShowToolTips = true;
             this.tabControl2.Size = new System.Drawing.Size(962, 689);
             this.tabControl2.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControl2.TabIndex = 15;
@@ -165,9 +168,9 @@
             this.groupBox2.Controls.Add(this.txtUsername);
             this.groupBox2.Controls.Add(this.lblLocalDomainList);
             this.groupBox2.Controls.Add(this.lstLocalDomainList);
-            this.groupBox2.Location = new System.Drawing.Point(489, 170);
+            this.groupBox2.Location = new System.Drawing.Point(489, 154);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(446, 353);
+            this.groupBox2.Size = new System.Drawing.Size(446, 369);
             this.groupBox2.TabIndex = 36;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Local Domain Settings";
@@ -242,23 +245,42 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.txtSiteID);
+            this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.txtSiteType);
             this.groupBox1.Controls.Add(this.txtDomainName);
             this.groupBox1.Controls.Add(this.lblDomainName);
             this.groupBox1.Controls.Add(this.lstRemoteDomainList);
             this.groupBox1.Controls.Add(this.lblRemoteDomainList);
-            this.groupBox1.Location = new System.Drawing.Point(23, 170);
+            this.groupBox1.Location = new System.Drawing.Point(23, 154);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(446, 353);
+            this.groupBox1.Size = new System.Drawing.Size(446, 369);
             this.groupBox1.TabIndex = 35;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Site Config";
             // 
+            // txtSiteID
+            // 
+            this.txtSiteID.Location = new System.Drawing.Point(19, 142);
+            this.txtSiteID.Name = "txtSiteID";
+            this.txtSiteID.ReadOnly = true;
+            this.txtSiteID.Size = new System.Drawing.Size(409, 29);
+            this.txtSiteID.TabIndex = 42;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(14, 114);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(65, 25);
+            this.label2.TabIndex = 41;
+            this.label2.Text = "SiteID";
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 114);
+            this.label1.Location = new System.Drawing.Point(226, 40);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(96, 25);
             this.label1.TabIndex = 40;
@@ -267,10 +289,10 @@
             // txtSiteType
             // 
             this.txtSiteType.BackColor = System.Drawing.SystemColors.Control;
-            this.txtSiteType.Location = new System.Drawing.Point(19, 142);
+            this.txtSiteType.Location = new System.Drawing.Point(231, 68);
             this.txtSiteType.Name = "txtSiteType";
             this.txtSiteType.ReadOnly = true;
-            this.txtSiteType.Size = new System.Drawing.Size(291, 29);
+            this.txtSiteType.Size = new System.Drawing.Size(197, 29);
             this.txtSiteType.TabIndex = 39;
             // 
             // txtDomainName
@@ -278,7 +300,7 @@
             this.txtDomainName.Location = new System.Drawing.Point(19, 68);
             this.txtDomainName.Name = "txtDomainName";
             this.txtDomainName.ReadOnly = true;
-            this.txtDomainName.Size = new System.Drawing.Size(291, 29);
+            this.txtDomainName.Size = new System.Drawing.Size(197, 29);
             this.txtDomainName.TabIndex = 38;
             // 
             // lblDomainName
@@ -372,6 +394,7 @@
             this.tabSvcConfig.Size = new System.Drawing.Size(954, 642);
             this.tabSvcConfig.TabIndex = 1;
             this.tabSvcConfig.Text = "Service Config";
+            this.tabSvcConfig.ToolTipText = "Configuration must be confirmed before this panel is enabled.";
             this.tabSvcConfig.UseVisualStyleBackColor = true;
             // 
             // groupBox3
@@ -512,6 +535,8 @@
             // 
             // lblStatusInfo
             // 
+            this.lblStatusInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblStatusInfo.AutoSize = true;
             this.lblStatusInfo.Location = new System.Drawing.Point(16, 728);
             this.lblStatusInfo.MinimumSize = new System.Drawing.Size(700, 60);
@@ -592,6 +617,8 @@
         private System.Windows.Forms.TextBox txtServicePassword;
         private System.Windows.Forms.TextBox txtServiceUsername;
         private System.Windows.Forms.Label lblStatusInfo;
+        private System.Windows.Forms.TextBox txtSiteID;
+        private System.Windows.Forms.Label label2;
     }
 }
 

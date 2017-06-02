@@ -54,11 +54,6 @@ namespace ComplexOrgSiteSetup
 
         private void btnCheckConfig_Click(object sender, EventArgs e)
         {
-            if (!_hasConfig)
-            {
-                MessageBox.Show("Please configure your API Key and Site URL before confirming your config.", "Need Config", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                return;
-            }
             CheckConfig();
         }
 
@@ -139,6 +134,7 @@ namespace ComplexOrgSiteSetup
                 OrgApiCalls.SiteUrl = txtSiteUrl.Text;
                 _siteConfig = OrgApiCalls.GetSiteConfig();
                 txtDomainName.Text = _siteConfig.OnPremDomainName;
+                txtSiteID.Text = _siteConfig.Id;
                 ADTools.ADDomainName = _siteConfig.OnPremDomainName;
 
                 txtSiteType.Text = _siteConfig.SiteType.ToString();
@@ -146,6 +142,11 @@ namespace ComplexOrgSiteSetup
                 lstRemoteDomainList.Items.Clear();
                 lstRemoteDomainList.Items.AddRange(_siteConfig.SiteDomains.ToArray());
                 CheckDomainsToUpns();
+            } 
+            else
+            {
+                MessageBox.Show("Please configure your API Key and Site URL before confirming your config.", "Need Config", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
             }
         }
 

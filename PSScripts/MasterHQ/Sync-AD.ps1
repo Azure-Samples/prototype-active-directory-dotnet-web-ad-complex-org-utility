@@ -1,12 +1,4 @@
 ﻿<#
-Validate
-#>
-if (($PSVersionTable.PSVersion).Major -lt 5) {
-    Write-Error "Powershell version must be 5 or greater - please upgrade"
-    exit
-}
-
-<#
 INITIALIZE
 #>
     #Set API variables, initialize sync API
@@ -19,7 +11,6 @@ INITIALIZE
     . "$PSScriptRoot\Logging.ps1"
 
     Init-SyncAPI -SyncVars $SyncVars
-
 <#
 INIT HQ
 #>

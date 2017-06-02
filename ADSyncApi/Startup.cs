@@ -24,8 +24,10 @@ namespace ADSyncApi
                 EnableJavaScriptProxies = false
             };
 
+            //https://stackoverflow.com/questions/35325531/signalr-redis-backplane-not-working-dependency-issue
             var connStr = ConfigurationManager.AppSettings["RedisConnectionString"];
-            GlobalHost.DependencyResolver.UseRedis(new RedisScaleoutConfiguration(connStr, "SiteHub"));
+            srConfig.Resolver.UseRedis(new RedisScaleoutConfiguration(connStr, "SiteHub"));
+            //GlobalHost.DependencyResolver.UseRedis(new RedisScaleoutConfiguration(connStr, "SiteHub"));
             app.MapSignalR("/sitelink", srConfig);
         }
     }

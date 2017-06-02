@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Security.Claims;
 using OrgRelay;
 using Newtonsoft.Json;
+using Common;
 
 namespace Infrastructure
 {
@@ -28,6 +29,7 @@ namespace Infrastructure
                     break;
             }
         }
+
         /// <summary>
         /// When a site notices a local change, it will queue the change then fire this call to get HQ to check the queue immediately
         /// </summary>
@@ -54,6 +56,7 @@ namespace Infrastructure
 
         public void WriteClientEventLog(ErrorEvent evt, string siteId=null)
         {
+            evt.Message = string.Format("Message from relay hub: {0}", evt.Message);
             var msg = new RelayMessage
             {
                 Data = JsonConvert.SerializeObject(evt),
@@ -92,18 +95,17 @@ namespace Infrastructure
         #region Overrides
         public override Task OnConnected()
         {
-            var environment = Context.Request.Environment;
-            var principal = environment["server.User"] as ClaimsPrincipal;
+            var principal = Context.Request.Environment["server.User"] as ClaimsPrincipal;
             
             var identity = principal.Identity as ClaimsIdentity;
             if (identity != null)
             {
-                var claim = identity.FindFirst("siteId");
+                var siteId = identity.GetClaim(CustomClaimTypes.SiteId);
 
-                if (claim != null)
+                if (siteId != null)
                 {
-                    Groups.Add(Context.ConnectionId, claim.Value);
-                    var msg = string.Format("Connection {0} connected, site {1}", Context.ConnectionId, claim.Value);
+                    Groups.Add(Context.ConnectionId, siteId);
+                    var msg = string.Format("Connection {0} connected, site {1}", Context.ConnectionId, identity.GetClaim(CustomClaimTypes.OnPremDomainName));
                     Debug.WriteLine(msg, "SignalR");
                     WriteClientEventLog(new ErrorEvent
                     {
@@ -117,7 +119,14 @@ namespace Infrastructure
         
         public override Task OnReconnected()
         {
-            var msg = string.Format("Client {0} RECONNECTED", Context.ConnectionId);
+            var principal = Context.Request.Environment["server.User"] as ClaimsPrincipal;
+            var identity = principal.Identity as ClaimsIdentity;
+            var siteId = identity.GetClaim(CustomClaimTypes.SiteId);
+
+            Groups.Add(Context.ConnectionId, siteId);
+
+            var site = identity.GetClaim(CustomClaimTypes.OnPremDomainName);
+            var msg = string.Format("Connection {0} RECONNECTED, site {1}", Context.ConnectionId, site);
             Debug.WriteLine(msg, "SignalR");
 
             WriteClientEventLog(new ErrorEvent
@@ -130,7 +139,9 @@ namespace Infrastructure
 
         public override Task OnDisconnected(bool stopCalled)
         {
-            Debug.WriteLine("Client {0} DISconnected", "SignalR", Context.ConnectionId);
+            var dType = (stopCalled) ? "DISCONNECTED" : "timed out";
+            var msg = string.Format("Connection {0} {1}", Context.ConnectionId, dType);
+            Debug.WriteLine(msg, "SignalR");
             
             return base.OnDisconnected(stopCalled);
         }

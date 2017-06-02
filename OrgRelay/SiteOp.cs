@@ -43,11 +43,6 @@ namespace OrgRelay
                         res.Operation = SiteOperation.TriggerPoll;
                         return res;
 
-                    case SiteOperation.Ping:
-                        res.Operation = SiteOperation.Ping;
-                        res.Data = message.Data;
-                        return res;
-
                     case SiteOperation.DisableUser:
                         r = ADTools.EnableDisableUser(message.Data, enabled: false);
                         res.Data = r.Data;
@@ -77,13 +72,13 @@ namespace OrgRelay
                         res.ErrorMessage = r.ErrorMessage;
                         return res;
 
+                    case SiteOperation.Ping:
                     case SiteOperation.AddLogEntry:
-
+                        res.Data = message.Data;
                         return res;
 
                     case SiteOperation.FireScript:
-
-                        return res;
+                        throw new NotImplementedException();
                 }
                 return null;
 
