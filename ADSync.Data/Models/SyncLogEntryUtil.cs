@@ -5,6 +5,7 @@ using Portal.Data;
 using System.Threading.Tasks;
 using Common;
 using ADSync.Common.Models;
+using System.Linq.Expressions;
 
 namespace ADSync.Data.Models
 {
@@ -42,7 +43,7 @@ namespace ADSync.Data.Models
             return res;
         }
 
-        public static async Task<IEnumerable<SyncLogEntry>> GetLogs(int? days=null)
+        public static async Task<IEnumerable<SyncLogEntry>> GetLogs(int? days = null)
         {
             IEnumerable<SyncLogEntry> res;
 
@@ -54,6 +55,22 @@ namespace ADSync.Data.Models
             {
                 var cutoffdate = DateTime.UtcNow.AddDays((int)days * -1);
                 res = await DocDBRepo.DB<SyncLogEntry>.GetItemsAsync(l => l.LogDate > cutoffdate);
+            }
+            return res;
+        }
+
+        public static async Task<IEnumerable<SyncLogEntry>> GetErrorLogs(int? days = null)
+        {
+            IEnumerable<SyncLogEntry> res;
+
+            if (days == null)
+            {
+                res = await DocDBRepo.DB<SyncLogEntry>.GetItemsAsync(l => l.ErrorType=="Error");
+            }
+            else
+            {
+                var cutoffdate = DateTime.UtcNow.AddDays((int)days * -1);
+                res = await DocDBRepo.DB<SyncLogEntry>.GetItemsAsync(l => l.ErrorType=="Error" && l.LogDate > cutoffdate);
             }
             return res;
         }

@@ -91,16 +91,18 @@ namespace Portal.Data
             }
 
             /// <summary>
-            /// The default DocumentDB batch size is 1000 - use this stub to limit returns to a single batch
+            /// use this stub to limit returns to max 1000 results
             /// </summary>
             /// <param name="query"></param>
             /// <returns></returns>
             private static async Task<IEnumerable<T>> _getOneBatchItemsAsync(IDocumentQuery<T> query)
             {
                 List<T> results = new List<T>();
-                if (query.HasMoreResults)
+                while (query.HasMoreResults)
                 {
                     results.AddRange(await query.ExecuteNextAsync<T>());
+                    if (results.Count() >= 1000)
+                        return results;
                 }
 
                 return results;
@@ -134,7 +136,7 @@ namespace Portal.Data
             /// returns all documents of type T
             /// </summary>
             /// <returns></returns>
-            public static async Task<IEnumerable<T>> GetItemsAsync(bool limit1000=false)
+            public static async Task<IEnumerable<T>> GetItemsAsync(bool limit1000 = false)
             {
                 var docType = (DocTypes)Enum.Parse(typeof(DocTypes), typeof(T).Name);
                 Expression<Func<T, bool>> docTypeFilter = (q => q.DocType == docType);

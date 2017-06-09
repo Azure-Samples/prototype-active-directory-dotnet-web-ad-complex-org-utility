@@ -4,34 +4,35 @@
 }
 <div class="panel panel-primary" style="margin-top:20px;">
     <div class="panel-title panel-heading">
-        @ViewBag.Title
+        <button id="btnRefresh" class="btn btn-default btn-sm pull-right">Refresh</button>
+        @ViewBag.Title - Refreshed <span id="spRefreshTime">(loading...)</span>
     </div>
     <div class="panel-body">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="well">
                     <h4>Sites</h4>
-                    <ul>
-                        <li><span id="spNumSites"></span> configured sites</li>
-                        <li>Last site activity <span id="spLastSiteActivity"></span></li>
-                    </ul>
+                    <div class="DashReport">
+                        <div><span id="spNumSites">0</span> configured sites</div>
+                        <div>Last site activity: <span id="spLastSiteActivity">N/A</span></div>
+                    </div>
 
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="well">
                     <h4>Users</h4>
-                    <ul>
-                        <li><span id="spNumUsers"></span> total staged/replicated users</li>
-                        <li><span id="spPendingSyncUsers"></span> users pending sync</li>
-                        <li>Last user sync <span id="spLastUserSync"></span></li>
-                    </ul>
+                    <div class="DashReport">
+                        <div><span id="spNumUsers">0</span> total staged/replicated users</div>
+                        <div><span id="spPendingSyncUsers">0</span> users pending sync</div>
+                        <div>Last user sync: <span id="spLastUserSync">N/A</span></div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="well">
-                    <h4>Error Logs</h4>
-                    <ul id="RecentLogList"></ul>
+                    <h4>Error Logs (Last 5)</h4>
+                    <div id="RecentLogList" class="DashReport"><div>Parsing logs...</div></div>
                 </div>
             </div>
         </div>
@@ -41,30 +42,37 @@
 @section scripts {
     <script type="text/javascript">
         $(function () {
-            debugger;
-            SiteUtil.AjaxCall("/api/Dashboard/Logs", null, function (res) {
-                $("#RecentLogList li").remove();
+            $("#btnRefresh").on("click", function () {
+                LoadDashboard();
+            });
+            function LoadDashboard() {
+                SiteUtil.AjaxCall("/api/Dashboard/Logs", null, function (res) {
+                    $("#RecentLogList div").remove();
+                    $("#spLastUserSync").html(SiteUtil.UtcToLocal(res.LastUserSync));
+                    $("#spLastSiteActivity").html(SiteUtil.UtcToLocal(res.LastSiteActivity));
 
-                if (res.LatestLogs.length == 0) {
-                    $("<li>").html("No errors in last 24 hours").appendTo("#RecentLogList");
-                } else {
-                    for (var x = 0; x < res.LatestLogs.length; x++) {
-                        var log = res.LatestLogs[x];
-                        $("<li>").html(log.Message).appendTo("#RecentLogList");
+                    if (res.LatestLogs.length == 0) {
+                        $("<div>").html("No errors in last 24 hours").appendTo("#RecentLogList");
+                    } else {
+                        for (var x = 0; x < res.LatestLogs.length; x++) {
+                            var log = res.LatestLogs[x];
+                            $("<div>").html("<span class='lHead'>" + log.SiteName + ": " + SiteUtil.UtcToLocal(log.LogDate) + "</span>" + log.Message).appendTo("#RecentLogList");
+                        }
                     }
-                }
-            });
+                    $("#spRefreshTime").html(SiteUtil.CurrLocalDateTime());
+                });
 
-            SiteUtil.AjaxCall("/api/Dashboard/Sites", null, function (res) {
-                $("#spNumSites").html(res.NumSites);
-                $("#spLastSiteActivity").html(SiteUtil.UtcToLocal(res.LastSiteActivity));
-            });
+                SiteUtil.AjaxCall("/api/Dashboard/Sites", null, function (res) {
+                    $("#spNumSites").html(res.NumSites);
+                });
 
-            SiteUtil.AjaxCall("/api/Dashboard/Users", null, function (res) {
-                $("#spNumUsers").html(res.NumUsers);
-                $("#spPendingSyncUsers").html(res.NumUsersPendingSync);
-                $("#spLastUserSync").html(SiteUtil.UtcToLocal(res.LastUserSync));
-            });
+                SiteUtil.AjaxCall("/api/Dashboard/Users", null, function (res) {
+                    $("#spNumUsers").html(res.NumUsers);
+                    $("#spPendingSyncUsers").html(res.NumUsersPendingSync);
+                });
+            }
+
+            LoadDashboard();
         });
     </script>
 }
@@ -72,7 +80,17 @@
 @section styles {
     <style type="text/css">
         div.well {
-            min-height: 250px;
+            min-height: 350px;
+        }
+        div.DashReport div {
+            font-size:.8em;
+            border-bottom:1px solid #dddddd;
+            margin-bottom:2px;
+            padding:2px;
+        }
+        div.DashReport div span.lHead {
+            display:block;
+            font-weight:bold;
         }
     </style>
 }

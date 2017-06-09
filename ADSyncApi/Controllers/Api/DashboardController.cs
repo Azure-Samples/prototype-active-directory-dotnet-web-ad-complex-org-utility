@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using ADSync.Common.Models;
 using Common;
 using ADSync.Common.Enums;
+using Portal.Data;
 
 namespace ADSyncApi.Controllers.Api
 {
@@ -20,6 +21,7 @@ namespace ADSyncApi.Controllers.Api
         {
             var data = new Dashboard();
             var siteActivity = await SyncLogEntryUtil.GetLogs(1);
+
             var sites = await RemoteSiteUtil.GetAllSites();
 
             var lastLog = siteActivity
@@ -45,6 +47,7 @@ namespace ADSyncApi.Controllers.Api
             return data;
         }
 
+        [HttpGet]
         public async Task<Dashboard> Users()
         {
             var data = new Dashboard();
@@ -57,6 +60,7 @@ namespace ADSyncApi.Controllers.Api
             return data;
         }
 
+        [HttpGet]
         public async Task<Dashboard> Sites()
         {
             var data = new Dashboard();

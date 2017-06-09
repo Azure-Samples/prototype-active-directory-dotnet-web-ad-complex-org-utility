@@ -9,8 +9,12 @@ $(function () {
 });
 
 $(document).ajaxComplete(function () {
-    $(".ui-loader").hide();
+    ajaxCallCount--;
+    if (ajaxCallCount==0)
+        $(".ui-loader").hide();
 });
+
+var ajaxCallCount = 0;
 $(document).ajaxStart(function () {
     $(".ui-loader").show();
 });
@@ -18,7 +22,6 @@ var localErr = {};
 
 //global events
 window.onerror = function (msg, url, line, col, err) {
-    $(".ajaxloader").hide();
     localErr.Message = msg + "\n  URL: " + url + "\n  Line: " + line + "\n  Col: " + col + "\n  Stack:\n  " + (((err) && (err.stack)) ? err.stack : "N/A");
     localErr.thrownError = "Global Catch";
     var txt = "A general web application error occured. Please <a href='javascript:popErrorUpdater();'>help us out</a> by supplying additional information.";
@@ -27,6 +30,10 @@ window.onerror = function (msg, url, line, col, err) {
     return true;
 };
 $(document).ajaxError(function (event, xhr, ajaxOptions, thrownError) {
+    ajaxCallCount--;
+    if (ajaxCallCount == 0)
+        $(".ui-loader").hide();
+
     if (xhr.status == 401) {
         //re-authenticate
         SiteUtil.ShowMessage("Sorry, your authentication token has expired. Please reload your keyed landing page.", "Authentication Expired", SiteUtil.AlertImages.warning);
@@ -163,6 +170,12 @@ var SiteUtil = function () {
         return SiteUtil.UtcToLocal(moment(sDate), null, sFormat, false)
     }
 
+    function _currLocalDateTime(sFormat) {
+        sFormat = sFormat || 'MM/DD/YYYY h:mmA';
+        var res = moment().format(sFormat);
+        res += " " + lTimezoneAbb;
+        return res;
+    }
     function _utcToServerAndLocal(sDate, sInputFormatMask) {
         var bIsUTC = (typeof sDate == "string" && sDate.indexOf("T") == 10);
         sInputFormatMask = (bIsUTC) ? null : (sInputFormatMask || 'MM/DD/YYYY HH:mmA');
@@ -179,6 +192,7 @@ var SiteUtil = function () {
         if (method !== "GET") {
             data = JSON.stringify(data);
         }
+        ajaxCallCount++;
         $.ajax({
             url: url,
             data: data,
@@ -313,6 +327,7 @@ var SiteUtil = function () {
         AjaxCall: _ajaxCall,
         UtcToLocal: _utcToLocal,
         UtcToServerAndLocal: _utcToServerAndLocal,
+        CurrLocalDateTime: _currLocalDateTime,
         GetShortDate: _getShortDate,
         GetFormObjects: getFormObjects,
         GetDataObject: getDataObject

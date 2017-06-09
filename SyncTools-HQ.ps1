@@ -2,7 +2,7 @@ function Process-PendingStagedUsers
 {
     param(
         [parameter(Position=0, Mandatory=$true)]
-        [ValidateSet("MasterHQ","AADB2B","LocalADOnly","All")]
+        [ValidateSet("MasterHQ","AADB2B","LocalADOnly","AADB2BCloudOnly","All")]
         [string]$SiteType
     )
 
@@ -10,6 +10,7 @@ function Process-PendingStagedUsers
     $StagedUsers = Get-NewStagedUsers -SiteType $SiteType
 
     if ($SiteType -eq "AADB2B") { $SearchBase = "ou=$B2BOU,$ForestRoot" }
+    if ($SiteType -eq "AADB2BCloudOnly") { $SearchBase = "ou=$B2BOU,$ForestRoot" }
     if ($SiteType -eq "LocalADOnly") { $SearchBase = "ou=$RemoteOU,$ForestRoot" }
 
     #filter gets all users from the remote OU
@@ -86,7 +87,7 @@ function Process-PendingStagedUsers
 
                 $userSiteType = Get-SiteType -SiteType $userSite.siteType
 
-                if ($userSiteType -eq "AADB2B")
+                if ($userSiteType -eq "AADB2B" -or $userSiteType -eq "AADB2BCloudOnly")
                 {
                     $e = Send-B2BInvite -user $StagedUser -RedirectTo $userSite.b2bRedirectUrl
                     $logs.AddRange($e)
@@ -212,9 +213,10 @@ function Get-LoadStage
 }
 
 $SiteTypes = @{
-    "MasterHQ"    = 0;
-    "AADB2B"      = 1;
-    "LocalADOnly" = 2;
+    "MasterHQ"        = 0;
+    "AADB2B"          = 1;
+    "LocalADOnly"     = 2;
+	"AADB2BCloudOnly" = 3;
 }
 $LoadStages = @{
     "PendingHQAdd"        = 0;
