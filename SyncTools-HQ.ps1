@@ -211,36 +211,6 @@ function Get-LoadStage
     return $res
 }
 
-function Get-SiteType
-{
-    param(
-        $SiteType
-    )
-
-    $res=""
-    [int]$type | Out-Null
-   
-    if ([int]::TryParse($SiteType, [ref][int]$type)){
-        switch($SiteType)
-        {
-            0 { $res = "MasterHQ" }
-            1 { $res = "AADB2B" }
-            2 { $res = "LocalADOnly" }
-            default { $res = $null }
-        }
-    } else {
-        switch($SiteType)
-        {
-            "MasterHQ" { $res = 0 }
-            "AADB2B" { $res = 1 }
-            "LocalADOnly" { $res = 2 }
-            default { $res = $null }
-        }
-    }
-
-    return $res
-}
-
 $SiteTypes = @{
     "MasterHQ"    = 0;
     "AADB2B"      = 1;

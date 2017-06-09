@@ -9,24 +9,40 @@ using System.Linq;
 using System.Reflection;
 using System.Configuration;
 using System.Threading;
+using System.Collections.Generic;
+using System.IO;
+using ADSync.Common.Events;
 
 namespace ComplexOrgSiteAgent
 {
     static partial class Program
     {
         static SigRClient relay;
+        static ScriptTimer timer;
 
-        public static string ConsoleLogSource;
-        public static string ServiceName;
-        public static string AssemblyName = "ComplexOrgSiteAgent.SiteListenerService";
+        static string ConsoleLogSource;
+        static string ServiceName;
+        static string AssemblyName = "ComplexOrgSiteAgent.SiteListenerService";
 
-        private static PingEvent _pingTest;
-        private static bool _isDebug;
-        private static bool _isRunning;
-        private static int _pollIntervalMinutes;
+        static PingEvent _pingTest;
+        static bool _isDebug;
+        static bool _isRunning;
+        static int _timerIntervalMinutes;
+        static string _scriptFolderPath;
 
         static void Main(string[] args)
         {
+            var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            _scriptFolderPath = args.Where(a => a.StartsWith("-scriptPath")).FirstOrDefault();
+            if (_scriptFolderPath != null)
+            {
+                _scriptFolderPath = _scriptFolderPath.Split(':')[1];
+            }
+            else
+            {
+                _scriptFolderPath = Path.GetFullPath(string.Format("{0}\\Scripts", dir));
+            }
+
             ServiceName = Assembly.GetCallingAssembly().GetCustomAttribute<AssemblyTitleAttribute>().Title;
             ConsoleLogSource = String.Format("{0}-console", ServiceName);
             ServiceUtil.AssemblyName = AssemblyName;
@@ -41,7 +57,7 @@ namespace ComplexOrgSiteAgent
 
             var sUrl = ConfigurationManager.AppSettings["SiteUrl"];
             var sDebugUrl = ConfigurationManager.AppSettings["DebugSiteUrl"];
-            _pollIntervalMinutes = Convert.ToInt16(ConfigurationManager.AppSettings["TimerIntervalMinutes"]);
+            _timerIntervalMinutes = Convert.ToInt16(ConfigurationManager.AppSettings["TimerIntervalMinutes"]);
 
             OrgApiCalls.ApiKey = ConfigurationManager.AppSettings["ApiKey"];
             OrgApiCalls.SiteUrl = (_isDebug) ? sDebugUrl : sUrl;
@@ -52,21 +68,14 @@ namespace ComplexOrgSiteAgent
             {
                 RemoteSite siteConfig = null;
 
-                //while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape))
-                //{
-                    try
-                    {
-                        siteConfig = OrgApiCalls.GetSiteConfig();
-                        //break;
-                    }
-                    catch (Exception)
-                    {
-                        //var delay = new Random().Next(2000, 4000);
-                        WriteConsoleStatus("Failed retrieving site status");
-                        //Console.WriteLine("Press ESC to cancel");
-                        //Thread.Sleep(delay);
-                    }
-                //}
+                try
+                {
+                    siteConfig = OrgApiCalls.GetSiteConfig();
+                }
+                catch (Exception)
+                {
+                    WriteConsoleStatus("Failed retrieving site status");
+                }
 
                 if (siteConfig == null)
                 {
@@ -81,53 +90,18 @@ namespace ComplexOrgSiteAgent
                 relay.ErrorEvent += Relay_ErrorEvent;
                 relay.PingEvent += Relay_PingEvent;
 
+                InitTimers(siteConfig);
+
                 if (Environment.UserInteractive)
                 {
-                    if (ParseCommandLine(args))
-                    {
-                        relay.StartAsync().Wait();
-                        _isRunning = true;
-                        
-                        while (_isRunning)
-                        {
-                            Console.TreatControlCAsInput = true;
-                            Console.WriteLine("Press \"p\" to send a Ping test, Ctrl-C to end.");
-                            var key = Console.ReadKey(true);
-                            switch (key.Key)
-                            {
-                                case ConsoleKey.P:
-                                    WriteConsoleStatus("Sending ping...");
-                                    _pingTest = new PingEvent(DateTime.Now);
-                                    relay.Send(new RelayMessage {
-                                        Operation = SiteOperation.Ping,
-                                        ApiKey=OrgApiCalls.ApiKey,
-                                        DestSiteId = siteConfig.Id
-                                    });
-                                    break;
-                                case ConsoleKey.Escape:
-                                case ConsoleKey.C:
-                                    if (key.Key == ConsoleKey.C && key.Modifiers != ConsoleModifiers.Control)
-                                        break;
-
-                                    Console.WriteLine("Stop the relay agent? (Y or N)");
-                                    if (Console.ReadKey().Key == ConsoleKey.Y)
-                                    {
-                                        WriteConsoleStatus("Received shutdown command.");
-                                        _isRunning = false;
-                                    }
-                                    break;
-                            }
-                        }
-                        relay.Stop();
-                    }
+                    RunConsole(siteConfig, args);
                 }
                 else
                 {
-
                     ServiceBase[] ServicesToRun;
                     ServicesToRun = new ServiceBase[]
                     {
-                        new SiteListenerService(relay)
+                        new SiteListenerService(relay, timer)
                     };
                     ServiceBase.Run(ServicesToRun);
                 }
@@ -139,22 +113,98 @@ namespace ComplexOrgSiteAgent
             }
         }
 
+        private static void RunConsole(RemoteSite siteConfig, string[] args)
+        {
+            if (ParseCommandLine(args))
+            {
+                relay.StartAsync().Wait();
+                timer.Start();
+                _isRunning = true;
+
+                while (_isRunning)
+                {
+                    Console.TreatControlCAsInput = true;
+                    Console.WriteLine("Press \"p\" to send a Ping test, Ctrl-C to end.");
+                    var key = Console.ReadKey(true);
+                    switch (key.Key)
+                    {
+                        case ConsoleKey.P:
+                            WriteConsoleStatus("Sending ping...");
+                            _pingTest = new PingEvent(DateTime.Now);
+                            relay.Send(new RelayMessage
+                            {
+                                Operation = SiteOperation.Ping,
+                                ApiKey = OrgApiCalls.ApiKey,
+                                DestSiteId = siteConfig.Id
+                            });
+                            break;
+                        case ConsoleKey.Escape:
+                        case ConsoleKey.C:
+                            if (key.Key == ConsoleKey.C && key.Modifiers != ConsoleModifiers.Control)
+                                break;
+
+                            Console.WriteLine("Stop the relay agent? (Y or N)");
+                            if (Console.ReadKey().Key == ConsoleKey.Y)
+                            {
+                                WriteConsoleStatus("Received shutdown command.");
+                                _isRunning = false;
+                            }
+                            break;
+                    }
+                }
+                relay.Stop();
+            }
+        }
+
+        private static void InitTimers(RemoteSite site)
+        {
+            //setup timers
+            var scripts = new List<ScriptObject>();
+
+            if (site.SiteType == SiteTypes.MasterHQ)
+            {
+                scripts.Add(new ScriptObject(Path.Combine(_scriptFolderPath, "sync-ad.ps1")));
+                scripts.Add(new ScriptObject(Path.Combine(_scriptFolderPath, "sync-b2b.ps1")));
+            }
+            else
+            {
+                scripts.Add(new ScriptObject(Path.Combine(_scriptFolderPath, "sync.ps1")));
+            }
+
+            timer = new ScriptTimer(scripts.ToArray(), _timerIntervalMinutes);
+            timer.ErrorEvent += Timer_ErrorEvent;
+            timer.StatusUpdate += Timer_StatusUpdate;
+        }
+
+        #region Events
+        private static void Timer_StatusUpdate(object sender, StatusEvent e)
+        {
+            WriteConsoleStatus(e.Message);
+        }
+
+        private static void Timer_ErrorEvent(object sender, ErrorEvent e)
+        {
+            Utils.AddLogEntry(ConsoleLogSource, e.Message, e.LogEntryType, e.EventId, e.Exception);
+            WriteConsoleStatus("{0}: {1}", e.LogEntryType.ToString(), e.Message);
+        }
+
         private static void Relay_PingEvent(object sender, PingEvent e)
         {
             var span = e.EndTime - _pingTest.StartTime;
-            Console.WriteLine("{0} (elapsed time {1} milliseconds)", e.Message, span.Milliseconds);
+            WriteConsoleStatus("{0} (elapsed time {1} milliseconds)", e.Message, span.Milliseconds);
         }
 
         private static void Relay_ErrorEvent(object sender, ErrorEvent e)
         {
             Utils.AddLogEntry(ConsoleLogSource, e.Message, e.LogEntryType, e.EventId, e.Exception);
-            Console.WriteLine("{0}: {1}", e.LogEntryType.ToString(),  e.Message);
+            WriteConsoleStatus("{0}: {1}", e.LogEntryType.ToString(), e.Message);
         }
 
         private static void Relay_StatusUpdate(object sender, StatusEvent e)
         {
-            Console.Write(e.Message);
+            WriteConsoleStatus(e.Message);
         }
+        #endregion
 
         static void PrintLogo()
         {
@@ -211,9 +261,11 @@ namespace ComplexOrgSiteAgent
             }
             return false;
         }
+
         private static void WriteConsoleStatus(string message)
         {
-            Console.WriteLine("{0}: {1}{2}", DateTime.Now, message, Environment.NewLine);
+            Console.WriteLine("{0}{2}{1}{2}", DateTime.Now, message, Environment.NewLine);
+            Console.WriteLine("Press \"p\" to send a Ping test, Ctrl-C to end.");
         }
 
         private static void WriteConsoleStatus(string message, params object[] args)

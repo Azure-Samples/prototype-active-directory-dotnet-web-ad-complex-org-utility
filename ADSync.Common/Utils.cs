@@ -128,6 +128,18 @@ namespace Common
         }
 
         /// <summary>
+        /// Allows testing an object against a set
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="item"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static bool IsAnyOf<T>(this T item, params T[] list)
+        {
+            return list.Contains(item);
+        }
+
+        /// <summary>
         /// Insert spaces before camel-cased words in a token, i.e., "ThisIsAString" to "This Is A String"
         /// </summary>
         /// <param name="s">the token</param>

@@ -7,13 +7,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using ADSync.Common.Enums;
+using Common;
 
 namespace ADSyncApi.Controllers
 {
     [Authorize]
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             return View();
         }
@@ -36,20 +38,21 @@ namespace ADSyncApi.Controllers
                 site = await RemoteSiteUtil.GetSite(siteId);
             });
             task.Wait();
-
-            var path = Request.MapPath("/Files/SyncSiteSetup/");
+            var path = Request.MapPath("/Files/");
 
             //Convert the memorystream to an array of bytes.
 
-            var ApiUrl = string.Format("https://{0}", Request.Url.Authority);
-            var zip = ZipCopy.SetupZip(path, site.ApiKey, ApiUrl);
+            var ApiUrl = string.Format("{0}://{1}/", Request.Url.Scheme, Request.Url.Authority);
+            var zip = ZipCopy.SetupZip(path, site, ApiUrl);
+
+            var filename = string.Format("{0}_setup.zip", site.OnPremDomainName.Replace(".", "_"));
 
             // Clear all content output from the buffer stream
             Response.Clear();
 
             // Add a HTTP header to the output stream that specifies the default filename
             // for the browser's download dialog
-            Response.AddHeader("Content-Disposition", "attachment; filename=BlobCopy.zip");
+            Response.AddHeader("Content-Disposition", "attachment; filename=" + filename);
 
             // Add a HTTP header to the output stream that contains the 
             // content length(File Size). This lets the browser know how much data is being transfered

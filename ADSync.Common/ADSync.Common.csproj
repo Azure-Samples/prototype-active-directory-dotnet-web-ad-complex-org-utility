@@ -61,6 +61,7 @@
     <Compile Include="Enums\Enums.cs" />
     <Compile Include="Events\EventArgs.cs" />
     <Compile Include="Models\ADUser.cs" />
+    <Compile Include="Models\Dashboard.cs" />
     <Compile Include="Models\DocModelBase.cs" />
     <Compile Include="Interfaces\IDocModelBase.cs" />
     <Compile Include="Models\RelayMessage.cs" />

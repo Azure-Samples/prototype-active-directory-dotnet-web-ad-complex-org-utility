@@ -9,6 +9,7 @@ function Init-SyncAPI
     )
     $ApiKey = $SyncVars.ApiKey
     $ApiSite = $SyncVars.ApiSite
+
     $global:SyncAPI_UriRoot = "$APISite/api"
     $global:SyncAPI_AuthHeader = @{apikey = $ApiKey}
     $global:SiteConfig = Get-SiteConfig

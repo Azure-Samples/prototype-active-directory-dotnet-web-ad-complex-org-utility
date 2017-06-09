@@ -46,7 +46,11 @@
             case "Setup":
                 var sn = $("#siteList li.active span.siteitem").text();
                 sn = sn.replace(/\./g, "_");
-                $("#SetupZipLink").html(sn + "_setup.zip");
+                var lnkArr = $("#SetupZipLink")[0].href.split("?");
+                var url = lnkArr[0] + "?siteId=" + id;
+                $("#SetupZipLink")
+                    .html(sn + "_setup.zip")
+                    .attr("href", url);
                 break;
             case "Settings":
                 LoadSiteSettings(id);

@@ -1,5 +1,6 @@
 ﻿@{
     ViewBag.Title = "Dashboard";
+   
 }
 <div class="panel panel-primary" style="margin-top:20px;">
     <div class="panel-title panel-heading">
@@ -11,8 +12,8 @@
                 <div class="well">
                     <h4>Sites</h4>
                     <ul>
-                        <li>3 configured sites</li>
-                        <li>Last site activity 3 minutes ago</li>
+                        <li><span id="spNumSites"></span> configured sites</li>
+                        <li>Last site activity <span id="spLastSiteActivity"></span></li>
                     </ul>
 
                 </div>
@@ -21,22 +22,53 @@
                 <div class="well">
                     <h4>Users</h4>
                     <ul>
-                        <li>493 replicated users</li>
-                        <li>Last user sync 3 hours ago</li>
+                        <li><span id="spNumUsers"></span> total staged/replicated users</li>
+                        <li><span id="spPendingSyncUsers"></span> users pending sync</li>
+                        <li>Last user sync <span id="spLastUserSync"></span></li>
                     </ul>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="well">
-                    <h4>Logs</h4>
-                    <ul>
-                        <li>No errors in last 22 days</li>
-                    </ul>
+                    <h4>Error Logs</h4>
+                    <ul id="RecentLogList"></ul>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section scripts {
+    <script type="text/javascript">
+        $(function () {
+            debugger;
+            SiteUtil.AjaxCall("/api/Dashboard/Logs", null, function (res) {
+                $("#RecentLogList li").remove();
+
+                if (res.LatestLogs.length == 0) {
+                    $("<li>").html("No errors in last 24 hours").appendTo("#RecentLogList");
+                } else {
+                    for (var x = 0; x < res.LatestLogs.length; x++) {
+                        var log = res.LatestLogs[x];
+                        $("<li>").html(log.Message).appendTo("#RecentLogList");
+                    }
+                }
+            });
+
+            SiteUtil.AjaxCall("/api/Dashboard/Sites", null, function (res) {
+                $("#spNumSites").html(res.NumSites);
+                $("#spLastSiteActivity").html(SiteUtil.UtcToLocal(res.LastSiteActivity));
+            });
+
+            SiteUtil.AjaxCall("/api/Dashboard/Users", null, function (res) {
+                $("#spNumUsers").html(res.NumUsers);
+                $("#spPendingSyncUsers").html(res.NumUsersPendingSync);
+                $("#spLastUserSync").html(SiteUtil.UtcToLocal(res.LastUserSync));
+            });
+        });
+    </script>
+}
+
 @section styles {
     <style type="text/css">
         div.well {

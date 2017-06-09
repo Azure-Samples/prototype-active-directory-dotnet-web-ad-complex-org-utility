@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.ComponentModel;
 using System.Configuration.Install;
-using System.Linq;
 using System.ServiceProcess;
-using System.Threading.Tasks;
 using System.Reflection;
 
 namespace ComplexOrgSiteAgent
@@ -24,7 +20,7 @@ namespace ComplexOrgSiteAgent
             serviceInstaller = new System.ServiceProcess.ServiceInstaller()
             {
                 StartType = ServiceStartMode.Automatic,
-                ServiceName = assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title,
+                ServiceName = assembly.GetCustomAttribute<AssemblyProductAttribute>().Product,
                 DisplayName = assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title,
                 Description = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>().Description
             };

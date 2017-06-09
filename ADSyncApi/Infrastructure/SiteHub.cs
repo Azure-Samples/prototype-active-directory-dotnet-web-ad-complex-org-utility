@@ -9,6 +9,7 @@ using System.Security.Claims;
 using OrgRelay;
 using Newtonsoft.Json;
 using Common;
+using ADSync.Common.Events;
 
 namespace Infrastructure
 {

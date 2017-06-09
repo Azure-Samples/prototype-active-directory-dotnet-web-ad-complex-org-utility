@@ -1,4 +1,5 @@
 ﻿using Common;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -35,6 +36,21 @@ namespace ComplexOrgSiteSetup
                 return false;
             }
         }
+        public static bool ModifyJsonConfig(string configPath, Dictionary<string, string> updates)
+        {
+            try
+            {
+                var config = JsonConvert.SerializeObject(updates);
+                System.IO.File.WriteAllText(configPath, config);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                var msg = Utils.GetFormattedException(ex);
+                Utils.AddLogEntry(Setup.LogSource, msg, EventLogEntryType.Error);
+                return false;
+            }
+        }
         public static bool ModifyAppConfig(string configPath, Dictionary<string, string> updates)
         {
             try
@@ -49,6 +65,7 @@ namespace ComplexOrgSiteSetup
                 foreach (var item in updates)
                 {
                     el = settings[item.Key];
+                    if (el == null) continue;
                     el.Value = item.Value;
                 }
 

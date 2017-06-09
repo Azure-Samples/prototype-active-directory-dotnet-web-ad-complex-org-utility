@@ -12,12 +12,14 @@ namespace ComplexOrgSiteAgent
     partial class SiteListenerService : ServiceBase
     {
         readonly SigRClient _relay;
+        readonly ScriptTimer _timer;
 
-        public SiteListenerService(SigRClient relay)
+        public SiteListenerService(SigRClient relay, ScriptTimer timer)
         {
             InitializeComponent();
 
             _relay = relay;
+            _timer = timer;
             ServiceName = GetType().Assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title;
 
             CanShutdown = true;
@@ -26,12 +28,14 @@ namespace ComplexOrgSiteAgent
 
         protected override void OnStart(string[] args)
         {
+            _timer.Start();
             var task = _relay.StartAsync();
             task.Wait();
         }
 
         protected override void OnStop()
         {
+            _timer.Stop();
             _relay.Stop();
         }
     }

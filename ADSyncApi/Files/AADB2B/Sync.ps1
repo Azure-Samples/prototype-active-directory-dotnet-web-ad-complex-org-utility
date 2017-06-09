@@ -9,15 +9,15 @@ if (($PSVersionTable.PSVersion).Major -lt 5) {
 <#
 INITIALIZE
 #>
+    #Set API variables, initialize sync API
+    $SyncVars = Get-Content -Path "$PSScriptRoot\SyncVars.json" | ConvertFrom-Json
+
     #include files
     . "$PSScriptRoot\SyncAPI.ps1"
     . "$PSScriptRoot\SyncTools.ps1"
     . "$PSScriptRoot\Logging.ps1"
 
-    #Set API variables, initialize sync API
-    $SyncVars = Get-Content -Path "$PSScriptRoot\SyncVars.json" | ConvertFrom-Json
     Init-SyncAPI -SyncVars $SyncVars
-
 <#
 PROCESS NEW USERS
 #>

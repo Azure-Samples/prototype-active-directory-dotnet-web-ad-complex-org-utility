@@ -49,6 +49,10 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Client, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Client.2.2.2\lib\net45\Microsoft.AspNet.SignalR.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
@@ -223,6 +227,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Api\DashboardController.cs" />
     <Compile Include="Controllers\Api\LogApiController.cs" />
     <Compile Include="Controllers\Api\RemoteSiteApiController.cs" />
     <Compile Include="Controllers\Api\StagedUsersAdmController.cs" />
@@ -286,17 +291,13 @@
     <Content Include="Files\LocalADOnly\Logs\placeholder.txt" />
     <Content Include="Files\MasterHQ\Logs\placeholder.txt" />
     <Content Include="Files\SyncSiteSetup\ADSync.Common.dll" />
-    <Content Include="Files\SyncSiteSetup\Agent\ADSync.Common.dll" />
-    <Content Include="Files\SyncSiteSetup\Agent\ComplexOrgSiteAgent.exe" />
-    <Content Include="Files\SyncSiteSetup\Agent\Microsoft.Azure.Relay.dll" />
-    <Content Include="Files\SyncSiteSetup\Agent\Microsoft.Azure.Relay.xml" />
-    <Content Include="Files\SyncSiteSetup\Agent\Newtonsoft.Json.dll" />
-    <Content Include="Files\SyncSiteSetup\Agent\Newtonsoft.Json.xml" />
-    <Content Include="Files\SyncSiteSetup\Agent\OrgRelay.dll" />
+    <Content Include="Files\SyncSiteSetup\api.config.txt" />
+    <Content Include="Files\SyncSiteSetup\ComplexOrgSiteAgent.exe" />
     <Content Include="Files\SyncSiteSetup\ComplexOrgSiteSetup.exe" />
-    <Content Include="Files\SyncSiteSetup\Microsoft.Azure.Relay.dll" />
+    <Content Include="Files\SyncSiteSetup\Microsoft.AspNet.SignalR.Client.dll" />
     <Content Include="Files\SyncSiteSetup\Newtonsoft.Json.dll" />
     <Content Include="Files\SyncSiteSetup\OrgRelay.dll" />
+    <Content Include="Files\SyncSiteSetup\System.Management.Automation.dll" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -308,7 +309,6 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
-    <Content Include="Files\AADB2B.zip" />
     <Content Include="Files\AADB2B\AADSyncLogin.ps1" />
     <Content Include="Files\AADB2B\GraphLogin.ps1" />
     <Content Include="Files\AADB2B\Logging.ps1" />
@@ -316,14 +316,12 @@
     <Content Include="Files\AADB2B\RunSync.cmd" />
     <Content Include="Files\AADB2B\Send-B2BInviteGraph.ps1" />
     <Content Include="Files\AADB2B\Sync.ps1" />
-    <Content Include="Files\LocalADOnly.zip" />
     <Content Include="Files\LocalADOnly\Logging.ps1" />
     <Content Include="Files\LocalADOnly\RunSync.cmd" />
     <Content Include="Files\LocalADOnly\Sync.ps1" />
     <Content Include="Files\LocalADOnly\SyncAPI.ps1" />
     <Content Include="Files\LocalADOnly\SyncTools.ps1" />
     <Content Include="Files\LocalADOnly\SyncVars.json" />
-    <Content Include="Files\MasterHQ.zip" />
     <Content Include="Files\MasterHQ\Get-DQUsers.ps1" />
     <Content Include="Files\MasterHQ\GraphDeltaToken.json" />
     <Content Include="Files\MasterHQ\GraphLogin.ps1" />
@@ -332,9 +330,20 @@
     <Content Include="Files\MasterHQ\Sync-AD.ps1" />
     <Content Include="Files\MasterHQ\SyncAPI.ps1" />
     <Content Include="Content\datatables\images\Sorting icons.psd" />
-    <Content Include="Files\SyncSiteSetup\Agent\ComplexOrgSiteAgent.exe.config" />
     <Content Include="Files\SyncSiteSetup\ComplexOrgSiteSetup.exe.config" />
-    <Content Include="Files\SyncSiteSetup.zip" />
+    <Content Include="Files\MasterHQ\AADSyncLogin.ps1" />
+    <Content Include="Files\MasterHQ\Get-DeltaUsersGraph.ps1" />
+    <Content Include="Files\MasterHQ\RunSync-ADLocal.cmd" />
+    <Content Include="Files\MasterHQ\RunSync-B2B.cmd" />
+    <Content Include="Files\MasterHQ\Send-B2BInviteGraph.ps1" />
+    <Content Include="Files\MasterHQ\Sync-B2B.ps1" />
+    <Content Include="Files\MasterHQ\SyncTools-HQ.ps1" />
+    <Content Include="Files\MasterHQ\SyncTools.ps1" />
+    <Content Include="Files\MasterHQ\SyncVars.json" />
+    <Content Include="Files\AADB2B\SyncApi.ps1" />
+    <Content Include="Files\AADB2B\SyncTools.ps1" />
+    <Content Include="Files\AADB2B\SyncVars.json" />
+    <Content Include="Files\SyncSiteSetup\ComplexOrgSiteAgent.exe.config" />
     <None Include="Properties\PublishProfiles\ADSyncApi20170413061307.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />

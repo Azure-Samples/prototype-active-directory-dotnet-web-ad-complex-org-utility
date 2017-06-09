@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Configuration.Install;
-using System.Linq;
-using System.Reflection;
 using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ComplexOrgSiteAgent
 {
@@ -23,12 +18,12 @@ namespace ComplexOrgSiteAgent
                 try
                 {
                     ServiceControllerStatus status = controller.Status;
+                    return true;
                 }
                 catch
                 {
                     return false;
                 }
-                return true;
             }
         }
 

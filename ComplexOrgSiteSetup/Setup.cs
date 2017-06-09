@@ -23,33 +23,49 @@ namespace ComplexOrgSiteSetup
     {
         bool _hasConfig;
         RemoteSite _siteConfig;
-        public static string LogSource = "ComplexOrgAgentLog";
+        public static string LogSource = "ComplexOrg Setup Log";
         private string _appPath;
         private static string AgentAssemblyName;
         private static string AgentServiceName;
 
         public Setup()
         {
-            InitializeComponent();
-            tabControl2.TabPages[1].Enabled = false;
+            try
+            {
+                var dd = ConfigurationManager.AppSettings["DebugDelay"];
+                if (dd != "")
+                {
+                    System.Threading.Thread.Sleep(Convert.ToInt32(dd));
+                }
 
-            _appPath = Path.GetDirectoryName(Application.ExecutablePath);
-            var agentPath = Path.Combine(_appPath, "AgentServiceFiles", "ComplexOrgSiteAgent.exe");
-            var assembly = Assembly.ReflectionOnlyLoadFrom(agentPath);
-            var attrData = assembly.GetCustomAttributesData();
-            var attr = attrData.Single(d => d.AttributeType == typeof(AssemblyTitleAttribute));
-            AgentServiceName = attr.ConstructorArguments[0].Value.ToString();
-            AgentAssemblyName = string.Format("{0}.SiteListenerService", assembly.GetName().Name);
+                InitializeComponent();
+                tabControl2.TabPages[1].Enabled = false;
 
-            ServiceUtil.AssemblyName = AgentAssemblyName;
-            ServiceUtil.ServiceName = AgentServiceName;
+                _appPath = Path.GetDirectoryName(Application.ExecutablePath);
+                var agentPath = Path.Combine(_appPath, "ComplexOrgSiteAgent.exe");
+                var assembly = Assembly.ReflectionOnlyLoadFrom(agentPath);
+                var attrData = assembly.GetCustomAttributesData();
+                var attr = attrData.Single(d => d.AttributeType == typeof(AssemblyTitleAttribute));
+                AgentServiceName = attr.ConstructorArguments[0].Value.ToString();
+                AgentAssemblyName = string.Format("{0}.SiteListenerService", assembly.GetName().Name);
 
-            LogSource = Utils.SetupLog(LogSource);
+                ServiceUtil.AssemblyName = AgentAssemblyName;
+                ServiceUtil.ServiceName = AgentServiceName;
 
-            txtApiKey.Text = ConfigurationManager.AppSettings["ApiKey"];
-            txtSiteUrl.Text = ConfigurationManager.AppSettings["SiteUrl"];
-            txtUsername.Text = ConfigurationManager.AppSettings["Username"];
-            CheckConfig();
+                LogSource = Utils.SetupLog(LogSource);
+
+                txtApiKey.Text = ConfigurationManager.AppSettings["ApiKey"];
+                txtSiteUrl.Text = ConfigurationManager.AppSettings["SiteUrl"];
+                txtUsername.Text = ConfigurationManager.AppSettings["Username"];
+                CheckConfig();
+            }
+            catch (Exception ex)
+            {
+                var msg = string.Format("An unknown error occured during initialization ({0}).", ex.Message);
+                Utils.AddLogEntry("Error initializing", System.Diagnostics.EventLogEntryType.Error, 0, ex);
+                MessageBox.Show(msg, "Error initializing application", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                Application.Exit();
+            }
         }
 
         private void btnCheckConfig_Click(object sender, EventArgs e)
@@ -154,8 +170,9 @@ namespace ComplexOrgSiteSetup
         {
             //saving config file for agent
             string appPath = Path.GetDirectoryName(Application.ExecutablePath);
-            string agentConfigFile = Path.Combine(appPath, "AgentServiceFiles\\ComplexOrgSiteAgent.exe.config");
+            string agentConfigFile = Path.Combine(appPath, "ComplexOrgSiteAgent.exe.config");
             string setupConfigFile = Path.Combine(appPath, "ComplexOrgSiteSetup.exe.config");
+            string scriptConfigFile = Path.Combine(appPath, "Scripts\\SyncVars.json");
 
             var updates = new Dictionary<string, string>
             {
@@ -163,9 +180,19 @@ namespace ComplexOrgSiteSetup
                 { "SiteUrl", txtSiteUrl.Text },
                 { "Username", txtUsername.Text }
             };
+            var scriptUpdates = new Dictionary<string, string>
+            {
+                { "ApiKey", txtApiKey.Text },
+                { "ApiSite", txtSiteUrl.Text }
+            };
 
-            AppUtil.ModifyAppConfig(setupConfigFile, updates);
-            AppUtil.ModifyAppConfig(agentConfigFile, updates);
+            var success = AppUtil.ModifyAppConfig(setupConfigFile, updates);
+            success = success && AppUtil.ModifyAppConfig(agentConfigFile, updates);
+            success = success && AppUtil.ModifyJsonConfig(scriptConfigFile, scriptUpdates);
+            if (!success)
+            {
+                WriteStatus("One or more configuration files weren't updated, please check the error logs");
+            }
         }
 
         private void btnExit_Click(object sender, EventArgs e)
