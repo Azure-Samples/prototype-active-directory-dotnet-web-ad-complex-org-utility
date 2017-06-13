@@ -16,18 +16,15 @@ namespace ADSyncApi
         {
             ConfigureAuth(app);
 
-            //SiteHubConnections.RelaySiteList = new ConcurrentDictionary<string, RelaySite>();
-
             var srConfig = new HubConfiguration
             {
                 EnableDetailedErrors = true,
                 EnableJavaScriptProxies = false
             };
 
-            //https://stackoverflow.com/questions/35325531/signalr-redis-backplane-not-working-dependency-issue
             var connStr = ConfigurationManager.AppSettings["RedisConnectionString"];
             srConfig.Resolver.UseRedis(new RedisScaleoutConfiguration(connStr, "SiteHub"));
-            //GlobalHost.DependencyResolver.UseRedis(new RedisScaleoutConfiguration(connStr, "SiteHub"));
+
             app.MapSignalR("/sitelink", srConfig);
         }
     }
