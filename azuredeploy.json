@@ -107,7 +107,7 @@
     "StsSiteName": "[concat(tolower(parameters('hostingPlanName')), '-sts', uniqueString(resourceGroup().id))]",
     "docDbHost": "[concat(tolower(parameters('hostingPlanName')), '-db', uniqueString(resourceGroup().id))]",
     "AdminRedisName": "[concat(tolower(parameters('hostingPlanName')), '-redis', uniqueString(resourceGroup().id))]",
-    "AdminStorageName": "[concat(concat(tolower(parameters('hostingPlanName')), '-storage', uniqueString(resourceGroup().id))]",
+    "AdminStorageName": "[concat(tolower(parameters('hostingPlanName')), '-storage', uniqueString(resourceGroup().id))]",
     "AdminStorageType": "Standard_LRS",
     "StorageAccountId": "[concat(resourceGroup().id,'/providers/Microsoft.Storage/storageAccounts/', variables('AdminStorageName'))]",
     "docDbName": "ComplexOrgDB",
