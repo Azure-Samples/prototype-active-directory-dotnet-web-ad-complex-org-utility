@@ -493,9 +493,8 @@
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.4\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.4\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Azure.DocumentDB.1.14.0\build\Microsoft.Azure.DocumentDB.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Azure.DocumentDB.1.14.0\build\Microsoft.Azure.DocumentDB.targets'))" />
   </Target>
-  <Import Project="..\packages\Microsoft.Web.WebJobs.Publish.1.0.13\tools\webjobs.targets" Condition="Exists('..\packages\Microsoft.Web.WebJobs.Publish.1.0.13\tools\webjobs.targets')" />
   <PropertyGroup>
-    <PreBuildEvent>powershell -Command "&amp; {Get-Date -Format 'yyyyMMddHHmmss' | Out-File $(SolutionDir)PSScripts\ScriptVersion.txt -NoNewLine }"
+    <PreBuildEvent>powershell -Command "&amp; {Get-Date -Format 'yyyyMMddHHmmss' | Out-File $(SolutionDir)PSScripts\ScriptVersion.txt -NoNewline }"
 
 xcopy $(SolutionDir)PSScripts\*.* $(ProjectDir)Files\ /e/v/i/h/r/y</PreBuildEvent>
   </PropertyGroup>
