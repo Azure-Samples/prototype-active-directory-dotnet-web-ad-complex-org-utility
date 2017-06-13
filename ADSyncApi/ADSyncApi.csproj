@@ -412,9 +412,6 @@
     <Content Include="Scripts\jquery-3.1.1.min.map" />
     <Content Include="Views\RemoteSite\Edit.cshtml" />
     <Content Include="Views\Account\SignedOut.cshtml" />
-    <Content Include="settings.config">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Views\Logs\Index.cshtml" />
     <Content Include="Views\RemoteSite\Index.cshtml" />
     <Content Include="Views\RemoteSite\_siteDetail.cshtml" />
