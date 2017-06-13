@@ -494,7 +494,7 @@
     <Error Condition="!Exists('..\packages\Microsoft.Azure.DocumentDB.1.14.0\build\Microsoft.Azure.DocumentDB.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Azure.DocumentDB.1.14.0\build\Microsoft.Azure.DocumentDB.targets'))" />
   </Target>
   <PropertyGroup>
-    <PreBuildEvent>powershell -Command "&amp; {Get-Date -Format 'yyyyMMddHHmmss' | Out-File $(SolutionDir)PSScripts\ScriptVersion.txt -NoNewline }"
+    <PreBuildEvent>powershell -Command "&amp; {Get-Date -Format 'yyyyMMddHHmmss' | Set-Content $(SolutionDir)PSScripts\ScriptVersion.txt -NoNewline }"
 
 xcopy $(SolutionDir)PSScripts\*.* $(ProjectDir)Files\ /e/v/i/h/r/y</PreBuildEvent>
   </PropertyGroup>
