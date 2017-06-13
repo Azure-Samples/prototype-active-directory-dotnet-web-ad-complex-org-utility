@@ -235,11 +235,11 @@
     <Content Include="settings.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\active-directory-dotnet-web-ad-complex-org-utility\ADSync.Common\ADSync.Common.csproj">
+    <ProjectReference Include="..\ADSync.Common\ADSync.Common.csproj">
       <Project>{4f56f58d-a05c-4a4a-8d5a-fcc3904750f9}</Project>
       <Name>ADSync.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\active-directory-dotnet-web-ad-complex-org-utility\ADSync.Data\ADSync.Data.csproj">
+    <ProjectReference Include="..\ADSync.Data\ADSync.Data.csproj">
       <Project>{d50a9792-ac8a-46e0-84ab-540a89161962}</Project>
       <Name>ADSync.Data</Name>
     </ProjectReference>
