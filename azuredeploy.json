@@ -40,6 +40,7 @@
     },
     "CustomSTSDisplayName": {
       "type": "string",
+      "defaultValue": "Complex Org Login",
       "metadata": {
         "description": "Title that is displayed on the login page of the custom STS"
       }
@@ -75,7 +76,7 @@
         "Standard"
       ],
       "metadata": {
-        "description": "The Redis cache supports the SignalR deployment. Default size is C0 Basic - use for testing only."
+        "description": "The Redis cache supports the SignalR deployment. Default size is Basic C0 - use for testing only."
       },
       "defaultValue": "Basic"
     },
