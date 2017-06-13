@@ -1,11 +1,15 @@
 ﻿@using ADSync.Common.Models;
 @using ADSync.Common.Enums;
+@using Common;
+
 @model IEnumerable<RemoteSite>
 
 @{
     ViewBag.Title = "Affiliate Configuration";
     bool hasRecords = (Model.Count() > 0);
 }
+<input type="hidden" id="CurrSiteScriptVersion" value="@Settings.CurrSiteScriptVersion" />
+
 <div class="panel panel-primary" style="margin-top:20px;">
     <div class="panel-title panel-heading">
         <div class="pull-right">
@@ -47,14 +51,17 @@
                 <div role="tabpanel" class="tab-pane active" id="users">@Html.Partial("_userDetail")</div>
                 <div role="tabpanel" class="tab-pane" id="logs">@Html.Partial("_logDetail")</div>
                 <div role="tabpanel" class="tab-pane" id="setup">@Html.Partial("_setupDetail")</div>
-                <div role="tabpanel" class="tab-pane" id="settings">@Html.Partial("_siteDetail", Model)</div>
+                <div role="tabpanel" class="tab-pane" id="settings">
+                    @Html.Partial("_siteDetail", Model)
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 @section scripts {
-    <script type="text/javascript" src="/scripts/app/site.js"></script>
+<script type="text/javascript" src="/scripts/app/siteapi.js"></script>
+<script type="text/javascript" src="/scripts/app/site.js"></script>
 }
 
 @section styles {

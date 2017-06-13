@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Configuration.Install;
+using System.Diagnostics;
 using System.ServiceProcess;
 
 namespace ComplexOrgSiteAgent
@@ -75,6 +76,7 @@ namespace ComplexOrgSiteAgent
 
                         installer.Install(state);
                         installer.Commit(state);
+                        SetRecoveryOptions();
                     }
                     catch
                     {
@@ -115,6 +117,27 @@ namespace ComplexOrgSiteAgent
             {
                 throw;
             }
+        }
+
+        private static void SetRecoveryOptions()
+        {
+            int exitCode;
+            using (var process = new Process())
+            {
+                var startInfo = process.StartInfo;
+                startInfo.FileName = "sc";
+                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+
+                startInfo.Arguments = string.Format("failure \"{0}\" reset= 0 actions= restart/60000/restart/150000/restart/300000", ServiceName);
+
+                process.Start();
+                process.WaitForExit();
+
+                exitCode = process.ExitCode;
+            }
+
+            if (exitCode != 0)
+                throw new InvalidOperationException();
         }
 
         public static void StartService()

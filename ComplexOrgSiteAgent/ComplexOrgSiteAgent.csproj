@@ -108,6 +108,8 @@
   <PropertyGroup>
     <PreBuildEvent>md $(TargetDir)Scripts
 xcopy $(SolutionDir)PSScripts\LocalADOnly\*.* $(TargetDir)Scripts\ /e/v/c/i/q/h/r/y
+
+copy $(SolutionDir)ADSyncAPI\Files\ScriptVersion.txt $(TargetDir)Scripts\ScriptVersion.txt
 </PreBuildEvent>
   </PropertyGroup>
 </Project>

@@ -15,8 +15,11 @@ namespace Common
         public static string StorageConnectionString { get; set; }
         public static string STSApiKey { get; set; }
         public static string AdminApiKey { get; set; }
+        public static string ClientId { get; set; }
+        public static string ClientSecret { get; set; }
+        public static string TenantId { get; set; }
         public static string AdminSiteUrl { get; set; }
-        
+        public static string CurrSiteScriptVersion { get; set; }
         public static EnvType Environment { get; set; }
 
         public static SiteMode SiteMode { get; set; }

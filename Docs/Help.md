@@ -31,13 +31,13 @@ __Powershell Scripts__
 
 
 
-[Diagram]: ./DocImages/Diagram.png "Application Diagram"
-[SiteDashboard]: ./DocImages/SiteDashboard.png "Site Dashboard"
-[SiteLogs]: ./DocImages/SiteLogs.png "Site Logs"
-[SiteSettings]: ./DocImages/SiteSettings.png "Site Settings"
-[SiteSetupDownload]: ./DocImages/SiteSetupDownload.png "Site Setup Download"
-[UserAdminPWReset]: ./DocImages/UserAdminPWReset.png "User Admin PW Reset"
-[UserAdvanced]: ./DocImages/UserAdvanced.png "User Advanced"
-[UserContact]: ./DocImages/UserContact.png "User Contact"
-[UserGeneral]: ./DocImages/UserGeneral.png "User General"
-[UserOnPremManage]: ./DocImages/UserOnPremManage.png "User On Prem Manage"
+[Diagram]: ../DocImages/Diagram.png "Application Diagram"
+[SiteDashboard]: ../DocImages/SiteDashboard.png "Site Dashboard"
+[SiteLogs]: ../DocImages/SiteLogs.png "Site Logs"
+[SiteSettings]: ../DocImages/SiteSettings.png "Site Settings"
+[SiteSetupDownload]: ../DocImages/SiteSetupDownload.png "Site Setup Download"
+[UserAdminPWReset]: ../DocImages/UserAdminPWReset.png "User Admin PW Reset"
+[UserAdvanced]: ../DocImages/UserAdvanced.png "User Advanced"
+[UserContact]: ../DocImages/UserContact.png "User Contact"
+[UserGeneral]: ../DocImages/UserGeneral.png "User General"
+[UserOnPremManage]: ../DocImages/UserOnPremManage.png "User On Prem Manage"

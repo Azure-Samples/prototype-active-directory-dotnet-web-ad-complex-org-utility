@@ -52,19 +52,26 @@ function Add-NewStagedUser
 		$loadState = 6
     }
 
-    $dom = $user.UserPrincipalName.Split('@')[1]
+	if ($user.UserPrincipalName -ne $null) {
+		$dom = $user.UserPrincipalName.Split('@')[1]
 
-    if ($dom.indexof("onmicrosoft.com") -gt -1) {
-        $msg = "Not syncing {0}, excluding '*.onmicrosoft.com' UPNs" -f $user.UserPrincipalName
-        Create-LogEntry -ErrorType Warning -Detail $msg -Source "Script:Add-NewStagedUser" -RemoteSiteID $RemoteSiteID | Add-LogEntry | Out-Null
-		$loadState = 6
-    }
+		if ($dom.indexof("onmicrosoft.com") -gt -1) {
+			$msg = "Not syncing {0}, excluding '*.onmicrosoft.com' UPNs" -f $user.UserPrincipalName
+			Create-LogEntry -ErrorType Warning -Detail $msg -Source "Script:Add-NewStagedUser" -RemoteSiteID $RemoteSiteID | Add-LogEntry | Out-Null
+			$loadState = 6
+		}
 
-    if (!$siteConfig.SiteDomain.Contains($dom)) {
-        $msg = "Not syncing {0}, domain not listed in site configuration" -f $user.UserPrincipalName
-        Create-LogEntry -ErrorType Warning -Detail $msg -Source "Script:Add-NewStagedUser" -RemoteSiteID $RemoteSiteID | Add-LogEntry | Out-Null
+		if (!$siteConfig.SiteDomain.Contains($dom)) {
+			$msg = "Not syncing {0}, domain not listed in site configuration" -f $user.UserPrincipalName
+			Create-LogEntry -ErrorType Warning -Detail $msg -Source "Script:Add-NewStagedUser" -RemoteSiteID $RemoteSiteID | Add-LogEntry | Out-Null
+			$loadState = 6
+		}
+	}
+	else {
+		$msg = "Not syncing {0}, UPN is null" -f $user.Name
+		Create-LogEntry -ErrorType Warning -Detail $msg -Source "Script:Add-NewStagedUser" -RemoteSiteID $RemoteSiteID | Add-LogEntry | Out-Null
 		$loadState = 6
-    }
+	}
 
     $msg="Staging new AD user $($user.UserPrincipalName)..."
     Create-LogEntry -ErrorType Info -Detail $msg -Source "Script:Add-NewStagedUser" -RemoteSiteID $RemoteSiteID | Add-LogEntry | Out-Null
@@ -114,7 +121,7 @@ function Add-NewStagedUser
 
 function Get-ADUsersToSync
 {
-    $userProps = @("cn","mail","co","name","company","department","displayName","l","mobile","objectSid","st","streetAddress","telephoneNumber","homePhone","postalCode","title")
+    $userProps = @("cn","mail","co","name","company","department","displayName","l","mobile","objectSid","ObjectGUID","st","streetAddress","telephoneNumber","homePhone","postalCode","title")
     $userFilter = '-not adminCount -like "*" -and Enabled -eq "True"'
     $res = Get-ADUser -Filter $userFilter -Properties $userProps
     return $res

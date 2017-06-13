@@ -228,13 +228,13 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\DashboardController.cs" />
+    <Compile Include="Controllers\Api\FilesController.cs" />
     <Compile Include="Controllers\Api\LogApiController.cs" />
     <Compile Include="Controllers\Api\RemoteSiteApiController.cs" />
     <Compile Include="Controllers\Api\StagedUsersAdmController.cs" />
     <Compile Include="Controllers\Api\StagedUsersController.cs" />
     <Compile Include="Controllers\Api\SyncLogUpdateController.cs" />
     <Compile Include="Controllers\Api\UserApiController.cs" />
-    <Compile Include="Controllers\FilesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LogsController.cs" />
     <Compile Include="Controllers\RemoteSiteController.cs" />
@@ -290,6 +290,7 @@
     <Content Include="Files\AADB2B\Logs\placeholder.txt" />
     <Content Include="Files\LocalADOnly\Logs\placeholder.txt" />
     <Content Include="Files\MasterHQ\Logs\placeholder.txt" />
+    <Content Include="Files\ScriptVersion.txt" />
     <Content Include="Files\SyncSiteSetup\ADSync.Common.dll" />
     <Content Include="Files\SyncSiteSetup\api.config.txt" />
     <Content Include="Files\SyncSiteSetup\ComplexOrgSiteAgent.exe" />
@@ -344,11 +345,17 @@
     <Content Include="Files\AADB2B\SyncTools.ps1" />
     <Content Include="Files\AADB2B\SyncVars.json" />
     <Content Include="Files\SyncSiteSetup\ComplexOrgSiteAgent.exe.config" />
+    <Content Include="Files\LocalADOnly\NewVersionCheck.ps1" />
+    <Content Include="Files\AADB2B\NewVersionCheck.ps1" />
+    <Content Include="Files\MasterHQ\NewVersionCheck.ps1" />
+    <Content Include="Files\MasterHQ\SyncAPI-HQ.ps1" />
     <None Include="Properties\PublishProfiles\ADSyncApi20170413061307.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\App\global.js" />
+    <Content Include="Scripts\App\search.js" />
     <Content Include="Scripts\App\site.js" />
+    <Content Include="Scripts\App\siteapi.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
@@ -403,21 +410,18 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
-    <Content Include="Views\RemoteSite\Index2.cshtml" />
     <Content Include="Views\RemoteSite\Edit.cshtml" />
     <Content Include="Views\Account\SignedOut.cshtml" />
     <Content Include="settings.config">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Logs\Index.cshtml" />
-    <Content Include="Views\Files\Index.cshtml" />
     <Content Include="Views\RemoteSite\Index.cshtml" />
     <Content Include="Views\RemoteSite\_siteDetail.cshtml" />
     <Content Include="Views\RemoteSite\_userDetail.cshtml" />
     <Content Include="Views\RemoteSite\_logDetail.cshtml" />
     <Content Include="Scripts\lib\moment-tzData.min.js.map" />
     <Content Include="Views\RemoteSite\_setupDetail.cshtml" />
-    <Content Include="Views\Home\Chat.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <None Include="Web.LocalDebug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -491,7 +495,9 @@
   </Target>
   <Import Project="..\packages\Microsoft.Web.WebJobs.Publish.1.0.13\tools\webjobs.targets" Condition="Exists('..\packages\Microsoft.Web.WebJobs.Publish.1.0.13\tools\webjobs.targets')" />
   <PropertyGroup>
-    <PreBuildEvent>xcopy $(SolutionDir)PSScripts\*.* $(ProjectDir)Files\ /e/v/c/i/q/h/r/y</PreBuildEvent>
+    <PreBuildEvent>powershell -Command "&amp; {Get-Date -Format 'yyyyMMddHHmmss' | Out-File $(SolutionDir)PSScripts\ScriptVersion.txt -NoNewLine }"
+
+xcopy $(SolutionDir)PSScripts\*.* $(ProjectDir)Files\ /e/v/i/h/r/y</PreBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\Microsoft.Web.WebJobs.Publish.1.0.12\tools\webjobs.targets" Condition="Exists('..\packages\Microsoft.Web.WebJobs.Publish.1.0.12\tools\webjobs.targets')" />
   <Import Project="..\packages\Microsoft.Web.WebJobs.Publish.1.0.13\tools\webjobs.targets" Condition="Exists('..\packages\Microsoft.Web.WebJobs.Publish.1.0.13\tools\webjobs.targets')" />

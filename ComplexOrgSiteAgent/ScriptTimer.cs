@@ -11,6 +11,7 @@ using System.IO;
 using System.Diagnostics;
 using ADSync.Common.Events;
 using System.Collections.ObjectModel;
+using ADSync.Common.Models;
 
 namespace ComplexOrgSiteAgent
 {
@@ -34,6 +35,8 @@ namespace ComplexOrgSiteAgent
         private int FrequencyMinutes { get; set; }
         private ScriptObject[] _scripts;
 
+        public static string ScriptFolderPath { get; set; }
+
         public ScriptTimer(ScriptObject[] Scripts, int FrequencyMinutes)
         {
             _scripts = Scripts;
@@ -48,7 +51,7 @@ namespace ComplexOrgSiteAgent
             string scriptName;
             foreach(var script in _scripts)
             {
-                scriptName = Path.GetFileNameWithoutExtension(script.ScriptPath);
+                scriptName = Path.GetFileNameWithoutExtension(script.ScriptName);
                 try
                 {
                     res = RunScript(script);
@@ -100,13 +103,12 @@ namespace ComplexOrgSiteAgent
             using (Runspace runspace = RunspaceFactory.CreateRunspace(runspaceConfiguration))
             {
                 runspace.Open();
-
-                var directory = Path.GetDirectoryName(script.ScriptPath);
-                runspace.SessionStateProxy.Path.SetLocation(directory);
+                var scriptPath = Path.Combine(ScriptFolderPath, script.ScriptName);
+                runspace.SessionStateProxy.Path.SetLocation(ScriptFolderPath);
 
                 using (Pipeline pipeline = runspace.CreatePipeline())
                 {
-                    Command cmd = new Command(script.ScriptPath, false, false);
+                    Command cmd = new Command(scriptPath, false, false);
                    
                     if (script.ScriptArgs != null)
                     {
@@ -154,18 +156,6 @@ namespace ComplexOrgSiteAgent
             }
             catch { }
             _timer.Dispose();
-        }
-    }
-    public class ScriptObject
-    {
-        public string ScriptPath { get; set; }
-        public Dictionary<string, string> ScriptArgs { get; set; }
-        public bool IsRunning { get; set; }
-
-        public ScriptObject(string scriptPath, Dictionary<string,string> scriptArgs = null)
-        {
-            ScriptPath = scriptPath;
-            ScriptArgs = scriptArgs;
         }
     }
 }

@@ -18,6 +18,7 @@ INITIALIZE
     . "$PSScriptRoot\Logging.ps1"
 
     Init-SyncAPI -SyncVars $SyncVars
+
 <#
 PROCESS NEW USERS
 #>

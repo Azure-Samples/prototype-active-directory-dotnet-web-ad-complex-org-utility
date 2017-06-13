@@ -19,10 +19,25 @@ namespace ADSync.Data.Models
             StorageRepo.AddQueueItem(user, "stageduser");
         }
 
-        public static void AddBulkUsersToQueue(IEnumerable<StagedUser> userBatch)
+        public static void AddBulkUsersToQueue(IEnumerable<StagedUser> userBatch, IEnumerable<string> siteDomains = null)
         {
+            if (siteDomains != null)
+                CheckBatchUsers(ref userBatch, siteDomains);
+
             //this will be queued
             StorageRepo.AddQueueItem(userBatch, "stageduser");
+        }
+
+        private static void CheckBatchUsers(ref IEnumerable<StagedUser> userBatch, IEnumerable<string> siteDomains)
+        {
+            //sanity check on domains
+            foreach(var user in userBatch)
+            {
+                if (!siteDomains.Any(d => d == user.DomainName))
+                {
+                    user.LoadState = LoadStageEnum.NewNothingPending;
+                }
+            }
         }
 
         public static async Task<IEnumerable<StagedUser>> GetUsers()

@@ -16,6 +16,7 @@ using Common;
 using ComplexOrgSiteAgent;
 using System.Reflection;
 using System.DirectoryServices;
+using ADSync.Common.Enums;
 
 namespace ComplexOrgSiteSetup
 {
@@ -180,11 +181,24 @@ namespace ComplexOrgSiteSetup
                 { "SiteUrl", txtSiteUrl.Text },
                 { "Username", txtUsername.Text }
             };
+
             var scriptUpdates = new Dictionary<string, string>
             {
                 { "ApiKey", txtApiKey.Text },
                 { "ApiSite", txtSiteUrl.Text }
             };
+
+            if (txtSiteType.Text == SiteTypes.MasterHQ.ToString())
+            {
+                //to enable GraphAPI calls for B2B invitations
+                scriptUpdates.Add("AADClientID", ConfigurationManager.AppSettings["AADClientID"]);
+                scriptUpdates.Add("AADClientKey", ConfigurationManager.AppSettings["AADClientKey"]);
+                scriptUpdates.Add("AADTenantID", ConfigurationManager.AppSettings["AADTenantID"]);
+
+                updates.Add("AADClientID", ConfigurationManager.AppSettings["AADClientID"]);
+                updates.Add("AADClientKey", ConfigurationManager.AppSettings["AADClientKey"]);
+                updates.Add("AADTenantID", ConfigurationManager.AppSettings["AADTenantID"]);
+            }
 
             var success = AppUtil.ModifyAppConfig(setupConfigFile, updates);
             success = success && AppUtil.ModifyAppConfig(agentConfigFile, updates);

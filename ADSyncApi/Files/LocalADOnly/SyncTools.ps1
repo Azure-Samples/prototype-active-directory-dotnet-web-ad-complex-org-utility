@@ -13,6 +13,8 @@
             0 { $res = "MasterHQ" }
             1 { $res = "AADB2B" }
             2 { $res = "LocalADOnly" }
+            3 { $res = "AADB2BCloudOnly" }
+			
             default { $res = $null }
         }
     } else {
@@ -21,6 +23,8 @@
             "MasterHQ" { $res = 0 }
             "AADB2B" { $res = 1 }
             "LocalADOnly" { $res = 2 }
+            "AADB2BCloudOnly" { $res = 3 }
+			
             default { $res = $null }
         }
     }
@@ -40,33 +44,41 @@ function Add-NewStagedUser
     User will then be sync'd to HQ Azure AD
     User will be authenticated via federation to this ADFS
     #>
+    $loadState = 0
 
     if ($user.UserPrincipalName.Length -eq 0) { 
-        $msg = "User $($user.DistinguishedName) missing UPN: not added."
-        Create-LogEntry -ErrorType Error -Detail $msg -Source "Script:Add-NewStagedUser" -RemoteSiteID $RemoteSiteID | Add-LogEntry | Out-Null
-        return $null
-    }
-
-    $dom = $user.UserPrincipalName.Split('@')[1]
-
-    if ($dom.indexof("onmicrosoft.com") -gt -1) {
-        $msg = "Not adding {0}, excluding '*.onmicrosoft.com' UPNs" -f $user.UserPrincipalName
+        $msg = "User $($user.DistinguishedName) missing UPN: will not sync."
         Create-LogEntry -ErrorType Warning -Detail $msg -Source "Script:Add-NewStagedUser" -RemoteSiteID $RemoteSiteID | Add-LogEntry | Out-Null
-        return $null
+		$loadState = 6
     }
 
-    if (!$siteConfig.SiteDomain.Contains($dom)) {
-        $msg = "Not adding {0}, domain not listed in site configuration" -f $user.UserPrincipalName
-        Create-LogEntry -ErrorType Warning -Detail $msg -Source "Script:Add-NewStagedUser" -RemoteSiteID $RemoteSiteID | Add-LogEntry | Out-Null
-        return $null
-    }
+	if ($user.UserPrincipalName -ne $null) {
+		$dom = $user.UserPrincipalName.Split('@')[1]
 
-    $msg="Staging new AD user $($user.UserPrincipalName)..."
+		if ($dom.indexof("onmicrosoft.com") -gt -1) {
+			$msg = "Not syncing {0}, excluding '*.onmicrosoft.com' UPNs" -f $user.UserPrincipalName
+			Create-LogEntry -ErrorType Warning -Detail $msg -Source "Script:Add-NewStagedUser" -RemoteSiteID $RemoteSiteID | Add-LogEntry | Out-Null
+			$loadState = 6
+		}
+
+		if (!$siteConfig.SiteDomain.Contains($dom)) {
+			$msg = "Not syncing {0}, domain not listed in site configuration" -f $user.UserPrincipalName
+			Create-LogEntry -ErrorType Warning -Detail $msg -Source "Script:Add-NewStagedUser" -RemoteSiteID $RemoteSiteID | Add-LogEntry | Out-Null
+			$loadState = 6
+		}
+	}
+	else {
+		$msg = "Not syncing {0}, UPN is null" -f $user.Name
+		Create-LogEntry -ErrorType Warning -Detail $msg -Source "Script:Add-NewStagedUser" -RemoteSiteID $RemoteSiteID | Add-LogEntry | Out-Null
+		$loadState = 6
+	}
+
+    $msg="Staging new AD user $($user.Name)..."
     Create-LogEntry -ErrorType Info -Detail $msg -Source "Script:Add-NewStagedUser" -RemoteSiteID $RemoteSiteID | Add-LogEntry | Out-Null
 	
-    $loadState = 0
     $masterGuid = $null
     $siteType = Get-SiteType -SiteType $SiteConfig.siteType
+
     if ($siteType -eq "MasterHQ") { 
         $masterGuid = $user.ObjectGUID
         $loadstate = 6
@@ -109,7 +121,7 @@ function Add-NewStagedUser
 
 function Get-ADUsersToSync
 {
-    $userProps = @("cn","mail","co","name","company","department","displayName","l","mobile","objectSid","st","streetAddress","telephoneNumber","homePhone","postalCode","title")
+    $userProps = @("cn","mail","co","name","company","department","displayName","l","mobile","objectSid","ObjectGUID","st","streetAddress","telephoneNumber","homePhone","postalCode","title")
     $userFilter = '-not adminCount -like "*" -and Enabled -eq "True"'
     $res = Get-ADUser -Filter $userFilter -Properties $userProps
     return $res

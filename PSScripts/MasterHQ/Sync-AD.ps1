@@ -14,6 +14,7 @@ INITIALIZE
 
     #include files
     . "$PSScriptRoot\SyncAPI.ps1"
+    . "$PSScriptRoot\SyncAPI-HQ.ps1"
     . "$PSScriptRoot\SyncTools.ps1"
     . "$PSScriptRoot\SyncTools-HQ.ps1"
     . "$PSScriptRoot\Logging.ps1"

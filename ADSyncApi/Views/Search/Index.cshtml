@@ -3,5 +3,32 @@
     ViewBag.Title = "User Search";
 }
 
-<h2>User Search</h2>
+<div class="panel panel-primary" style="margin-top:20px;">
+    <div class="panel-title panel-heading">
+        @ViewBag.Title
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-4">
+                <input placeholder="Filter Users..." class="form-control" type="text" id="UserSearch" />
 
+                <button class="btn btn-default" id="btnShowDups">Show Duplicates</button>
+
+            </div>
+
+            <div class="col-sm-8">
+
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+<script type="text/javascript" src="/scripts/app/siteapi.js"></script>
+<script type="text/javascript" src="~/Scripts/App/search.js"></script>
+}
+
+@section styles {
+    <style type="text/css">
+
+    </style>    
+}

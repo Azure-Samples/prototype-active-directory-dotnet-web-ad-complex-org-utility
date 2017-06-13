@@ -25,7 +25,7 @@ namespace ADSyncApi.Infrastructure
                 var msg = new RelayMessage
                 {
                     ApiKey = Settings.AdminApiKey,
-                    Data = user.Upn,
+                    Data = user.LocalGuid,
                     DestSiteId = user.SiteId,
                     Identifier = user.Upn,
                     Operation = SiteOperation.GetUserStatus
@@ -109,5 +109,35 @@ namespace ADSyncApi.Infrastructure
                 };
             }
         }
+        public static async Task<RelayResponse> GetSiteScriptVersion(string siteId)
+        {
+            try
+            {
+                var client = new SigRClient(Settings.AdminSiteUrl, Settings.STSApiKey, "SiteHub");
+
+                var msg = new RelayMessage
+                {
+                    ApiKey = Settings.AdminApiKey,
+                    DestSiteId = siteId,
+                    Identifier = siteId,
+                    Operation = SiteOperation.GetScriptVersion
+                };
+
+                await client.StartAsync();
+                RelayResponse res = await client.ProcessRelayMessage(msg);
+
+                return res;
+            }
+            catch (Exception ex)
+            {
+                Utils.AddLogEntry("Error getting user status", EventLogEntryType.Error, 0, ex);
+                return new RelayResponse
+                {
+                    Success = false,
+                    ErrorMessage = ex.Message
+                };
+            }
+        }
+
     }
 }

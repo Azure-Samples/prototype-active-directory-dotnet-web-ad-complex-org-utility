@@ -84,7 +84,8 @@ namespace Infrastructure
                 List<Claim> claims = new List<Claim>
                 {
                     new Claim(CustomClaimTypes.SiteId, site.Id),
-                    new Claim(CustomClaimTypes.SiteDomain, domainList)
+                    new Claim(CustomClaimTypes.SiteDomain, domainList),
+                    new Claim(CustomClaimTypes.OnPremDomainName, site.OnPremDomainName)
                 };
                 
                 // create an identity with the valid claims.

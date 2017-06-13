@@ -37,33 +37,16 @@ namespace ADSyncApi.Controllers.Api
             else
             { 
                 var siteDomains = SiteUtils.GetSiteDomainList(User.Identity);
-                var siteId = User.Identity.GetClaim(CustomClaimTypes.SiteId);
 
-                //sanity check on domains
-                //note: this checks the indexed domain name, not the upn suffix. The upn suffix
-                //will be checked before being dequeued - if an error occurs there, it will be logged.
-                //var isInvalid = userBatch.Any(u => siteDomains.Any(d => d != u.DomainName));
-                var isInvalid = userBatch.Select(u => u.DomainName).Except(siteDomains).Count() > 0;
-                if (isInvalid)
+                try
+                {
+                    StagedUserUtil.AddBulkUsersToQueue(userBatch, siteDomains);
+                }
+                catch (Exception ex)
                 {
                     res = HttpStatusCode.InternalServerError;
-                    var siteDomainList = string.Join(",", siteDomains);
-                    var logMessage = string.Format("A user domain record was found that didn't match one of the caller domains \"{0}\"", siteDomainList);
-                    Logging.WriteToSyncLog("StagedUsersController/AddPending", logMessage, System.Diagnostics.EventLogEntryType.Error);
-                    errorMessage = "One or more domain names are invalid for your site. Please check your configuration.";
-                }
-                else
-                {
-                    try
-                    {
-                        StagedUserUtil.AddBulkUsersToQueue(userBatch);
-                    }
-                    catch (Exception ex)
-                    {
-                        res = HttpStatusCode.InternalServerError;
-                        Logging.WriteToSyncLog("StagedUsersController/UpdateBatch", ex.Message, System.Diagnostics.EventLogEntryType.Error, ex);
-                        errorMessage = string.Format("An error occurred processing the request, check the event log for details ({0}).", ex.Message);
-                    }
+                    Logging.WriteToSyncLog("StagedUsersController/UpdateBatch", ex.Message, System.Diagnostics.EventLogEntryType.Error, ex);
+                    errorMessage = string.Format("An error occurred processing the request, check the event log for details ({0}).", ex.Message);
                 }
             }
 
@@ -76,7 +59,7 @@ namespace ADSyncApi.Controllers.Api
         {
             var siteDomains = SiteUtils.GetSiteDomainList(User.Identity);
             var siteId = User.Identity.GetClaim(CustomClaimTypes.SiteId);
-            return await StagedUserUtil.GetAllByDomain(siteDomains);
+            return await StagedUserUtil.GetAllBySiteId(siteId);
         }
 
         public async Task<IEnumerable<StagedUser>> GetAllByStage(string stage)

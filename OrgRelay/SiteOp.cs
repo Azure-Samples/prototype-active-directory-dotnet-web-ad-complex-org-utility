@@ -5,6 +5,8 @@ using System.DirectoryServices.AccountManagement;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using Common;
+using System.IO;
+using System.Reflection;
 
 namespace OrgRelay
 {
@@ -72,13 +74,19 @@ namespace OrgRelay
                         res.ErrorMessage = r.ErrorMessage;
                         return res;
 
+                    case SiteOperation.GetScriptVersion:
+                        r = GetScriptVersion(message);
+                        res.Data = r.Data;
+                        res.Success = r.Success;
+                        res.ErrorMessage = r.ErrorMessage;
+                        return res;
+
                     case SiteOperation.Ping:
                     case SiteOperation.AddLogEntry:
+                    case SiteOperation.FireScript:
                         res.Data = message.Data;
                         return res;
 
-                    case SiteOperation.FireScript:
-                        throw new NotImplementedException();
                 }
                 return null;
 
@@ -158,6 +166,25 @@ namespace OrgRelay
         {
 
             throw new NotImplementedException();
+        }
+        public static RelayResponse GetScriptVersion(RelayMessage message)
+        {
+            var res = new RelayResponse();
+
+            try
+            {
+                var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                var path = Path.GetFullPath(string.Format("{0}\\Scripts\\ScriptVersion.txt", dir));
+                res.Data = File.ReadAllText(path);
+                res.Success = true;
+                return res;
+            }
+            catch (Exception ex)
+            {
+                res.Success = false;
+                res.ErrorMessage = ex.Message;
+                return res;
+            }
         }
     }
 

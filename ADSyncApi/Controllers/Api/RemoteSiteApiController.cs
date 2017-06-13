@@ -1,6 +1,7 @@
 ﻿using ADSync.Common.Enums;
 using ADSync.Common.Models;
 using ADSync.Data.Models;
+using ADSyncApi.Infrastructure;
 using Common;
 using Newtonsoft.Json;
 using System;
@@ -29,6 +30,13 @@ namespace ADSyncApi.Controllers.Api
         {
             var res = await RemoteSiteUtil.GetAllSites();
             return res;
+        }
+
+        [HttpGet]
+        public async Task<string> GetSiteScriptVersion(string id)
+        {
+            var response = await AdminRelayClient.GetSiteScriptVersion(id);
+            return response.Data;
         }
 
         [HttpPost]

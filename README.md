@@ -2,11 +2,11 @@
 ## Sample/Prototype utility facilitating automated access to a headquarters Azure AD and on-premises resources from affiliated companies
 ## Quick Start
 
-<a href="#"><img src="http://azuredeploy.net/deploybutton.png"/></a> (coming soon)
+<a target="_blank" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2Factive-directory-dotnet-web-ad-complex-org-utility%2Fmaster%2Fazuredeploy.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
 
-[Documentation](./Help.md)
+[Documentation](./Docs/Help.md)
 
-[Detailed step-by-step deployment instructions](./Setup.md)
+[Detailed step-by-step deployment instructions](./Docs/Setup.md)
 
 __Details__
 * Creates a cloud-based management portal and database for staging of user accounts from one or more on-premises Active Directory forests, for creation in a master AD

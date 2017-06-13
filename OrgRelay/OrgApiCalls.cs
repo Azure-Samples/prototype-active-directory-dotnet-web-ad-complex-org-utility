@@ -41,7 +41,7 @@ namespace OrgRelay
         {
             log.RemoteSiteID = RemoteSiteId;
 
-            Uri uri = new Uri(string.Format("{0}/api/SyncLogUpdate/AddLogEntry", SiteUrl));
+            Uri uri = new Uri(string.Format("{0}api/SyncLogUpdate/AddLogEntry", SiteUrl));
             var data = JsonConvert.SerializeObject(log);
             WebClient2 web;
             using (web = new WebClient2())

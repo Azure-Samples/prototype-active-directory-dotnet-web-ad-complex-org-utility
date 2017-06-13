@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.4
+VisualStudioVersion = 15.0.26430.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADSyncApi", "ADSyncApi\ADSyncApi.csproj", "{D0D03B2A-53CA-4564-B0DC-2DF330EC4D23}"
 EndProject
@@ -12,6 +12,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADSync.Common", "ADSync.Common\ADSync.Common.csproj", "{4F56F58D-A05C-4A4A-8D5A-FCC3904750F9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PSScripts", "PSScripts", "{403BB528-A379-432B-9A63-10396C4AEC89}"
+	ProjectSection(SolutionItems) = preProject
+		ADSyncApi\Files\ScriptVersion.txt = ADSyncApi\Files\ScriptVersion.txt
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MasterHQ", "MasterHQ", "{83B73DB4-4182-43D0-96D0-DBEF13867BC7}"
 	ProjectSection(SolutionItems) = preProject
@@ -19,11 +22,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MasterHQ", "MasterHQ", "{83
 		PSScripts\MasterHQ\GraphDeltaToken.json = PSScripts\MasterHQ\GraphDeltaToken.json
 		PSScripts\MasterHQ\GraphLogin.ps1 = PSScripts\MasterHQ\GraphLogin.ps1
 		PSScripts\MasterHQ\Logging.ps1 = PSScripts\MasterHQ\Logging.ps1
+		PSScripts\MasterHQ\NewVersionCheck.ps1 = PSScripts\MasterHQ\NewVersionCheck.ps1
 		PSScripts\MasterHQ\RunSync-ADLocal.cmd = PSScripts\MasterHQ\RunSync-ADLocal.cmd
 		PSScripts\MasterHQ\RunSync-B2B.cmd = PSScripts\MasterHQ\RunSync-B2B.cmd
 		PSScripts\MasterHQ\Send-B2BInviteGraph.ps1 = PSScripts\MasterHQ\Send-B2BInviteGraph.ps1
 		PSScripts\MasterHQ\Sync-AD.ps1 = PSScripts\MasterHQ\Sync-AD.ps1
 		PSScripts\MasterHQ\Sync-B2B.ps1 = PSScripts\MasterHQ\Sync-B2B.ps1
+		PSScripts\MasterHQ\SyncAPI-HQ.ps1 = PSScripts\MasterHQ\SyncAPI-HQ.ps1
 		PSScripts\MasterHQ\SyncAPI.ps1 = PSScripts\MasterHQ\SyncAPI.ps1
 		SyncTools-HQ.ps1 = SyncTools-HQ.ps1
 		PSScripts\MasterHQ\SyncTools.ps1 = PSScripts\MasterHQ\SyncTools.ps1
@@ -33,6 +38,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LocalADOnly", "LocalADOnly", "{352F2598-7354-45CE-8AFF-91F29064B959}"
 	ProjectSection(SolutionItems) = preProject
 		PSScripts\LocalADOnly\Logging.ps1 = PSScripts\LocalADOnly\Logging.ps1
+		PSScripts\LocalADOnly\NewVersionCheck.ps1 = PSScripts\LocalADOnly\NewVersionCheck.ps1
 		PSScripts\LocalADOnly\RunSync.cmd = PSScripts\LocalADOnly\RunSync.cmd
 		PSScripts\LocalADOnly\Sync.ps1 = PSScripts\LocalADOnly\Sync.ps1
 		PSScripts\LocalADOnly\SyncAPI.ps1 = PSScripts\LocalADOnly\SyncAPI.ps1
@@ -43,6 +49,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AADB2B", "AADB2B", "{13C1FC44-D031-4C9C-A13F-054465BF554F}"
 	ProjectSection(SolutionItems) = preProject
 		PSScripts\AADB2B\Logging.ps1 = PSScripts\AADB2B\Logging.ps1
+		PSScripts\AADB2B\NewVersionCheck.ps1 = PSScripts\AADB2B\NewVersionCheck.ps1
 		PSScripts\AADB2B\RunSync.cmd = PSScripts\AADB2B\RunSync.cmd
 		PSScripts\AADB2B\Sync.ps1 = PSScripts\AADB2B\Sync.ps1
 		PSScripts\AADB2B\SyncApi.ps1 = PSScripts\AADB2B\SyncApi.ps1
@@ -58,9 +65,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logs", "Logs", "{AE873B75-9
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{B7D40B83-3A61-4B5C-A707-1DEB0320BCA9}"
 	ProjectSection(SolutionItems) = preProject
-		Help.md = Help.md
+		azuredeploy.json = azuredeploy.json
+		azuredeploy.parameters.json = azuredeploy.parameters.json
+		CustomDeploy.ps1 = CustomDeploy.ps1
 		README.md = README.md
-		Setup.md = Setup.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DocImages", "DocImages", "{8F22BC43-FF2D-47BA-B5EC-D1FBA57EC58C}"
@@ -84,6 +92,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComplexOrgSTS", "ComplexOrgSTS\ComplexOrgSTS.csproj", "{62701C3C-E88E-407F-B805-E3BF13B74CCE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrgRelay", "OrgRelay\OrgRelay.csproj", "{1B4B9E0E-AB4B-46FA-A035-D5E912F6A767}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{5C2A9A2D-5DE5-4553-A74C-43006DB220D3}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\Help.md = Docs\Help.md
+		Docs\Setup.md = Docs\Setup.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -152,6 +166,7 @@ Global
 		{1A0AF3CF-EDD0-4BA6-A92B-C5D0F5EF7CD1} = {352F2598-7354-45CE-8AFF-91F29064B959}
 		{AE873B75-9D8D-4596-9B76-92D3717262A7} = {83B73DB4-4182-43D0-96D0-DBEF13867BC7}
 		{8F22BC43-FF2D-47BA-B5EC-D1FBA57EC58C} = {B7D40B83-3A61-4B5C-A707-1DEB0320BCA9}
+		{5C2A9A2D-5DE5-4553-A74C-43006DB220D3} = {B7D40B83-3A61-4B5C-A707-1DEB0320BCA9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8

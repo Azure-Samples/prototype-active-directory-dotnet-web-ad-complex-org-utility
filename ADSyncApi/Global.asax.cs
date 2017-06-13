@@ -4,6 +4,7 @@ using Portal.Data;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Helpers;
@@ -35,9 +36,14 @@ namespace ADSyncApi
                 Settings.STSApiKey = ConfigurationManager.AppSettings["STSApiKey"];
                 Settings.AdminSiteUrl = ConfigurationManager.AppSettings["AdminSiteUrl"];
                 Settings.AdminApiKey = ConfigurationManager.AppSettings["AdminApiKey"];
-                
+
+                Settings.ClientId = ConfigurationManager.AppSettings["ida:ClientId"];
+                Settings.ClientSecret = ConfigurationManager.AppSettings["ida:ClientSecret"];
+                Settings.TenantId = ConfigurationManager.AppSettings["ida:TenantId"];
+
                 //Zip init
                 ZipCopy.InitZip(Settings.AppRootPath);
+                Settings.CurrSiteScriptVersion = ZipCopy.GetCurrSiteVersion(Path.Combine(Settings.AppRootPath, "Files"));
 
                 var client = DocDBRepo.Initialize().Result;
             }

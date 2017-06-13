@@ -66,6 +66,7 @@
     <Compile Include="Interfaces\IDocModelBase.cs" />
     <Compile Include="Models\RelayMessage.cs" />
     <Compile Include="Models\RemoteSite.cs" />
+    <Compile Include="Models\ScriptObject.cs" />
     <Compile Include="Models\STACredential.cs" />
     <Compile Include="Models\StagedUser.cs" />
     <Compile Include="Models\SyncLogEntry.cs" />

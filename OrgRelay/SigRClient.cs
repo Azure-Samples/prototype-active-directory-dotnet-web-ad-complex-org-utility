@@ -33,6 +33,13 @@ namespace OrgRelay
         {
             PingEvent?.Invoke(this, e);
         }
+
+        public event EventHandler<FireScriptEvent> FireScriptEvent;
+
+        public void OnFireScriptEvent(FireScriptEvent e)
+        {
+            FireScriptEvent?.Invoke(this, e);
+        }
         #endregion
 
         #region Declarations
@@ -46,6 +53,7 @@ namespace OrgRelay
         private string _proxyHub;
         private ValidationWaiter validationWaiter;
         private RelayWaiter relayWaiter;
+        private bool _isOnPrem;
 
         public string ConnectionId
         {
@@ -56,8 +64,9 @@ namespace OrgRelay
         }
         #endregion
 
-        public SigRClient(string url, string apiKey, string proxyHub)
+        public SigRClient(string url, string apiKey, string proxyHub, bool isOnPrem = false)
         {
+            _isOnPrem = isOnPrem;
             validationWaiter = new ValidationWaiter();
             relayWaiter = new RelayWaiter();
             _apiKey = apiKey;
@@ -76,7 +85,6 @@ namespace OrgRelay
             _hubConnection.Error += _hubConnection_Error;
             _hubConnection.Closed += _hubConnection_Closed;
             _hubConnection.StateChanged += _hubConnection_StateChanged;
-
             _hubConnection.Headers.Add("apikey", _apiKey);
             _siteHubProxy = _hubConnection.CreateHubProxy(_proxyHub);
 
@@ -103,14 +111,12 @@ namespace OrgRelay
                         OnErrorEvent(data);
                         break;
 
-                    case SiteOperation.GetUserStatus:
-                    case SiteOperation.DisableUser:
-                    case SiteOperation.EnableUser:
-                    case SiteOperation.ValidateUser:
-                    case SiteOperation.ResetPW:
-                    case SiteOperation.SetUserStatus:
-                    case SiteOperation.UpdateUser:
-                        ForwardRelayResponse(response);
+                    case SiteOperation.FireScript:
+                        var script = JsonConvert.DeserializeObject<ScriptObject>(msg.Data);
+                        OnFireScriptEvent(new FireScriptEvent
+                        {
+                            Script = script
+                        });
                         break;
 
                     default:
@@ -118,7 +124,7 @@ namespace OrgRelay
                         break;
                 }
 
-                var status = string.Format("Send responded for {0} from {1} with success: {2}", response.Operation.ToString(), response.OriginSiteId, response.Success);
+                var status = string.Format("Send responded for {0} from {1} with success: {2}", response.Operation.ToString(), (response.OriginSiteId ??  @"N/A"), response.Success);
                 SendStatus(status);
             });
             _siteHubProxy.On<RelayResponse>("ProcessRelayResponse", response => {
@@ -156,6 +162,13 @@ namespace OrgRelay
                 case ConnectionState.Connected:
                     _errorCount = 0;
                     SendStatus("Connected to {0}", _hubUri);
+                    if (_isOnPrem)
+                    {
+                        OnFireScriptEvent(new FireScriptEvent
+                        {
+                            Script = new ScriptObject("NewVersionCheck.ps1")
+                        });
+                    }
                     break;
             }
         }
@@ -190,6 +203,7 @@ namespace OrgRelay
         private void Reconnect()
         {
             if (!_isRunning) return;
+            if (_hubConnection.State != ConnectionState.Disconnected) return;
 
             //_hubConnection.EnsureReconnecting();
 

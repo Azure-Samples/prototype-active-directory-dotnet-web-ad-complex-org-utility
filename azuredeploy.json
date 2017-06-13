@@ -1,0 +1,372 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "hostingPlanName": {
+      "type": "string",
+      "minLength": 1,
+      "metadata": {
+        "description": "Azure App Services use \"Hosting Plans\" to define the compute resources that will run your app. The name of this plan will also be used elsewhere throughout this deployment, as part of your database host name and your site names"
+      }
+    },
+    "skuName": {
+      "type": "string",
+      "defaultValue": "F1",
+      "allowedValues": [
+        "F1",
+        "D1",
+        "B1",
+        "B2",
+        "B3",
+        "S1",
+        "S2",
+        "S3",
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "metadata": {
+        "description": "Describes plan's pricing tier and capacity - this can be changed after deployment. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/"
+      }
+    },
+    "skuCapacity": {
+      "type": "int",
+      "defaultValue": 1,
+      "minValue": 1,
+      "metadata": {
+        "description": "Describes plan's instance count (how many distinct web servers will be deployed in the farm) - this can be changed after deployment"
+      }
+    },
+    "CustomSTSDisplayName": {
+      "type": "string",
+      "metadata": {
+        "description": "Title that is displayed on the login page of the custom STS"
+      }
+    },
+    "tenantName": {
+      "type": "string",
+      "metadata": {
+        "description": "Required: the name of the Azure Active Directory tenant that will host your auth app (like contoso.com, or contoso.onmicrosoft.com)"
+      }
+    },
+    "tenantId": {
+      "type": "string",
+      "metadata": {
+        "description": "Required: the GUID of the tenant above"
+      }
+    },
+    "clientId": {
+      "type": "string",
+      "metadata": {
+        "description": "Required: the application ID GUID of your admin auth app (see Readme for details)"
+      }
+    },
+    "clientSecret": {
+      "type": "string",
+      "metadata": {
+        "description": "Required: the application secret for your admin auth app"
+      }
+    },
+    "AdminRedisSKUName": {
+      "type": "string",
+      "allowedValues": [
+        "Basic",
+        "Standard"
+      ],
+      "metadata": {
+        "description": "The Redis cache supports the SignalR deployment. Default size is C0 Basic - use for testing only."
+      },
+      "defaultValue": "Basic"
+    },
+    "AdminRedisSKUFamily": {
+      "type": "string",
+      "allowedValues": [
+        "C"
+      ],
+      "defaultValue": "C"
+    },
+    "AdminRedisSKUCapacity": {
+      "type": "int",
+      "allowedValues": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "defaultValue": 0
+    }
+  },
+  "variables": {
+    "RepoUrl": "https://github.com/Azure-Samples/active-directory-dotnet-web-ad-complex-org-utility.git",
+    "RepoBranch": "master",
+    "adminSiteName": "[concat(tolower(parameters('hostingPlanName')), '-admin', uniqueString(resourceGroup().id))]",
+    "StsSiteName": "[concat(tolower(parameters('hostingPlanName')), '-sts', uniqueString(resourceGroup().id))]",
+    "docDbHost": "[concat(tolower(parameters('hostingPlanName')), '-db', uniqueString(resourceGroup().id))]",
+    "AdminRedisName": "[concat(tolower(parameters('hostingPlanName')), '-redis', uniqueString(resourceGroup().id))]",
+    "AdminStorageName": "[concat(concat(tolower(parameters('hostingPlanName')), '-storage', uniqueString(resourceGroup().id))]",
+    "AdminStorageType": "Standard_LRS",
+    "StorageAccountId": "[concat(resourceGroup().id,'/providers/Microsoft.Storage/storageAccounts/', variables('AdminStorageName'))]",
+    "docDbName": "ComplexOrgDB",
+    "AdminRedisRedisVersion": "2.8",
+    "uniqueBase": "[toLower(uniqueString(resourceGroup().id, deployment().name))]",
+    "temp": "[concat(variables('uniqueBase') , variables('uniqueBase'), substring(variables('uniqueBase'), 0, 10))]",
+    "AdminKey": "[uniqueString(variables('temp'))]",
+    "STSKey": "[uniqueString(variables('AdminKey'))]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2015-08-01",
+      "name": "[parameters('hostingPlanName')]",
+      "type": "Microsoft.Web/serverfarms",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "HostingPlan"
+      },
+      "sku": {
+        "name": "[parameters('skuName')]",
+        "capacity": "[parameters('skuCapacity')]"
+      },
+      "properties": {
+        "name": "[parameters('hostingPlanName')]"
+      }
+    },
+    {
+      "type": "Microsoft.DocumentDB/databaseAccounts",
+      "kind": "GlobalDocumentDB",
+      "name": "[variables('docDbHost')]",
+      "apiVersion": "2015-04-08",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "CosmoDB"
+      },
+      "properties": {
+        "databaseAccountOfferType": "Standard",
+        "consistencyPolicy": {
+          "defaultConsistencyLevel": "Session",
+          "maxIntervalInSeconds": 5,
+          "maxStalenessPrefix": 100
+        },
+        "name": "[variables('docDbHost')]"
+      },
+      "dependsOn": []
+    },
+    {
+      "name": "[variables('AdminRedisName')]",
+      "type": "Microsoft.Cache/Redis",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-04-01",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "AdminRedis"
+      },
+      "properties": {
+        "sku": {
+          "name": "[parameters('AdminRedisSKUName')]",
+          "family": "[parameters('AdminRedisSKUFamily')]",
+          "capacity": "[parameters('AdminRedisSKUCapacity')]"
+        },
+        "redisVersion": "[variables('AdminRedisRedisVersion')]"
+      }
+    },
+    {
+      "name": "[variables('AdminStorageName')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-01-01",
+      "sku": {
+        "name": "[variables('AdminStorageType')]"
+      },
+      "dependsOn": [],
+      "tags": {
+        "displayName": "AdminStorage"
+      },
+      "kind": "Storage"
+    },
+    {
+      "apiVersion": "2015-08-01",
+      "name": "[variables('adminSiteName')]",
+      "type": "Microsoft.Web/sites",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]": "Resource",
+        "displayName": "AdminSite"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+        "[variables('docDbHost')]",
+        "[variables('AdminStorageName')]"
+      ],
+      "properties": {
+        "name": "[variables('adminSiteName')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+        "siteConfig": {
+          "phpVersion": "off",
+          "appSettings": [
+            {
+              "Name": "PROJECT",
+              "Value": "ADSyncApi/ADSyncApi.csproj"
+            },
+            {
+              "Name": "ida:ClientId",
+              "Value": "[parameters('clientId')]"
+            },
+            {
+              "Name": "ida:ClientSecret",
+              "Value": "[parameters('clientSecret')]"
+            },
+            {
+              "Name": "ida:Tenant",
+              "Value": "[parameters('tenantName')]"
+            },
+            {
+              "Name": "ida:TenantId",
+              "Value": "[parameters('tenantId')]"
+            },
+            {
+              "Name": "StorageConnectionString",
+              "Value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('AdminStorageName'),';AccountKey=',concat(listKeys(variables('StorageAccountId'),'2015-05-01-preview').key1))]"
+            },
+            {
+              "Name": "AdminApiKey",
+              "Value": "[variables('AdminKey')]"
+            },
+            {
+              "Name": "STSApiKey",
+              "Value": "[variables('STSKey')]"
+            },
+            {
+              "Name": "DocDBUri",
+              "Value": "[reference(concat('Microsoft.DocumentDb/databaseAccounts/', variables('docDbHost'))).documentEndpoint]"
+            },
+            {
+              "Name": "DocDBAuthKey",
+              "Value": "[listKeys(resourceId('Microsoft.DocumentDb/databaseAccounts', variables('docDbHost')), '2015-04-08').primaryMasterKey]"
+            },
+            {
+              "Name": "DocDBName",
+              "Value": "[variables('docDbName')]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "name": "web",
+          "type": "sourcecontrols",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2015-08-01",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('adminSiteName'))]"
+          ],
+          "tags": {
+            "displayName": "AdminCodeDeploy"
+          },
+          "properties": {
+            "RepoUrl": "[variables('RepoUrl')]",
+            "branch": "[variables('RepoBranch')]",
+            "IsManualIntegration": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "[variables('StsSiteName')]",
+      "type": "Microsoft.Web/sites",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-08-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
+      ],
+      "tags": {
+        "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName')))]": "Resource",
+        "displayName": "StsSite"
+      },
+      "properties": {
+        "name": "[variables('StsSiteName')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+        "siteConfig": {
+          "phpVersion": "off",
+          "appSettings": [
+            {
+              "Name": "PROJECT",
+              "Value": "ComplexOrgSTS/ComplexOrgSTS.csproj"
+            },
+            {
+              "Name": "SiteName",
+              "Value": "[parameters('CustomSTSDisplayName')]"
+            },
+            {
+              "Name": "SigningCertificate",
+              "Value": "Infrastructure\\LocalSTS.pfx"
+            },
+            {
+              "Name": "SigningCertificatePassword",
+              "Value": "LocalSTS"
+            },
+            {
+              "Name": "Port",
+              "Value": "443"
+            },
+            {
+              "Name": "HttpLocalHost",
+              "Value": "[concat('https://', reference(concat('Microsoft.Web/sites/', variables('StsSiteName'))).DefaultHostName, ':')]"
+            },
+            {
+              "Name": "AdminSiteUrl",
+              "Value": "[concat('https://', reference(concat('Microsoft.Web/sites/', variables('adminSiteName'))).DefaultHostName, '/')]"
+            },
+            {
+              "Name": "STSApiKey",
+              "Value": "[variables('STSKey')]"
+            },
+            {
+              "Name": "DocDBUri",
+              "Value": "[reference(concat('Microsoft.DocumentDb/databaseAccounts/', variables('docDbHost'))).documentEndpoint]"
+            },
+            {
+              "Name": "DocDBAuthKey",
+              "Value": "[listKeys(resourceId('Microsoft.DocumentDb/databaseAccounts', variables('docDbHost')), '2015-04-08').primaryMasterKey]"
+            },
+            {
+              "Name": "DocDBName",
+              "Value": "[variables('docDbName')]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "name": "web",
+          "type": "sourcecontrols",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2015-08-01",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('StsSiteName'))]"
+          ],
+          "tags": {
+            "displayName": "StsCodeDeploy"
+          },
+          "properties": {
+            "RepoUrl": "[variables('repoUrl')]",
+            "branch": "[variables('repoBranch')]",
+            "IsManualIntegration": true
+          }
+        }
+      ]
+    }
+  ],
+  "outputs": {
+    "AdminSiteObject": {
+      "value": "[reference(resourceId('Microsoft.Web/sites/', variables('adminSiteName')), '2015-08-01')]",
+      "type": "object"
+    },
+    "StsSiteObject": {
+      "value": "[reference(resourceId('Microsoft.Web/sites/', variables('stsSiteName')), '2015-08-01')]",
+      "type": "object"
+    }
+  }
+}

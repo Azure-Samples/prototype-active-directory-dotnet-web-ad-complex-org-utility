@@ -12,6 +12,7 @@ using System.Threading;
 using System.Collections.Generic;
 using System.IO;
 using ADSync.Common.Events;
+using Newtonsoft.Json;
 
 namespace ComplexOrgSiteAgent
 {
@@ -82,15 +83,20 @@ namespace ComplexOrgSiteAgent
                     throw new Exception("Unable to retrieve site configuration, exiting");
                 }
 
+                var scriptConfig = GetJsonConfig(siteConfig, OrgApiCalls.SiteUrl);
+                File.WriteAllText(Path.Combine(_scriptFolderPath, "SyncVars.json"), scriptConfig);
+
                 ADTools.ADDomainName = siteConfig.OnPremDomainName;
 
-                relay = new SigRClient(OrgApiCalls.SiteUrl, OrgApiCalls.ApiKey, "SiteHub");
+                relay = new SigRClient(OrgApiCalls.SiteUrl, OrgApiCalls.ApiKey, "SiteHub", true);
 
                 relay.StatusUpdate += Relay_StatusUpdate;
                 relay.ErrorEvent += Relay_ErrorEvent;
                 relay.PingEvent += Relay_PingEvent;
 
                 InitTimers(siteConfig);
+
+                relay.FireScriptEvent += Relay_FireScriptEvent;
 
                 if (Environment.UserInteractive)
                 {
@@ -111,6 +117,11 @@ namespace ComplexOrgSiteAgent
                 var msg = Utils.GetFormattedException(ex);
                 Utils.AddLogEntry(ConsoleLogSource, msg, EventLogEntryType.Error);
             }
+        }
+
+        private static void Relay_FireScriptEvent(object sender, FireScriptEvent e)
+        {
+            ScriptTimer.RunScript(e.Script);
         }
 
         private static void RunConsole(RemoteSite siteConfig, string[] args)
@@ -163,13 +174,15 @@ namespace ComplexOrgSiteAgent
 
             if (site.SiteType == SiteTypes.MasterHQ)
             {
-                scripts.Add(new ScriptObject(Path.Combine(_scriptFolderPath, "sync-ad.ps1")));
-                scripts.Add(new ScriptObject(Path.Combine(_scriptFolderPath, "sync-b2b.ps1")));
+                scripts.Add(new ScriptObject("sync-ad.ps1"));
+                scripts.Add(new ScriptObject("sync-b2b.ps1"));
             }
             else
             {
-                scripts.Add(new ScriptObject(Path.Combine(_scriptFolderPath, "sync.ps1")));
+                scripts.Add(new ScriptObject("sync.ps1"));
             }
+
+            ScriptTimer.ScriptFolderPath = _scriptFolderPath;
 
             timer = new ScriptTimer(scripts.ToArray(), _timerIntervalMinutes);
             timer.ErrorEvent += Timer_ErrorEvent;
@@ -274,5 +287,24 @@ namespace ComplexOrgSiteAgent
             WriteConsoleStatus(message);
         }
 
+        private static string GetJsonConfig(RemoteSite site, string apiUrl)
+        {
+            var scriptUpdates = new Dictionary<string, string>
+            {
+                { "ApiKey", site.ApiKey },
+                { "ApiSite", apiUrl }
+            };
+
+            if (site.SiteType == SiteTypes.MasterHQ)
+            {
+                //to enable GraphAPI calls for B2B invitations
+                scriptUpdates.Add("AADClientID", ConfigurationManager.AppSettings["AADClientID"]);
+                scriptUpdates.Add("AADClientKey", ConfigurationManager.AppSettings["AADClientKey"]);
+                scriptUpdates.Add("AADTenantID", ConfigurationManager.AppSettings["AADTenantID"]);
+            }
+
+            var config = JsonConvert.SerializeObject(scriptUpdates);
+            return config;
+        }
     }
 }

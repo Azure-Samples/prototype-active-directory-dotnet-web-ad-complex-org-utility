@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ADSync.Common.Models;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,6 +13,11 @@ namespace ADSync.Common.Events
         public string Message { get; set; }
         public string ConnectionId { get; set; }
         public string ApiKey { get; set; }
+    }
+
+    public class FireScriptEvent
+    {
+        public ScriptObject Script { get; set; }
     }
 
     public class PingEvent

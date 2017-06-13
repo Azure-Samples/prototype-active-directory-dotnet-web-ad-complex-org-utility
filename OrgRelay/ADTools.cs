@@ -210,7 +210,7 @@ namespace OrgRelay
             }
         }
 
-        public static RelayResponse GetUserStatus(string username)
+        public static RelayResponse GetUserStatus(string localGuid)
         {
             var res = new RelayResponse
             {
@@ -219,7 +219,7 @@ namespace OrgRelay
 
             try
             {
-                UserPrincipal p = GetUserPrincipal(username);
+                UserPrincipal p = GetUserPrincipal(localGuid);
 
                 var usr = new ADUser
                 {

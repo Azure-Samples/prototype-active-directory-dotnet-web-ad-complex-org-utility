@@ -25,45 +25,22 @@ namespace ADSyncApi.Controllers
             return View();
         }
 
-        public ActionResult Files()
+        public async Task GetSetupZip(string siteId)
         {
-            return View();
-        }
-
-        public void GetSetupZip(string siteId)
-        {
-            RemoteSite site = null;
-
-            var task = Task.Run(async () => {
-                site = await RemoteSiteUtil.GetSite(siteId);
-            });
-            task.Wait();
             var path = Request.MapPath("/Files/");
-
-            //Convert the memorystream to an array of bytes.
-
             var ApiUrl = string.Format("{0}://{1}/", Request.Url.Scheme, Request.Url.Authority);
-            var zip = ZipCopy.SetupZip(path, site, ApiUrl);
-
+            var site = await RemoteSiteUtil.GetSite(siteId);
             var filename = string.Format("{0}_setup.zip", site.OnPremDomainName.Replace(".", "_"));
 
-            // Clear all content output from the buffer stream
+            var zip = ZipCopy.SetupZip(path, site, ApiUrl);
+
             Response.Clear();
-
-            // Add a HTTP header to the output stream that specifies the default filename
-            // for the browser's download dialog
             Response.AddHeader("Content-Disposition", "attachment; filename=" + filename);
-
-            // Add a HTTP header to the output stream that contains the 
-            // content length(File Size). This lets the browser know how much data is being transfered
             Response.AddHeader("Content-Length", zip.Length.ToString());
-
-            // Set the HTTP MIME type of the output stream
             Response.ContentType = "application/octet-stream";
-            
-            // Write the data out to the client.
             Response.BinaryWrite(zip.ToArray());
         }
+
         public ActionResult Error()
         {
             ViewBag.Message = Request.QueryString["message"];
