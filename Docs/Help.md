@@ -8,8 +8,8 @@ __Application Diagram:__
 There are four main components of the solution:
 * A C#/MVC administrative portal, backed by CosmosDB, running a webjob and hosting a SignalR hub and client
 * A SignalR agent, installed as a Windows Service at each site, with line of sight to that location's Active Directory
+* A set of PowerShell scripts set to run on a schedule within the same Windows service that hosts the SignalR client
 * A custom Security Token Service (STS) with a SignalR agent
-* A set of PowerShell scripts set to run as a Windows Scheduled Job at each site *
 
 __Administrative Portal__
 
