@@ -101,27 +101,26 @@ $deployment = New-AzureRmResourceGroupDeployment -ResourceGroupName $RGName -Tem
 if ($deployment) {
     #to-do: update URIs and reply URLs for apps, based on output parms from $deployment
     #also to-do: update application permissions and APIs - may need to be done in the portal
-    $adminHostName = $Deployment.Outputs.AdminSiteObject.Value.enabledHostNames.Item(0).ToString()
+    $adminHostName = "https://$($deployment.Outputs.adminSiteObject.Value.defaultHostName.ToString())/"
     if ($newApps) {
         $url = "https://$adminHostName/"
         $adminApp.ReplyUrls.Add($url)
         #todo: update app reply urls
     }
-    $stsHostName = $Deployment.Outputs.StsSiteObject.Value.enabledHostNames.Item(0).ToString()
+    $stsHostName = "https://$($deployment.Outputs.stsSiteObject.Value.defaultHostName.ToString())/sts"
 
     $ProjectFolder = "$env:USERPROFILE\desktop\$RGName\"
-    if (!(Test-Path -Path $ProjectFolder)) {
-        md $ProjectFolder
-    }
+    md $ProjectFolder -ErrorAction Ignore
+
     $WshShell = New-Object -comObject WScript.Shell
-    $Shortcut = $WshShell.CreateShortcut("$($ProjectFolder)Complex Org Admin.lnk")
-    $Shortcut.TargetPath = $adminHostName
+    $Shortcut = $WshShell.CreateShortcut("$($ProjectFolder)ComplexOrgAdmin.lnk")
+    $Shortcut.TargetPath = "$adminHostName"
     $Shortcut.IconLocation = "%ProgramFiles%\Internet Explorer\iexplore.exe, 0"
     $Shortcut.Save()
 
     $WshShell = New-Object -comObject WScript.Shell
-    $Shortcut = $WshShell.CreateShortcut("$($ProjectFolder)Complex Org STS.lnk")
-    $Shortcut.TargetPath = $stsHostName
+    $Shortcut = $WshShell.CreateShortcut("$($ProjectFolder)ComplexOrgSTS.lnk")
+    $Shortcut.TargetPath = "$stsHostName"
     $Shortcut.IconLocation = "%ProgramFiles%\Internet Explorer\iexplore.exe, 0"
     $Shortcut.Save()
 

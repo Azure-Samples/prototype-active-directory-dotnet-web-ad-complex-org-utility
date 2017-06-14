@@ -73,11 +73,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{B7D40B83-3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DocImages", "DocImages", "{8F22BC43-FF2D-47BA-B5EC-D1FBA57EC58C}"
 	ProjectSection(SolutionItems) = preProject
+		DocImages\App1.png = DocImages\App1.png
+		DocImages\App1a.png = DocImages\App1a.png
+		DocImages\App2.png = DocImages\App2.png
+		DocImages\App3a.png = DocImages\App3a.png
+		DocImages\App4.png = DocImages\App4.png
+		DocImages\App5.png = DocImages\App5.png
 		DocImages\Diagram.png = DocImages\Diagram.png
 		DocImages\SiteDashboard.png = DocImages\SiteDashboard.png
 		DocImages\SiteLogs.png = DocImages\SiteLogs.png
 		DocImages\SiteSettings.png = DocImages\SiteSettings.png
 		DocImages\SiteSetupDownload.png = DocImages\SiteSetupDownload.png
+		DocImages\Url.png = DocImages\Url.png
+		DocImages\Url2.png = DocImages\Url2.png
+		DocImages\Url3.png = DocImages\Url3.png
 		DocImages\UserAdminPWReset.png = DocImages\UserAdminPWReset.png
 		DocImages\UserAdvanced.png = DocImages\UserAdvanced.png
 		DocImages\UserContact.png = DocImages\UserContact.png
@@ -95,6 +104,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrgRelay", "OrgRelay\OrgRel
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{5C2A9A2D-5DE5-4553-A74C-43006DB220D3}"
 	ProjectSection(SolutionItems) = preProject
+		Docs\DemoConfig.md = Docs\DemoConfig.md
 		Docs\Help.md = Docs\Help.md
 		Docs\Setup.md = Docs\Setup.md
 	EndProjectSection
