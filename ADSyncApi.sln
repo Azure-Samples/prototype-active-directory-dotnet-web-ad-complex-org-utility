@@ -18,6 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PSScripts", "PSScripts", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MasterHQ", "MasterHQ", "{83B73DB4-4182-43D0-96D0-DBEF13867BC7}"
 	ProjectSection(SolutionItems) = preProject
+		PSScripts\MasterHQ\CustomSTSConfig.ps1 = PSScripts\MasterHQ\CustomSTSConfig.ps1
 		PSScripts\MasterHQ\Get-DQUsers.ps1 = PSScripts\MasterHQ\Get-DQUsers.ps1
 		PSScripts\MasterHQ\GraphDeltaToken.json = PSScripts\MasterHQ\GraphDeltaToken.json
 		PSScripts\MasterHQ\GraphLogin.ps1 = PSScripts\MasterHQ\GraphLogin.ps1
