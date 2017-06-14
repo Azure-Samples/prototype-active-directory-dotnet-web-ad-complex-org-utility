@@ -31,7 +31,7 @@ __Details__
 
 # As-Is Code
 
-This code is made available as a sample to demonstrate a potential strategy for managing and integrating multiple disconnected directories with Azure Active Directory. It should be customized by your dev team or a partner, and should be reviewed before being deployed in a production scenario.
+This code is made available as a sample to demonstrate a potential strategy for managing and integrating multiple disconnected directories with Azure Active Directory. It should be customized by your dev team or a partner, and should be reviewed before being deployed in a production scenario. As an end to end system, it should be considered ALPHA code.
 
 # Contributing
 

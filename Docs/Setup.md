@@ -11,7 +11,7 @@ An Azure Active Directory app must be created in your tenant for login to the ad
 
   ![alt text][App1]
 
-* Click "+ New application registration" and enter the name of your app (like "B2B Admin App"). This title will be seen when users are prompted for their credentials.
+* Click "+ New application registration" and enter the name of your app (like "Complex Org Admin"). This title will be seen when users are prompted for their credentials.
 * Select "Web app / API", and enter the Sign-on URL. If you're setting this up before you deploy the app to Azure, you can enter https://loopback as a placeholder. Click "Create".
 
   ![alt text][App2]
