@@ -85,7 +85,7 @@ should edit the PS to ensure that the names align with your naming strategy.
 
 In the example, the "RemoteUsers-B2B" OU will need to be EXCLUDED from the Azure AD Connect synchronization. These are shadow accounts that
 will be used by Azure Active Directory Application Proxy - B2B users will authenticate to the app proxy agent using their AAD credentials, and those
-credentials will be used by the on-prem agent to authenticate the user to the on-prem resource using Kerberos Constrained Delegation (KDC). Since these
+credentials will be used by the on-prem agent to authenticate the user to the on-prem resource using Kerberos Constrained Delegation (KCD). Since these
 B2B users are already present in this tenant as B2B guest, we don't want the AAD Connect tool to try and sync them to the tenant again.
 
 ![alt text][OUFilter]
