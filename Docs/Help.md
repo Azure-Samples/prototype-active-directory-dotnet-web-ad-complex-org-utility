@@ -62,7 +62,7 @@ The process for this configuration is:
   * These remote users are updated, setting the mS-DS-ConsistencyGuid to the HQ ObjectGUID value
   * The HQ accounts that were created are sync'd to the AAD tenant using the regular AAD Connect sync tool
   * Powershell is used to configure federation for the remote site domain in the tenant. This federation points to 
-  * the custom STS (below)
+    the custom STS (below)
 
 The agent service is available to download from the administrative portal. The link is unique for each configured site, and 
 on download, the configuration files are customized with that location's API keys and URLs before being bundled into a 
