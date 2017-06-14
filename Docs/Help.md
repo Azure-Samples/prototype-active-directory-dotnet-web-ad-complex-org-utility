@@ -54,12 +54,12 @@ administrative reset of the account's password.
   ![UserAdminPWReset]
 
 * The second function of the SignalR hub is to facilitate pass-through authentication of users.
-The process for this configuration is
+The process for this configuration is:
   * The AD domain of the remote site is configured in the HQ AAD tenant
   * Synchronize the users from the remote site to the HQ site
   * Those users are created in the HQ site with smart-card access required and with a complex random password
   * The ObjectGUID from these new AD accounts is copied back to the remote site via the administrative portal database
-  * These remote users are updated, setting the msds_consistencyGUID to the HQ ObjectGUID value
+  * These remote users are updated, setting the mS-DS-ConsistencyGuid to the HQ ObjectGUID value
   * The HQ accounts that were created are sync'd to the AAD tenant using the regular AAD Connect sync tool
   * Powershell is used to configure federation for the remote site domain in the tenant. This federation points to 
   * the custom STS (below)
