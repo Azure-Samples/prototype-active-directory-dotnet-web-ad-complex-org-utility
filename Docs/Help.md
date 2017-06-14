@@ -72,9 +72,9 @@ ZIP file and downloaded.
 
 __Custom STS__
 
-The custom STS runs as a stand-alone web application. It leverages the .Net Framework Windows Identity Foundation SDK to 
-enable it to perform as a custom STS. It is designed to be configured as the federation endpoint for one or more
-secondary domains configured in the HQ AAD tenant. Each domain's federation config requires a unique IssuerUri, so the 
+The custom STS runs as a stand-alone web application. It leverages the .Net Framework Windows Identity Foundation SDK, implemented
+as an MVC application, to enable it to perform as a custom STS. It is designed to be configured as the federation endpoint for one 
+or more secondary domains configured in the HQ AAD tenant. Each domain's federation config requires a unique IssuerUri, so the 
 STS is designed to generate a different IssuerUri in the SAML token that's returned back to AAD, depending on the login
 identity of the user. The format of the IssuerUri is configurable in the web.config - the default is:
 "http&#58;//[site FQDN]/sts/[AAD domain name for this location]/services/trust"
