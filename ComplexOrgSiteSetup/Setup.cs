@@ -288,13 +288,18 @@ namespace ComplexOrgSiteSetup
                     case "Install":
                         if (txtServiceUsername.Text.Length == 0 || txtServicePassword.Text.Length == 0)
                         {
-                            MessageBox.Show("Please enter the service account credentials to use for the service installation. Account must be a member of the domain admins group.");
+                            MessageBox.Show("Please enter the service account credentials to use for the service installation. Account must be a member of the domain admins group.", "Credentials Needed");
                             return;
                         }
+                        lblServiceStatusRes.Text = "Installing...";
+                        Application.DoEvents();
+
                         ServiceUtil.InstallService(txtServiceUsername.Text, txtServicePassword.Text);
                         Task.Delay(3000).Wait();
 
+
                         ServiceUtil.StartService();
+                        ServiceUtil.SetRecoveryOptions();
                         break;
 
                     case "Uninstall":
@@ -305,17 +310,21 @@ namespace ComplexOrgSiteSetup
                         }
                         lblServiceStatusRes.Text = "Uninstalling...";
                         Application.DoEvents();
+
                         ServiceUtil.StopService();
                         ServiceUtil.UninstallService();
                         break;
                 }
-                RefreshServiceData();
             }
             catch (Exception ex)
             {
                 var msg = string.Format("An error occured managing the service - {0}.", ex.Message);
                 Utils.AddLogEntry("Error managing the service from the setup utility", System.Diagnostics.EventLogEntryType.Error, 0, ex);
                 MessageBox.Show(msg, "Service Management Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                RefreshServiceData();
             }
         }
 

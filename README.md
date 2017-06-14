@@ -8,7 +8,9 @@
 
 [Detailed step-by-step deployment instructions](./Docs/Setup.md)
 
-[Demo configuration instructions](./Docs/DemoConfig.md)
+[Configuration instructions](./Docs/Config.md)
+
+[Setting up a demo](./Docs/DemoConfig.md)
 
 __Details__
 * Creates a cloud-based management portal and database for staging of user accounts from one or more on-premises Active Directory forests, for creation in a master AD

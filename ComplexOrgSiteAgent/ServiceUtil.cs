@@ -3,6 +3,7 @@ using System.Collections;
 using System.Configuration.Install;
 using System.Diagnostics;
 using System.ServiceProcess;
+using System.Threading.Tasks;
 
 namespace ComplexOrgSiteAgent
 {
@@ -76,7 +77,6 @@ namespace ComplexOrgSiteAgent
 
                         installer.Install(state);
                         installer.Commit(state);
-                        SetRecoveryOptions();
                     }
                     catch
                     {
@@ -119,25 +119,26 @@ namespace ComplexOrgSiteAgent
             }
         }
 
-        private static void SetRecoveryOptions()
+        public static void SetRecoveryOptions()
         {
             int exitCode;
             using (var process = new Process())
             {
+                var name = AssemblyName.Split('.')[0];
                 var startInfo = process.StartInfo;
                 startInfo.FileName = "sc";
                 startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-
-                startInfo.Arguments = string.Format("failure \"{0}\" reset= 0 actions= restart/60000/restart/150000/restart/300000", ServiceName);
+                startInfo.Arguments = string.Format("failure \"{0}\" reset= 0 actions= restart/120000/restart/240000/restart/300000", name);
 
                 process.Start();
                 process.WaitForExit();
 
                 exitCode = process.ExitCode;
+               
             }
 
             if (exitCode != 0)
-                throw new InvalidOperationException();
+                throw new InvalidOperationException(string.Format("Setting recovery option failed with exit code {0}", exitCode));
         }
 
         public static void StartService()
