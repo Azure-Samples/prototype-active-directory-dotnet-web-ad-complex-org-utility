@@ -74,7 +74,7 @@ Now that the app is deployed, there's a final step. We need to go back into our 
 
     ![alt text][Url]
   
-  * Edit each of your Azure AD apps. First, update the Home page URL:
+  * Edit your Azure AD app. First, update the Home page URL:
 
     ![alt text][Url3]
   
