@@ -18,9 +18,9 @@ Fill out the form. "Site Domains" should contain all of the UPN suffixes from yo
 
 * "Site Type" includes 4 options:
   * MasterHQ - the HQ site that is running AAD Connect and synchronizing with an AAD tenant
-  * AADB2B - an affiliate site that has it's own AAD tenant - these users will be added as B2B guests
-  * LocalADOnly - an affiliate that doesn't have it's own AAD tenant - these users will be synchronized as users in the HQ tenant
-  * AADB2BCloudOnly - an affiliate this ONLY has an AAD tenant with no on-prem hybrid identity (not implemented in code yet)
+  * AADB2B - an affiliate site that has its own AAD tenant - these users will be added as B2B guests
+  * LocalADOnly - an affiliate that doesn't have its own AAD tenant - these users will be synchronized as users in the HQ tenant
+  * AADB2BCloudOnly - an affiliate that ONLY has an AAD tenant with no on-prem hybrid identity (not implemented in code yet)
 
 * "B2B Default Redirect URL" - for B2B affiliates, this is the URL a user will be redirected to after redeeming an invitation
 
@@ -168,6 +168,6 @@ Set-MsolDomainAuthentication -DomainName $domain -Authentication Managed
 [ServiceInstaller2]: ../DocImages/ServiceInstaller2.png "Service Confirmed"
 [ServiceInstaller3]: ../DocImages/ServiceInstaller3.png "Install Service"
 [ManageOnPrem]: ../DocImages/UserOnPremManage.png "Manage On-prem user"
-[InitOUs]: ../DocImages/InitHQ.png "PS script that init's HQ settings"
+[InitOUs]: ../DocImages/InitHQ.png "PS script that initializes HQ settings"
 [HQOUs]: ../DocImages/HQOUs.png "HQ OUs in Users and Computers"
 [OUFilter]: ../DocImages/ConnectOUFilter.png "AAD Connect - OU filter"

@@ -26,7 +26,7 @@ INITIALIZE
 
     #The "RedirectTo" link will be sent along with the email invitation - 
     #   this is where the user is taken after redeeming their invitation
-    #   Each site may have it's own configured, this will be used if 
+    #   Each site may have its own configured, this will be used if 
     #   a site's redirect is null
     $DefaultRedirectTo = "https://b2bmultidom-webuocf7lvgfqppw.azurewebsites.net/profile"
    

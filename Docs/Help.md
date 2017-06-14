@@ -30,7 +30,7 @@ PowerShell scripts are used to facilitate a rudimentary sync process between the
 3 groups of script types:
 * MasterHQ - these scripts are run at HQ and manage creation of shadow accounts and updating the central database with new ObjectGUIDs
 * LocalADOnly - run at a remote site with no existing AAD tenant
-* AADB2B - run at an affiliate site that also already has it's own Azure AD
+* AADB2B - run at an affiliate site that also already has its own Azure AD
 
 "LocalADOnly" users are created at HQ in an OU that is included in Azure AD Connect's sync process. Users from "AADB2B" 
 affiliates are created at HQ in an OU that is excluded from the Connect sync. By creating both types of users at HQ,
