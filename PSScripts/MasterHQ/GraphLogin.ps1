@@ -14,7 +14,7 @@ function Init-GraphAPI
     $AADTenantID  = $SyncVars.AADTenantID
 
     #Get Token via REST
-    $loginURL = "https://login.windows.net"
+    $loginURL = "https://login.microsoftonline.com"
     $resource="https://graph.microsoft.com"
     $body = @{grant_type="client_credentials";resource=$resource;client_id=$AADClientID;client_secret=$AADClientKey}
     $LoginUri = "$loginURL/$AADTenantID/oauth2/token?api-version=1.0"
