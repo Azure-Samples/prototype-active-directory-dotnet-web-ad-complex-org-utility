@@ -6,7 +6,7 @@ $ClientKey="4wt7wtWJolyMH3WAsxV1nYRD1ApvBgnfkdxio4N40pI="
 $TenantID="a038f999-4e71-40c4-aa5b-f1aec8ae12e3"
 
 #Get Token via REST
-$loginURL = "https://login.windows.net"
+$loginURL = "https://login.microsoftonline.com"
 $resource="https://graph.microsoft.com"
 $body = @{grant_type="client_credentials";resource=$resource;client_id=$ClientID;client_secret=$ClientKey}
 $LoginUri = "$loginURL/$TenantID/oauth2/token?api-version=1.0"
